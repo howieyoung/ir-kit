@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ir-kit",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["server.js"],
+      "port": 4820
+    }
+  ]
+}

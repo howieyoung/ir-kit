@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IR Kit — Investor Relations for Founders</title>
+<link rel="stylesheet" href="css/app.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>📈</text></svg>">
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">IR</div>
+      <div>
+        <div class="brand-name">IR Kit</div>
+        <div class="brand-company" id="brand-company"></div>
+      </div>
+    </div>
+    <nav id="nav">
+      <a href="#/dashboard" data-route="dashboard">Dashboard</a>
+      <a href="#/financials" data-route="financials">Financials</a>
+      <a href="#/captable" data-route="captable">Cap Table</a>
+      <a href="#/crm" data-route="crm">Investor CRM</a>
+      <a href="#/updates" data-route="updates">Updates</a>
+      <a href="#/playbooks" data-route="playbooks">Playbooks</a>
+      <a href="#/settings" data-route="settings">Settings</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div id="mode-badge" class="badge"></div>
+      <div id="save-status" class="save-status"></div>
+      <div class="foot-note">Open kit — run it with your own agent.</div>
+    </div>
+  </aside>
+  <main id="main"></main>
+</div>
+<div id="sample-banner" class="sample-banner" hidden>
+  Sample data is loaded. Replace it with your company's numbers (Settings → company profile, then each module), or keep exploring.
+  <button id="sample-dismiss">Dismiss</button>
+</div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

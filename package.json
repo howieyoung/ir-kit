@@ -1,0 +1,15 @@
+{
+  "name": "ir-kit",
+  "version": "1.0.0",
+  "description": "Open investor-relations kit for founders: cap table + SAFE math, financial dashboard, investor CRM, update composer, and IR playbooks. Zero dependencies; data as plain JSON your agent can edit.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node scripts/seed-data.js",
+    "init-workspace": "node scripts/init-workspace.js"
+  },
+  "repository": { "type": "git", "url": "https://github.com/howieyoung/ir-kit.git" },
+  "engines": { "node": ">=18" },
+  "license": "MIT"
+}

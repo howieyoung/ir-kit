@@ -1,0 +1,10 @@
+# YOUR IR DATA IS PRIVATE — it never belongs in this (public) repository.
+# The app reads/writes data/*.json locally; keep backups in a PRIVATE repo or encrypted storage.
+data/*.json
+
+# Private local IR workspace created by scripts/init-workspace.js
+ir-workspace/
+
+node_modules/
+.DS_Store
+*.log

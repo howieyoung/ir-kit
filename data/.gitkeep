@@ -1,0 +1,3 @@
+# Your IR data lives here as JSON files — gitignored by design.
+# First run works without any files (the app seeds itself with the sample company).
+# Run `npm run seed` to write the sample dataset here explicitly.

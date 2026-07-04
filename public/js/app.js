@@ -1,0 +1,93 @@
+import { store } from './store.js';
+import { el, section } from './ui.js';
+import { renderDashboard } from './dashboard.js';
+import { renderFinancials } from './financials.js';
+import { renderCapTable } from './captable.js';
+import { renderCrm } from './crm.js';
+import { renderUpdates } from './updates.js';
+import { renderPlaybooks } from './playbooks.js';
+
+const routes = {
+  dashboard: renderDashboard,
+  financials: renderFinancials,
+  captable: renderCapTable,
+  crm: renderCrm,
+  updates: renderUpdates,
+  playbooks: renderPlaybooks,
+  settings: renderSettings,
+};
+
+function currentRoute() {
+  const r = location.hash.replace(/^#\//, '');
+  return routes[r] ? r : 'dashboard';
+}
+
+function render() {
+  const route = currentRoute();
+  document.querySelectorAll('#nav a').forEach((a) => a.classList.toggle('active', a.dataset.route === route));
+  const main = document.getElementById('main');
+  main.innerHTML = '';
+  routes[route](main);
+  const company = store.get('company');
+  document.getElementById('brand-company').textContent = company?.name || '';
+  const banner = document.getElementById('sample-banner');
+  banner.hidden = !(company?.sample) || sessionStorage.getItem('irkit:banner-dismissed');
+}
+
+function renderSettings(root) {
+  const company = store.get('company');
+  root.append(el('h1', {}, 'Settings'));
+  root.append(el('p', { class: 'page-sub' }, `Mode: ${store.mode === 'server' ? 'server — data persists to JSON files in the data/ folder (agent-editable)' : 'static demo — data lives in this browser\'s localStorage only'}.`));
+
+  const field = (label, key, type = 'text') => el('div', { class: 'field' },
+    el('label', {}, label),
+    el('input', {
+      type, value: company[key] ?? '', step: 'any',
+      onchange: (e) => store.update('company', (c) => { c[key] = type === 'number' ? Number(e.target.value) : e.target.value; }),
+    }));
+
+  root.append(section('Company profile', 'Used across the app and in update templates.',
+    el('div', { class: 'grid cols-2' },
+      field('Company name', 'name'), field('Founder', 'founder'),
+      field('Email', 'email'), field('Round target ($)', 'roundTarget', 'number')),
+    field('Round instrument (shown in updates)', 'roundInstrument'),
+    el('div', { class: 'field' }, el('label', {}, 'Sample data flag'),
+      el('label', { style: 'font-weight:400;display:flex;gap:8px;align-items:center' },
+        (() => { const cb = el('input', { type: 'checkbox', onchange: (e) => store.update('company', (c) => { c.sample = e.target.checked; }) }); cb.checked = !!company.sample; return cb; })(),
+        'Show the sample-data banner (untick once real data is in)')),
+  ));
+
+  const file = el('input', { type: 'file', accept: '.json', style: 'display:none', onchange: async (e) => {
+    if (!e.target.files[0]) return;
+    try { await store.importAll(e.target.files[0]); alert('Imported.'); render(); }
+    catch (err) { alert('Import failed: ' + err.message); }
+  } });
+  root.append(section('Data', 'Export everything as one JSON file — for backup, or to move between the static demo and your own server.',
+    file,
+    el('div', { class: 'btn-row' },
+      el('button', { class: 'btn secondary', onclick: () => store.exportAll() }, 'Export all data (JSON)'),
+      el('button', { class: 'btn secondary', onclick: () => file.click() }, 'Import JSON'),
+      el('button', { class: 'btn danger', onclick: () => { if (confirm('Replace ALL data with the sample dataset?')) { store.resetToSeed(); render(); } } }, 'Reset to sample')),
+  ));
+
+  root.append(section('Working with your agent', null, el('div', { class: 'doc', html: `
+    <p>This kit is built to be operated <b>with</b> a coding agent (Claude Code, Cursor, etc.):</p>
+    <ul>
+      <li>All data is plain JSON in <code>data/</code> — your agent can close the month, add SAFEs, or log interactions by editing files. The UI picks changes up on reload.</li>
+      <li>All logic is dependency-free vanilla JS in <code>public/js/</code> — ask your agent to add a module (e.g. ESOP tracking, multi-currency) and point it at <code>CLAUDE.md</code> for the data schemas.</li>
+      <li>The SAFE conversion + waterfall math lives in one pure-function file: <code>public/js/metrics.js</code>.</li>
+    </ul>` })));
+}
+
+document.getElementById('sample-dismiss')?.addEventListener('click', () => {
+  sessionStorage.setItem('irkit:banner-dismissed', '1');
+  document.getElementById('sample-banner').hidden = true;
+});
+
+window.addEventListener('hashchange', render);
+store.init().then(() => {
+  const badge = document.getElementById('mode-badge');
+  badge.textContent = store.mode === 'server' ? 'server mode' : 'demo mode';
+  store.onChange(() => { /* views re-render themselves; brand may change */ document.getElementById('brand-company').textContent = store.get('company')?.name || ''; });
+  render();
+});
