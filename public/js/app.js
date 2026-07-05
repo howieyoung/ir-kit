@@ -85,13 +85,9 @@ function renderSettings(root) {
       el('button', { class: 'btn danger', onclick: () => { if (confirm('Replace ALL data with the sample dataset?')) { store.resetToSeed(); render(); } } }, 'Reset to sample')),
   ));
 
-  root.append(section('Working with your agent', null, el('div', { class: 'doc', html: `
-    <p>This kit is built to be operated <b>with</b> a coding agent (Claude Code, Codex, Cursor, etc.):</p>
-    <ul>
-      <li>Your agent uses the <code>ir</code> CLI — <code>ir status</code>, <code>ir close-month</code>, <code>ir safe add</code>, <code>ir check</code> — which enforces the same invariants as this UI. Full reference: <a href="https://github.com/howieyoung/ir-kit/blob/main/docs/CLI.md" target="_blank" rel="noopener">docs/CLI.md</a>.</li>
-      <li>The agent contract (capability map, schemas, privacy rules) is <a href="https://github.com/howieyoung/ir-kit/blob/main/AGENTS.md" target="_blank" rel="noopener">AGENTS.md</a>; ritual prompts live in <code>prompts/</code>. See the Get started page → "Use it with your agent".</li>
-      <li>All logic is dependency-free vanilla JS — new operations go in <code>core/ops.js</code>, the math lives in <code>public/js/metrics.js</code>.</li>
-    </ul>` })));
+  root.append(el('div', { class: 'callout' },
+    'Working with a coding agent (CLI, prompts, scheduling, extending the kit) is covered in ',
+    el('a', { href: '#/guide' }, 'Get started → Use it with your agent'), '.'));
 }
 
 document.getElementById('sample-dismiss')?.addEventListener('click', () => {

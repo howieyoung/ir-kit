@@ -95,6 +95,9 @@ The mechanical part doesn't even need an agent — `ir update draft` is determin
 
 Add an agent run on top to fill in the narrative (highlights/lowlights) — recipes and safety rules in [prompts/schedule-updates.md](prompts/schedule-updates.md). Drafts never auto-send: the review and the send stay yours.
 
+## Extending the kit
+The codebase is deliberately agent-editable: dependency-free vanilla JS, no build step. Ask your agent for a new module ("add ESOP tracking", "multi-currency support") and point it at [AGENTS.md](AGENTS.md) — the conventions are written down: new operations go in `core/ops.js` and get a CLI verb, the math lives in `public/js/metrics.js`, new pages register in `app.js`. Keep the kit's promise when extending: zero dependencies, local-first, and `ir check` still passes.
+
 ---
 
 # Cap table 101 — the ten-minute version
