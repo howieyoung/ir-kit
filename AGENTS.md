@@ -18,8 +18,11 @@ You are operating a founder's investor-relations system. This file is the canoni
 ./bin/ir.js update draft [--month 2026-07]
 ./bin/ir.js update mark-sent --subject "..."
 ./bin/ir.js model round --pre 12000000 --new 3000000 --pool 0.10
+./bin/ir.js export board-pack|tearsheet|captable   real-data artifacts → ir-workspace/exports/
 ./bin/ir.js schedule show
 ```
+
+`ir export` writes markdown/CSV substance generated from actuals (board pack, one-pager, diligence cap-table CSV). Styling into pptx/docx/PDF is your job if you have those skills — never alter the numbers while styling.
 
 All commands take `--json` for structured output; errors go to stderr with exit 1. Data location overrides: `IRKIT_DATA_DIR`, `IRKIT_ROOT` (useful for tests — never point tests at the founder's live data).
 

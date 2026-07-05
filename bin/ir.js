@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // ir — the IR Kit command line. Built for agents first, humans second.
 // Every command supports --json. Data location overrides: IRKIT_DATA_DIR, IRKIT_ROOT.
-import { status, closeMonth, addSafe, draftUpdate, markSent, modelPricedRound } from '../core/ops.js';
+import { status, closeMonth, addSafe, draftUpdate, markSent, modelPricedRound, exportCaptableCsv, exportBoardPack, exportTearsheet } from '../core/ops.js';
 import { check } from '../core/check.js';
 import { DATA_DIR } from '../core/store.js';
 
@@ -21,6 +21,7 @@ const HELP = `ir — agent-native investor relations (data: ${DATA_DIR})
   ir update draft [--month YYYY-MM]      write the metrics-filled draft to ir-workspace/updates/drafts/
   ir update mark-sent [--subject S] [--month YYYY-MM]
   ir model round --pre N --new N [--pool 0.10]
+  ir export board-pack|tearsheet|captable   real-data artifacts → ir-workspace/exports/
   ir schedule show                       cron lines for the monthly rituals
 
 Rules of engagement (full contract in AGENTS.md):
@@ -88,6 +89,16 @@ try {
         console.log(`post-money ${usd(r.postMoney)} · new investors ${pct(r.newInvestorPct)} · SAFEs ${pct(r.safePreRoundPct)} · PPS $${r.pricePerShare}`);
         for (const row of r.proForma) console.log(`  ${row.stakeholder.padEnd(38)} ${String(row.shares).padStart(12)}  ${pct(row.pct)}`);
       });
+      break;
+    }
+
+    case 'export': {
+      const what = positional[0];
+      const r = what === 'captable' ? exportCaptableCsv()
+        : what === 'board-pack' ? exportBoardPack()
+        : what === 'tearsheet' ? exportTearsheet()
+        : fail('usage: ir export board-pack|tearsheet|captable');
+      out(r, () => console.log(`✓ exported — ${r.file}`));
       break;
     }
 

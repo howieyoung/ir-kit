@@ -5,6 +5,7 @@ import path from 'node:path';
 import { load, save, uid, WORKSPACE } from './store.js';
 import { latestMetrics, derive, updateCadence, capTotals, safeImpliedPct, modelRound } from '../public/js/metrics.js';
 import { updateTemplate } from '../public/js/update-template.js';
+import { fmt } from '../public/js/ui.js';
 
 const YM = /^\d{4}-(0[1-9]|1[0-2])$/;
 
@@ -140,6 +141,124 @@ export function modelPricedRound({ pre, newMoney, pool = 0.1 }) {
     poolTopUpPct: round4(m.dp), pricePerShare: Number(m.pps.toFixed(6)), totalShares: Math.round(m.T),
     proForma: m.rows.map((r) => ({ stakeholder: r.name, shares: Math.round(r.shares), pct: round4(r.pct) })),
   };
+}
+
+// ---------- exports: real-data artifacts for board packs, one-pagers, diligence ----------
+// Markdown/CSV substance only — styling into pptx/docx/PDF is the founder's (or their agent's) job.
+
+function exportDir() {
+  const dir = path.join(WORKSPACE, 'exports');
+  fs.mkdirSync(dir, { recursive: true });
+  return dir;
+}
+const csvEsc = (v) => {
+  const s = v === null || v === undefined ? '' : String(v);
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+};
+
+export function exportCaptableCsv() {
+  const captable = load('captable');
+  const { shares } = capTotals(captable);
+  const rows = [['kind', 'name', 'type_or_status', 'security', 'shares', 'pct_fully_diluted', 'principal_usd', 'post_money_cap_usd', 'discount', 'implied_pct', 'date', 'notes']];
+  for (const s of captable.stakeholders) {
+    rows.push(['stakeholder', s.name, s.type, s.security, s.shares ?? '', shares && s.shares ? (s.shares / shares).toFixed(4) : '', '', '', '', '', '', s.notes ?? '']);
+  }
+  for (const s of captable.safes) {
+    if (!s.investor) continue;
+    const imp = safeImpliedPct(s);
+    rows.push(['safe', s.investor, s.status ?? '', 'SAFE', '', '', s.principal ?? '', s.cap ?? '', s.discount ?? '', imp !== null ? imp.toFixed(4) : '', s.date ?? '', s.notes ?? '']);
+  }
+  const file = path.join(exportDir(), `captable-${iso(new Date())}.csv`);
+  fs.writeFileSync(file, rows.map((r) => r.map(csvEsc).join(',')).join('\n') + '\n');
+  return { file, stakeholders: captable.stakeholders.length, safes: captable.safes.filter((s) => s.investor).length };
+}
+
+export function exportBoardPack() {
+  const company = load('company');
+  const crm = load('crm');
+  const captable = load('captable');
+  const fin = load('financials');
+  const m = latestMetrics(fin);
+  if (!m) throw new Error('no closed months — close at least one month before exporting a board pack');
+  const d = derive(fin).filter((x) => x.pnl !== null);
+  const last3 = d.slice(-3);
+  const { shares } = capTotals(captable);
+  const safeTotal = captable.safes.reduce((t, s) => t + (safeImpliedPct(s) || 0), 0);
+  const closed = crm.commitments.filter((c) => ['Signed', 'Wired'].includes(c.stage)).reduce((s, c) => s + (c.ticket || 0), 0);
+  const target = company.roundTarget || 0;
+  const runwayLine = m.runway === Infinity ? 'cash-flow positive' : `${m.runway.toFixed(1)} months (zero-cash ${fmt.month(m.zeroCash)})`;
+  const withRound = m.burn3 < 0 ? (m.cash + Math.max(target - closed, 0)) / -m.burn3 : Infinity;
+
+  const md = `# ${company.name} — board / investor-council pack — ${iso(new Date())}
+
+> Pre-read: send 72 hours before the meeting. ≥50% of meeting time on discuss/decide items, not status narration.
+
+## 1. CEO letter (write this — one page, prose)
+- State of the company in 3 sentences:
+- What I said last quarter vs. what happened:
+- The 1–2 decisions I need this group's help making:
+- What keeps me up at night:
+
+## 2. Metrics — last ${last3.length} closed months
+| Month | Revenue | Costs | Net P&L | Cash | Headcount |
+|---|---|---|---|---|---|
+${last3.map((x) => `| ${fmt.month(x.month)} | ${fmt.usd(x.revenue)} | ${fmt.usd(x.costs)} | ${fmt.usd(x.pnl)} | ${fmt.usd(x.cash)} | ${x.headcount ?? '—'} |`).join('\n')}
+
+Traction (${fmt.month(m.month)}): traffic ${fmt.num(m.traffic, true)}${m.trafficYoY !== null ? ` (+${fmt.pct(m.trafficYoY, 0)} YoY)` : ''} · pages/day ${fmt.num(m.pages, true)} · platforms ${m.paying ?? '—'}/${m.platforms ?? '—'} paying/total
+
+## 3. Financial position
+- Cash: ${fmt.usd(m.cash)} · net burn (3-mo avg): ${m.burn3 >= 0 ? 'CF positive' : fmt.usd(-m.burn3) + '/mo'} · runway: ${runwayLine}
+- Round: ${company.roundInstrument || '—'} — ${fmt.usd(closed)} of ${fmt.usd(target)} signed/wired
+- With remaining round closed: runway ${withRound === Infinity ? 'CF positive' : withRound.toFixed(1) + ' months'}
+
+## 4. Cap table snapshot
+| Holder | Shares | % FD |
+|---|---|---|
+${captable.stakeholders.map((s) => `| ${s.name} | ${fmt.num(s.shares)} | ${shares && s.shares ? fmt.pct(s.shares / shares) : '—'} |`).join('\n')}
+
+SAFEs outstanding: ${captable.safes.filter((s) => s.principal).length} totalling ${fmt.usd(captable.safes.reduce((t, s) => t + (s.principal || 0), 0))} · implied ownership ${fmt.pct(safeTotal)} ${safeTotal > 0.15 ? '— OVER the 15% guardrail' : '(within 15% guardrail)'}
+
+## 5. Decisions & asks (write this)
+1.
+
+## 6. Consents & resolutions needed (draft exact wording in advance)
+-
+
+---
+Generated by IR Kit from data/ actuals on ${iso(new Date())} — numbers trace to financials.json; narrative sections are yours to write.
+`;
+  const file = path.join(exportDir(), `board-pack-${iso(new Date())}.md`);
+  fs.writeFileSync(file, md);
+  return { file, months: last3.length };
+}
+
+export function exportTearsheet() {
+  const company = load('company');
+  const crm = load('crm');
+  const m = latestMetrics(load('financials'));
+  if (!m) throw new Error('no closed months — close at least one month first');
+  const closed = crm.commitments.filter((c) => ['Signed', 'Wired'].includes(c.stage)).reduce((s, c) => s + (c.ticket || 0), 0);
+  const md = `# ${company.name}
+
+${company.tagline || ''}
+
+| | ${fmt.month(m.month)} |
+|---|---|
+| Revenue (month) | ${fmt.usd(m.revenue)}${m.mom !== null ? ` (${(m.mom >= 0 ? '+' : '') + fmt.pct(m.mom)} MoM)` : ''} |
+| ARR run-rate | ${fmt.usd(m.arrRunRate)} |
+| Monthly traffic | ${fmt.num(m.traffic, true)}${m.trafficYoY !== null ? ` (+${fmt.pct(m.trafficYoY, 0)} YoY)` : ''} |
+| Platforms (paying/total) | ${m.paying ?? '—'} / ${m.platforms ?? '—'} |
+| Team | ${m.headcount ?? '—'} |
+
+**Raising:** ${company.roundInstrument || '—'} · ${fmt.usd(closed)} of ${fmt.usd(company.roundTarget || 0)} committed
+
+**Contact:** ${company.founder || ''} · ${company.email || ''}
+
+*Generated ${iso(new Date())} from live actuals via IR Kit.*
+`;
+  const file = path.join(exportDir(), `tearsheet-${iso(new Date())}.md`);
+  fs.writeFileSync(file, md);
+  return { file, month: m.month };
 }
 
 const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;

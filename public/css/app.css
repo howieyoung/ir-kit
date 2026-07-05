@@ -177,3 +177,17 @@ textarea.composer { width: 100%; min-height: 420px; font-family: var(--mono); fo
 .due-chip.ok { background: #d8f3e3; color: #157347; }
 .due-chip.soon { background: #fff3cd; color: #8a6d1a; }
 .due-chip.overdue { background: #f8d7da; color: #b02a37; }
+
+/* ---------- mobile: sidebar collapses to a top bar ---------- */
+@media (max-width: 760px) {
+  #app { flex-direction: column; }
+  #sidebar { width: 100%; height: auto; position: static; }
+  .brand { padding: 12px 16px 6px; }
+  #nav { flex-direction: row; overflow-x: auto; padding: 2px 10px 10px; gap: 4px; -webkit-overflow-scrolling: touch; }
+  #nav a { white-space: nowrap; padding: 7px 11px; font-size: 13px; flex-shrink: 0; }
+  .sidebar-foot { display: none; }
+  #main { padding: 18px 14px 90px; }
+  .grid.cols-2 { grid-template-columns: 1fr; }
+  .sample-banner { left: 0; font-size: 12px; padding: 8px 14px; }
+  textarea.composer { min-height: 320px; }
+}
