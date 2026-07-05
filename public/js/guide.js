@@ -56,38 +56,52 @@ Download the calendar file in Updates to put this rhythm in your actual calendar
 
 export const GUIDE_AGENT = `# Operating IR Kit with your agent
 
-The browser UI and your coding agent (Claude Code, Cursor, etc.) read and write the **same JSON files** in \`data/\`. You click; the agent edits files; both see the same truth. That's the design: you make the calls, the agent does the clerical work — that's your "IR team of ten".
+Your coding agent (Claude Code, Codex, Cursor, etc.) is a **peer of this UI**, not a hack on top of it. It works through the \`ir\` command line, which enforces the same rules this interface does — you make the calls, the agent does the clerical work. That's your "IR team of ten".
 
 ## Setup (once)
-1. Run your agent in the repo folder. It will find [CLAUDE.md](CLAUDE.md) automatically — that file teaches it the data schemas, the reconciliation rules, and the privacy guardrails.
-2. Scaffold your private document workspace: \`node scripts/init-workspace.js\` — data-room folders, board records, meeting briefs. It's gitignored; your agent files documents into it.
+1. Run your agent in the repo folder. It reads [AGENTS.md](AGENTS.md) — the contract with the capability map, data schemas, and privacy guardrails.
+2. Scaffold your private document workspace: \`node scripts/init-workspace.js\` — data-room folders, board records, meeting briefs. Gitignored; the agent files documents into it.
+
+## The interface: the ir CLI
+Full reference with examples: [docs/CLI.md](docs/CLI.md).
+
+\`\`\`
+ir status --json      ground yourself: burn, runway, round progress, SAFE overhang
+ir check              the test suite — run after ANY direct edit to data/*.json
+ir close-month 2026-07 --saas 31000 --ads 14000 --payroll 34000 ...
+ir safe add "Fund X" --principal 50000 --cap 8000000 --status Signed
+ir update draft       metrics-filled draft from actuals (refuses unclosed months)
+ir export board-pack | tearsheet | captable
+\`\`\`
+
+Three rules the agent follows (and you should too):
+1. **Prefer \`ir\` verbs over editing JSON** — one \`safe add\` reconciles the cap table, CRM commitment, investor record, and distribution list; a raw edit can silently break them apart.
+2. **After any direct JSON edit, run \`ir check\`** — exit 1 means an invariant broke; fix before anything else.
+3. **Never invent a number.** Missing data stays null; unclosed months block the update draft.
 
 ## The rituals (prompts/)
-Each recurring IR task has a canonical prompt in [prompts/](prompts/) — copy, fill the brackets, paste:
+Each recurring IR task has a canonical prompt in [prompts/](prompts/) — copy, fill the brackets, paste. They route through the CLI verbs:
 
 | Prompt | What the agent does |
 |---|---|
-| \`monthly-close.md\` | Appends the month, computes burn/runway, flags >20% moves, checks promises from last update |
-| \`safe-signed.md\` | Updates cap table + CRM + distribution in one reconciled pass, checks the 15% SAFE guardrail |
-| \`draft-update.md\` | Writes the YC-format update from real numbers only, keeps metric continuity with the archive |
+| \`monthly-close.md\` | \`ir close-month\` + explains every flag it raises, checks promises from last update |
+| \`safe-signed.md\` | \`ir safe add\` + guardrail report + same-day action items |
+| \`draft-update.md\` | \`ir update draft\` for the skeleton, then writes the narrative from your raw material |
 | \`meeting-prep.md\` | One-page brief: history with this investor, numbers to know cold, their 3 hardest questions |
 | \`data-room-audit.md\` | Walks your data room against the tier checklists, outputs a punch list by blocker severity |
 | \`round-kickoff.md\` | Models the raise, seeds the CRM pipeline, builds the batch-process round plan |
 
-## Put the agent on a schedule
-The real leverage: the draft is waiting for you on update day instead of you remembering to start. With Claude Code, for example:
+## Put it on a schedule
+The mechanical part doesn't even need an agent — \`ir update draft\` is deterministic:
 
 \`\`\`
-# crontab: 9am on the 3rd of each month — draft the update from last month's close
-0 9 3 * * cd ~/ir-kit && claude -p "$(cat prompts/draft-update.md)" >> ir-workspace/updates/drafts/cron.log
+# crontab -e   (or: ir schedule show)
+0 9 1 * *  cd ~/ir-kit && ./bin/ir.js status          # 1st: close reminder
+0 9 3 * *  cd ~/ir-kit && ./bin/ir.js update draft    # 3rd: draft waiting for review
+0 9 * * 1  cd ~/ir-kit && ./bin/ir.js check           # Mondays: data integrity
 \`\`\`
 
-Or use your agent's built-in scheduled tasks / the schedule feature in Claude Code. Details and safety notes: [prompts/schedule-updates.md](prompts/schedule-updates.md).
-
-## Guardrails your agent already knows (CLAUDE.md)
-- **Never invent a number.** Missing data stays null.
-- **Reconcile the three:** a signed SAFE touches cap table + CRM + distribution together.
-- **Privacy:** \`data/\` and \`ir-workspace/\` never leave the machine, never get committed, never get pasted into hosted tools.`;
+Add an agent run on top to fill in the narrative (highlights/lowlights) — recipes and safety rules in [prompts/schedule-updates.md](prompts/schedule-updates.md). Drafts never auto-send: the review and the send stay yours.`;
 
 export const CAPTABLE_101 = `# Cap table 101 — the ten-minute version
 

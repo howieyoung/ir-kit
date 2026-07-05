@@ -22,6 +22,7 @@ git clone https://github.com/howieyoung/ir-kit && cd ir-kit
 node server.js                      # Node 18+, zero dependencies — that's the whole install
 # → http://127.0.0.1:4820
 node scripts/init-workspace.js      # scaffold your private data room / board / CRM folders
+./bin/ir.js status                  # the same system, from the command line
 ```
 
 Explore with the built-in sample company, then replace it with yours (Settings → profile, or hand your agent `prompts/monthly-close.md`).
@@ -72,7 +73,20 @@ $ ./bin/ir.js status --json | jq .financials.runwayMonths
 
 Three layers make it agent-native:
 
-- **The `ir` CLI** — verbs for every ritual (`status`, `check`, `close-month`, `safe add`, `update draft`, `update mark-sent`, `model round`), all with `--json`. One `safe add` reconciles the cap table, CRM commitment, investor record, and distribution list — the invariants live in code, not in a prompt's good intentions.
+- **The `ir` CLI** — a verb for every ritual, humans welcome too. Full reference with examples: **[docs/CLI.md](docs/CLI.md)**.
+
+  | Command | What it does |
+  |---|---|
+  | `ir status` | every derived metric in one call (burn, runway, round, SAFE overhang) |
+  | `ir check` | validate schemas + invariants — the post-edit test suite (exit 1 on violations) |
+  | `ir close-month 2026-07 --saas …` | close the books; flags >20% MoM moves and short runway |
+  | `ir safe add "Fund X" --principal …` | record a SAFE and reconcile cap table + CRM + distribution in one pass |
+  | `ir update draft` / `mark-sent` | metrics-filled draft from actuals (blocked if month isn't closed) / archive + streak |
+  | `ir model round --pre … --new …` | priced-round conversion with post-money SAFE mechanics |
+  | `ir export board-pack\|tearsheet\|captable` | board pack, one-pager, diligence CSV — generated from actuals |
+  | `ir schedule show` | cron lines for the monthly rituals |
+
+  All commands take `--json`; errors exit 1. One `safe add` keeps four collections consistent — the invariants live in code, not in a prompt's good intentions.
 - **`ir check`** — the agent's test suite: schema validation + cross-collection invariants (ledger↔CRM reconciliation, month continuity, the 15% SAFE-overhang guardrail). Any agent that edits JSON directly verifies its own work.
 - **[AGENTS.md](AGENTS.md)** — the vendor-neutral contract every agent reads on arrival: capability map, schemas, privacy rules, and the prompt rituals in [`prompts/`](prompts/) (monthly close, SAFE signed, meeting prep, data-room audit, round kickoff, scheduling).
 

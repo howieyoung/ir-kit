@@ -31,6 +31,14 @@ export function markdown(src, docId) {
   while (i < lines.length) {
     const line = lines[i];
     if (/^\s*$/.test(line)) { i++; continue; }
+    if (line.startsWith('```')) {
+      const buf = [];
+      i++;
+      while (i < lines.length && !lines[i].startsWith('```')) buf.push(lines[i++]);
+      i++;
+      out.push(el('pre', { class: 'codeblock' }, buf.join('\n')));
+      continue;
+    }
     if (/^---+\s*$/.test(line)) { out.push(el('hr')); i++; continue; }
     const h = line.match(/^(#{1,3})\s+(.*)/);
     if (h) { out.push(el('h' + h[1].length, { html: inline(h[2]) })); i++; continue; }

@@ -1,6 +1,6 @@
 # Prompt sets — operate IR Kit with your agent
 
-These are ready-to-use prompts for coding agents (Claude Code, Cursor, Copilot Workspace, etc.) running in this repo. They assume the agent has read [CLAUDE.md](../CLAUDE.md) (agents pick it up automatically in most tools; paste it in otherwise).
+These are ready-to-use prompts for coding agents (Claude Code, Codex, Cursor, etc.) running in this repo. They assume the agent has read [AGENTS.md](../AGENTS.md) (agents pick it up automatically in most tools; paste it in otherwise) and route through the [`ir` CLI](../docs/CLI.md), which enforces the data invariants.
 
 Copy, fill the brackets, paste. Each prompt produces file edits in `data/` and/or your private `ir-workspace/` — your data never needs to leave your machine.
 

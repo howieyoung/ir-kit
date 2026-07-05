@@ -147,6 +147,7 @@ svg.chart text { font-family: var(--sans); }
 .doc th { background: var(--accent-soft); }
 .doc blockquote { border-left: 3px solid #cfdfee; margin: 10px 0; padding: 4px 14px; color: #556; background: #f8fafc; }
 .doc code { font-family: var(--mono); background: #eef1f4; padding: 1px 5px; border-radius: 4px; font-size: 12.5px; }
+.doc pre.codeblock { font-family: var(--mono); font-size: 12.5px; line-height: 1.55; background: #f4f6f8; border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; overflow-x: auto; }
 .doc li.task { list-style: none; margin-left: -18px; }
 .doc li.task input { margin-right: 7px; }
 .doc hr { border: none; border-top: 1px solid var(--line); margin: 18px 0; }
