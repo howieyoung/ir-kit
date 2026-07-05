@@ -11,9 +11,12 @@ Actuals:
 - Traction: [traffic/MAU X, pages/day X, platforms X, paying X — whatever your columns track]
 
 Do:
-1. Append the month row to data/financials.json (missing values = null, never invented).
-2. Tell me: revenue MoM, 3-month avg burn, cash, runway months, and zero-cash date —
-   and flag anything that moved >20% month-over-month with a one-line why-it-matters.
+1. Close it with the CLI (preferred): `./bin/ir.js close-month [YYYY-MM] --saas ... --ads ...`
+   — it validates, appends, and returns the >20% MoM flags itself. Missing values stay
+   unset, never invented. (Only edit data/financials.json directly if amending an
+   existing month — then run `./bin/ir.js check`.)
+2. Run `./bin/ir.js status` and tell me: revenue MoM, 3-month avg burn, cash, runway
+   months, zero-cash date, plus a one-line why-it-matters for every flag from step 1.
 3. Compare against what last month's update promised (data/updates.json archive) and
    list any commitment I'm about to miss.
 4. Save a close note to ir-workspace/financials/closes/[YYYY-MM].md with the numbers

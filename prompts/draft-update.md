@@ -3,6 +3,10 @@
 ```
 Draft my [MONTH] investor update (read CLAUDE.md).
 
+Start from the deterministic skeleton: run `./bin/ir.js update draft` — it writes the
+metrics-filled template to ir-workspace/updates/drafts/ (or a BLOCKED note if the month
+isn't closed). Your job is the narrative on top of it.
+
 Sources — use ONLY these, never invent a number:
 - Metrics: derive from data/financials.json (latest month vs prior; 3-mo avg burn).
 - Fundraising line: data/crm.json commitments (signed+wired vs data/company.json roundTarget).

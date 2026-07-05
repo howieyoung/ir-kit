@@ -1,6 +1,6 @@
 # IR Kit
 
-**Run investor relations like you have an IR team of ten — even if it's just you and an AI agent.**
+**The agent-native IR system: run investor relations like you have a team of ten — even if it's just you and an AI agent.**
 
 Most founders learn IR by losing: a diligence that stalls on a messy SAFE stack, an update streak that dies the first bad month, a data room assembled in a panic the week a term sheet shows up. The founders who raise well aren't smarter — they run a *system*. IR Kit is that system, open-sourced: the tools **and** the operating doctrine of an A-class startup's investor relations, runnable by any founder, anywhere, for free.
 
@@ -53,14 +53,30 @@ This is the part that matters, so it's not a policy, it's the design:
 
 ## Operate it with your agent
 
-The kit is deliberately agent-native: all state is human-readable JSON ([schemas in CLAUDE.md](CLAUDE.md)), all logic is dependency-free vanilla JS, and [`prompts/`](prompts/) contains the recurring rituals as ready-to-paste prompts:
+This is the part no other IR tool has: a first-class programmatic surface, so your coding agent (Claude Code, Codex, Cursor, …) is a peer of the browser UI — not a hack on top of it.
 
-- **Monthly close** → agent updates financials, computes burn/runway, flags misses against last month's promises
-- **SAFE signed** → agent reconciles cap table + CRM + distribution list in one pass and checks your dilution guardrail
-- **Draft update** → agent writes the YC-format update from real numbers only, keeping metric continuity with the archive
-- **Meeting prep / data-room audit / round kickoff** → one-page briefs, punch lists, and round plans into your private workspace
+```console
+$ ./bin/ir.js safe add "Meridian Capital" --principal 50000 --cap 8000000 --status Wired
+✓ SAFE recorded — Meridian Capital $50,000 · implied 0.6%
+✓ total SAFE overhang 4.8% (guardrail <15%)
+✓ CRM reconciled — commitment → Wired · added to update distribution
+round: $50,000 of $750,000 signed/wired
+→ same-day ritual: countersign + send executed doc + thank-you note
 
-That's the "IR team of ten": the system remembers the cadence, the agent does the clerical work, you make the calls.
+$ ./bin/ir.js check
+✓ ok — 0 errors, 0 warning(s)
+
+$ ./bin/ir.js status --json | jq .financials.runwayMonths
+22.0
+```
+
+Three layers make it agent-native:
+
+- **The `ir` CLI** — verbs for every ritual (`status`, `check`, `close-month`, `safe add`, `update draft`, `update mark-sent`, `model round`), all with `--json`. One `safe add` reconciles the cap table, CRM commitment, investor record, and distribution list — the invariants live in code, not in a prompt's good intentions.
+- **`ir check`** — the agent's test suite: schema validation + cross-collection invariants (ledger↔CRM reconciliation, month continuity, the 15% SAFE-overhang guardrail). Any agent that edits JSON directly verifies its own work.
+- **[AGENTS.md](AGENTS.md)** — the vendor-neutral contract every agent reads on arrival: capability map, schemas, privacy rules, and the prompt rituals in [`prompts/`](prompts/) (monthly close, SAFE signed, meeting prep, data-room audit, round kickoff, scheduling).
+
+That's the "IR team of ten": the system remembers the cadence and enforces the invariants, the agent does the clerical work, you make the calls.
 
 ## Deploying
 

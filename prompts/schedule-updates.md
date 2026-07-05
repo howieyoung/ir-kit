@@ -17,11 +17,24 @@ data/financials.json is missing that month, instead write
 ir-workspace/updates/drafts/BLOCKED-[YYYY-MM].md telling me to close the month first.
 ```
 
-## Plain cron (any agent CLI)
+## Plain cron — no agent required for the mechanical part
+
+`ir update draft` generates the metrics-filled draft deterministically (and writes a
+BLOCKED note if the month isn't closed) — run `./bin/ir.js schedule show` for
+ready-made cron lines:
 
 ```bash
-# crontab -e   — 9am on the 3rd of each month
-0 9 3 * * cd $HOME/ir-kit && claude -p "$(cat prompts/draft-update.md)" --allowedTools "Read,Write,Edit" >> ir-workspace/updates/drafts/cron.log 2>&1
+# crontab -e
+0 9 1 * *  cd $HOME/ir-kit && ./bin/ir.js status                # 1st: close reminder
+0 9 3 * *  cd $HOME/ir-kit && ./bin/ir.js update draft          # 3rd: draft waiting
+0 9 * * 1  cd $HOME/ir-kit && ./bin/ir.js check                 # Mondays: integrity
+```
+
+## Cron with an agent (narrative filled in, not just metrics)
+
+```bash
+# 9am on the 3rd — agent expands the draft with highlights/lowlights from the close notes
+0 9 3 * * cd $HOME/ir-kit && claude -p "$(cat prompts/draft-update.md)" --allowedTools "Read,Write,Edit,Bash" >> ir-workspace/updates/drafts/cron.log 2>&1
 ```
 
 ## Safety rules for scheduled runs

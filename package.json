@@ -1,9 +1,10 @@
 {
   "name": "ir-kit",
-  "version": "1.0.0",
-  "description": "Open investor-relations kit for founders: cap table + SAFE math, financial dashboard, investor CRM, update composer, and IR playbooks. Zero dependencies; data as plain JSON your agent can edit.",
+  "version": "1.2.0",
+  "description": "The agent-native investor-relations kit: cap table + SAFE math, financial dashboard, investor CRM, update composer, IR playbooks, and an ir CLI with invariant checks built for coding agents. Zero dependencies; all data in local JSON.",
   "type": "module",
   "main": "server.js",
+  "bin": { "ir": "bin/ir.js" },
   "scripts": {
     "start": "node server.js",
     "seed": "node scripts/seed-data.js",
