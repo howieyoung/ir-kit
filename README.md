@@ -4,6 +4,10 @@
 
 Most founders learn IR by losing: a diligence that stalls on a messy SAFE stack, an update streak that dies the first bad month, a data room assembled in a panic the week a term sheet shows up. The founders who raise well aren't smarter — they run a *system*. IR Kit is that system, open-sourced: the tools **and** the operating doctrine of an A-class startup's investor relations, runnable by any founder, anywhere, for free.
 
+[![IR Kit dashboard — burn, runway, traction, round progress, update cadence](docs/assets/dashboard.png)](https://howieyoung.github.io/ir-kit/)
+
+<p align="center"><b><a href="https://howieyoung.github.io/ir-kit/">▶ Try the live demo</a></b> — sample company, your edits stay in your browser · <a href="docs/assets/captable.png">see the cap table & SAFE ledger</a></p>
+
 - 📊 **Financial command center** — monthly close, burn/runway/zero-cash date, KPI dashboard, runway scenarios for hiring decisions
 - 🧮 **Cap table & SAFE math** — SAFE ledger with implied ownership, a priced-round modeler using real post-money SAFE mechanics, founder dilution walk to Series A, exit waterfall
 - 🤝 **Investor CRM** — round commitments with weighted pipeline, interaction log, asks tracker, update distribution segments

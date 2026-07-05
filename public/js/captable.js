@@ -47,7 +47,7 @@ function renderLedger() {
         { key: 'date', label: 'Date', type: 'date', width: 120 },
         { key: 'principal', label: 'Principal $', type: 'number', width: 100 },
         { key: 'cap', label: 'Post-money cap $', type: 'number', width: 120 },
-        { key: 'discount', label: 'Discount (0.2 = 20%)', type: 'number', width: 76, placeholder: '0.2' },
+        { key: 'discount', label: 'Discount (0.2 = 20%)', type: 'number', width: 76 },
         { compute: (r) => safeImpliedPct(r), label: 'Implied %', fmt: (v) => fmt.pct(v) },
         { key: 'status', label: 'Status', type: 'select', options: ['Target', 'Verbal', 'SAFE sent', 'Signed', 'Wired', 'Verify'] },
         { key: 'notes', label: 'Notes', type: 'text', width: 200 },
