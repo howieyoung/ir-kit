@@ -1,6 +1,6 @@
 import { el, fmt, kpi, section, lineChart } from './ui.js';
 import { store } from './store.js';
-import { latestMetrics } from './metrics.js';
+import { latestMetrics, updateCadence } from './metrics.js';
 
 export function renderDashboard(root) {
   const fin = store.get('financials');
@@ -48,6 +48,18 @@ export function renderDashboard(root) {
     el('div', { class: 'progress' }, el('div', { style: `width:${pctClosed * 100}%` })),
     el('div', { class: 'muted', style: 'font-size:12px' }, `${fmt.pct(pctClosed)} closed — manage in Investor CRM → Round commitments`),
   ));
+
+  // IR cadence
+  const cad = updateCadence(company, store.get('updates').archive);
+  const dueChip = el('span', { class: `due-chip ${cad.overdue ? 'overdue' : cad.days <= 3 ? 'soon' : 'ok'}` },
+    cad.overdue ? `OVERDUE ${-cad.days}d` : cad.days === 0 ? 'DUE TODAY' : `due in ${cad.days}d`);
+  root.append(section('Update cadence', null,
+    el('div', { style: 'display:flex;gap:18px;align-items:center;flex-wrap:wrap' },
+      el('div', {}, el('b', {}, `Next update: ${cad.due.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} `), dueChip),
+      el('div', { class: 'muted' }, cad.lastSent ? `Last sent ${cad.lastSent}` : 'No update sent yet — the streak starts with the first one'),
+      el('div', { class: 'muted' }, cad.streak > 0 ? `Streak: ${cad.streak} month${cad.streak > 1 ? 's' : ''} 🔥` : ''),
+      el('a', { href: '#/updates', style: 'margin-left:auto' }, 'Compose →'),
+    )));
 
   // follow-ups due
   const open = crm.interactions.filter((i) => !i.done && i.followUp);

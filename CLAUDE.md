@@ -38,7 +38,7 @@ Safe to edit `data/*.json` while the server runs — it reads per request; the b
 
 **checklists.json** — flat map of `"docId:index": bool` for playbook checkboxes. Position-keyed: append checklist items in `playbook-content.js`, don't reorder.
 
-**company.json** — `name, founder, email, tagline, roundTarget, roundInstrument, sample`. Keep `sample:true` until real data replaces the seed everywhere.
+**company.json** — `name, founder, email, tagline, roundTarget, roundInstrument, updateDay (day of month the update is sent, default 5), sample`. Keep `sample:true` until real data replaces the seed everywhere (it drives the SAMPLE pill + banner).
 
 ## Conventions
 
@@ -55,3 +55,5 @@ Safe to edit `data/*.json` while the server runs — it reads per request; the b
 - Monthly close: append a month row to `financials.json`, then remind the user to compose the update (Updates page pre-fills metrics).
 - Reset demo: `npm run seed` (destructive).
 - Verify after code changes: `node server.js` and check `/api/health`, then each page renders without console errors.
+- Tutorial content lives in `public/js/guide.js` (in-app Get started page); after editing it run `npm run build-tutorial` to regenerate `docs/TUTORIAL.md` — never edit TUTORIAL.md directly.
+- Scheduled drafting runs (cron/scheduled tasks) follow `prompts/schedule-updates.md`: write drafts to `ir-workspace/updates/drafts/` only; never auto-send, never touch the archive.

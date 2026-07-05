@@ -15,7 +15,8 @@ function renderDoc(doc) {
 }
 
 // Minimal markdown renderer: headings, lists, checkboxes (persisted), tables, bold/italic/code, blockquotes, hr.
-function markdown(src, docId) {
+// Exported for reuse (Guide page renders through it too).
+export function markdown(src, docId) {
   const checklists = store.get('checklists');
   const lines = src.split('\n');
   const out = [];

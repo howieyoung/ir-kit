@@ -74,7 +74,7 @@ export function dataTable({ columns, rows, save, addLabel = '+ Add row', newRow,
   const table = el('table', { class: 'tbl' });
   table.append(el('thead', {}, el('tr', {},
     ...columns.map((c) => el('th', { style: c.width ? `min-width:${c.width}px` : '' }, c.label)),
-    deletable ? el('th', {}, '') : null,
+    deletable ? el('th', { class: 'act' }, '') : null,
   )));
   const tbody = el('tbody');
 
@@ -114,7 +114,7 @@ export function dataTable({ columns, rows, save, addLabel = '+ Add row', newRow,
       tr.append(el('td', {}, input));
     }
     if (deletable) {
-      tr.append(el('td', {}, el('button', {
+      tr.append(el('td', { class: 'act' }, el('button', {
         class: 'row-del', title: 'Delete row',
         onclick: () => {
           if (!confirm('Delete this row?')) return;

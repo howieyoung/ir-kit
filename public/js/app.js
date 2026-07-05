@@ -6,8 +6,10 @@ import { renderCapTable } from './captable.js';
 import { renderCrm } from './crm.js';
 import { renderUpdates } from './updates.js';
 import { renderPlaybooks } from './playbooks.js';
+import { renderGuide } from './guide.js';
 
 const routes = {
+  guide: renderGuide,
   dashboard: renderDashboard,
   financials: renderFinancials,
   captable: renderCapTable,
@@ -29,9 +31,21 @@ function render() {
   main.innerHTML = '';
   routes[route](main);
   const company = store.get('company');
-  document.getElementById('brand-company').textContent = company?.name || '';
+  renderBrand(company);
   const banner = document.getElementById('sample-banner');
   banner.hidden = !(company?.sample) || sessionStorage.getItem('irkit:banner-dismissed');
+}
+
+function renderBrand(company) {
+  const box = document.getElementById('brand-company');
+  box.innerHTML = '';
+  box.append(company?.name || '');
+  if (company?.sample) {
+    box.append(el('div', {}, el('span', {
+      class: 'sample-pill', title: 'Sample data is loaded — click to open Settings',
+      onclick: () => { location.hash = '#/settings'; },
+    }, 'SAMPLE DATA')));
+  }
 }
 
 function renderSettings(root) {
@@ -49,7 +63,8 @@ function renderSettings(root) {
   root.append(section('Company profile', 'Used across the app and in update templates.',
     el('div', { class: 'grid cols-2' },
       field('Company name', 'name'), field('Founder', 'founder'),
-      field('Email', 'email'), field('Round target ($)', 'roundTarget', 'number')),
+      field('Email', 'email'), field('Round target ($)', 'roundTarget', 'number'),
+      field('Update day of month (1–28)', 'updateDay', 'number')),
     field('Round instrument (shown in updates)', 'roundInstrument'),
     el('div', { class: 'field' }, el('label', {}, 'Sample data flag'),
       el('label', { style: 'font-weight:400;display:flex;gap:8px;align-items:center' },
@@ -88,6 +103,6 @@ window.addEventListener('hashchange', render);
 store.init().then(() => {
   const badge = document.getElementById('mode-badge');
   badge.textContent = store.mode === 'server' ? 'server mode' : 'demo mode';
-  store.onChange(() => { /* views re-render themselves; brand may change */ document.getElementById('brand-company').textContent = store.get('company')?.name || ''; });
+  store.onChange(() => renderBrand(store.get('company')));
   render();
 });

@@ -1,12 +1,13 @@
 import { el, fmt, section } from './ui.js';
 import { store, uid } from './store.js';
-import { latestMetrics } from './metrics.js';
+import { latestMetrics, updateCadence } from './metrics.js';
 
 export function renderUpdates(root) {
   const updates = store.get('updates');
   root.append(el('h1', {}, 'Investor Updates'));
   root.append(el('p', { class: 'page-sub' }, 'YC-format monthly update: TL;DR, metrics, highlights, lowlights, asks, thanks. The streak is the asset — same day every month, never skip a bad one.'));
 
+  root.append(renderSchedule(updates));
   root.append(renderComposer());
 
   // archive
@@ -31,6 +32,50 @@ function archiveItem(u) {
       },
     }, 'Delete')));
   return box;
+}
+
+function renderSchedule(updates) {
+  const company = store.get('company');
+  const cad = updateCadence(company, updates.archive);
+  const chip = el('span', { class: `due-chip ${cad.overdue ? 'overdue' : cad.days <= 3 ? 'soon' : 'ok'}` },
+    cad.overdue ? `OVERDUE by ${-cad.days} days` : cad.days === 0 ? 'DUE TODAY' : `due in ${cad.days} days`);
+  return section('Schedule', `Updates go out on day ${cad.day} of each month (change in Settings). Consistency beats perfection — the same date, every month.`,
+    el('div', { style: 'display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:6px' },
+      el('div', {}, el('b', {}, `Next: ${cad.due.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} `), chip),
+      el('div', { class: 'muted' }, cad.streak > 0 ? `Current streak: ${cad.streak} month${cad.streak > 1 ? 's' : ''}` : 'No streak yet'),
+    ),
+    el('div', { class: 'btn-row' },
+      el('button', { class: 'btn secondary small', onclick: () => downloadIcs(company, cad) }, '📅 Add to calendar (.ics)'),
+    ),
+    el('div', { class: 'callout', style: 'margin-top:10px' },
+      'Want the draft waiting for you on update day? Put your agent on a schedule — cron/scheduled-task recipes are in ',
+      el('a', { href: 'https://github.com/howieyoung/ir-kit/blob/main/prompts/schedule-updates.md', target: '_blank' }, 'prompts/schedule-updates.md'), '.'));
+}
+
+// Recurring calendar events: monthly update on day N, plus a quarterly board-pack reminder.
+function downloadIcs(company, cad) {
+  const d8 = (d) => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+  const now = new Date();
+  const qMonths = [0, 3, 6, 9]; // Jan Apr Jul Oct
+  let bp = new Date(now.getFullYear(), now.getMonth(), 15);
+  while (!qMonths.includes(bp.getMonth()) || bp <= now) bp = new Date(bp.getFullYear(), bp.getMonth() + 1, 15);
+  const ics = [
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//IR Kit//EN',
+    'BEGIN:VEVENT', `UID:irkit-update-${Date.now()}@irkit`, `DTSTART;VALUE=DATE:${d8(cad.due)}`,
+    `RRULE:FREQ=MONTHLY;BYMONTHDAY=${cad.day}`,
+    `SUMMARY:Send ${company.name || ''} investor update`,
+    'DESCRIPTION:Close the month first (Financials) — then compose in IR Kit → Updates. Never skip a bad month.',
+    'END:VEVENT',
+    'BEGIN:VEVENT', `UID:irkit-board-${Date.now()}@irkit`, `DTSTART;VALUE=DATE:${d8(bp)}`,
+    'RRULE:FREQ=MONTHLY;INTERVAL=3;BYMONTHDAY=15',
+    `SUMMARY:${company.name || ''} board/investor-council pack`,
+    'DESCRIPTION:Assemble from Playbooks → Board pack. Send 72 hours before the meeting.',
+    'END:VEVENT', 'END:VCALENDAR',
+  ].join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
+  a.download = 'ir-kit-cadence.ics';
+  a.click();
 }
 
 function renderComposer() {

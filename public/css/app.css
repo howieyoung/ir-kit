@@ -91,8 +91,12 @@ table.tbl { border-collapse: collapse; width: 100%; font-size: 13px; }
 .tbl input:hover, .tbl select:hover, .tbl textarea:hover { border-color: var(--line); background: #fff; }
 .tbl input:focus, .tbl select:focus, .tbl textarea:focus { outline: none; border-color: #7aa7d0; background: #fff; box-shadow: 0 0 0 2px rgba(46,109,164,.12); }
 .tbl .computed { text-align: right; font-variant-numeric: tabular-nums; color: #345; white-space: nowrap; }
-.tbl .row-del { border: none; background: none; color: #bbb; cursor: pointer; font-size: 14px; padding: 2px 6px; }
-.tbl .row-del:hover { color: var(--bad); }
+.tbl .row-del { border: 1px solid var(--line); background: #fff; color: #8896a5; cursor: pointer; font-size: 13px; padding: 3px 8px; border-radius: 6px; }
+.tbl .row-del:hover { color: var(--bad); border-color: var(--bad); }
+/* action column stays visible while wide tables scroll horizontally */
+.tbl th.act, .tbl td.act { position: sticky; right: 0; z-index: 2; }
+.tbl td.act { background: #fff; box-shadow: -8px 0 8px -8px rgba(20, 40, 70, .28); }
+.tbl th.act { right: 0; box-shadow: -8px 0 8px -8px rgba(20, 40, 70, .28); }
 
 /* ---------- forms & buttons ---------- */
 .btn {
@@ -162,3 +166,14 @@ textarea.composer { width: 100%; min-height: 420px; font-family: var(--mono); fo
 .muted { color: #889; }
 .right { text-align: right; }
 .nowrap { white-space: nowrap; }
+
+.sample-pill {
+  display: inline-block; background: #f6c344; color: #5a4500; font-size: 10px; font-weight: 800;
+  padding: 1px 8px; border-radius: 999px; letter-spacing: .07em; cursor: pointer; margin-top: 3px;
+}
+.sample-pill:hover { filter: brightness(1.08); }
+
+.due-chip { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+.due-chip.ok { background: #d8f3e3; color: #157347; }
+.due-chip.soon { background: #fff3cd; color: #8a6d1a; }
+.due-chip.overdue { background: #f8d7da; color: #b02a37; }

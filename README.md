@@ -22,6 +22,17 @@ node scripts/init-workspace.js      # scaffold your private data room / board / 
 
 Explore with the built-in sample company, then replace it with yours (Settings → profile, or hand your agent `prompts/monthly-close.md`).
 
+## Learn it in 10 minutes
+
+**[→ The tutorial](docs/TUTORIAL.md)** — also built into the app as the **Get started** page:
+
+- **Use it yourself** — the first-30-minutes walkthrough and the monthly rhythm
+- **Use it with your agent** — setup, the prompt rituals, and putting your agent on a schedule so the update draft is waiting for you on update day
+- **Cap table 101** — never seen a SAFE? Ten minutes to using the modeler confidently
+- **Glossary** — every term in the kit, one line each
+
+The kit also tracks your cadence: the dashboard shows when the next update is due (and your streak), and Updates → Schedule exports a recurring calendar file for update day + quarterly board packs.
+
 ## Your data stays yours — by architecture
 
 This is the part that matters, so it's not a policy, it's the design:
@@ -58,6 +69,6 @@ Not legal advice (conversion math is a planning tool; counsel and the instrument
 
 ## Contributing / roadmap
 
-Small, dependency-free PRs welcome. Wanted next: configurable traction-metric columns (currently sample-company-shaped: traffic/pages/platforms), CSV import for financials, priced-round (non-SAFE) ledger entries, more playbooks (debt, bridge, secondaries), localization. Keep the promises: zero deps, no build step, local-first, agent-editable JSON.
+Small, dependency-free PRs welcome. Wanted next: configurable traction-metric columns (currently sample-company-shaped: traffic/pages/platforms), CSV import for financials, opt-in scheduled sending via bring-your-own SMTP, priced-round (non-SAFE) ledger entries, more playbooks (debt, bridge, secondaries), localization. Keep the promises: zero deps, no build step, local-first, agent-editable JSON. See [SECURITY.md](SECURITY.md) for the security model.
 
 MIT © [Howie Young](https://github.com/howieyoung)

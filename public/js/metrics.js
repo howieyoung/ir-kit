@@ -107,6 +107,30 @@ export function dilutionWalk(founderPct, sc) {
   return { afterSafe, afterSeed, afterA, valueAtA: afterA * n(sc.aPost) };
 }
 
+// ---------- IR cadence ----------
+// Update-due engine: company.updateDay (default 5) is the day of month the update goes out.
+export function updateCadence(company, updatesArchive, today = new Date()) {
+  const day = Math.min(Math.max(company.updateDay || 5, 1), 28);
+  const sentDates = (updatesArchive || []).map((u) => u.sentAt).filter(Boolean).sort();
+  const lastSent = sentDates.length ? sentDates[sentDates.length - 1] : null;
+  const thisYM = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+  const sentThisMonth = lastSent ? lastSent.slice(0, 7) === thisYM : false;
+  let due = new Date(today.getFullYear(), today.getMonth(), day);
+  if (sentThisMonth) due = new Date(today.getFullYear(), today.getMonth() + 1, day);
+  const days = Math.round((due - new Date(today.getFullYear(), today.getMonth(), today.getDate())) / 86400000);
+  // streak: consecutive calendar months with a sent update, ending at the most recent
+  const months = new Set(sentDates.map((d) => d.slice(0, 7)));
+  let streak = 0;
+  if (lastSent) {
+    let [y, m] = lastSent.slice(0, 7).split('-').map(Number);
+    while (months.has(`${y}-${String(m).padStart(2, '0')}`)) {
+      streak++;
+      m--; if (m === 0) { m = 12; y--; }
+    }
+  }
+  return { day, due, days, overdue: days < 0, lastSent, sentThisMonth, streak };
+}
+
 // 1x non-participating waterfall at a given exit value
 export function waterfall(exit, { prefInvested, prefPct, founderPct, multiple = 1 }) {
   const preference = prefInvested * multiple;

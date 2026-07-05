@@ -12,5 +12,6 @@ Copy, fill the brackets, paste. Each prompt produces file edits in `data/` and/o
 | [meeting-prep.md](meeting-prep.md) | Before any investor meeting |
 | [data-room-audit.md](data-room-audit.md) | Before opening a raise; quarterly after |
 | [round-kickoff.md](round-kickoff.md) | When you decide to raise |
+| [schedule-updates.md](schedule-updates.md) | Once — put the agent on a monthly schedule |
 
 **Privacy rule for all prompts:** your agent works on local files only. Never paste real cap table or financial data into hosted tools you don't control, and keep `data/` and `ir-workspace/` out of public repos (the `.gitignore` here already does this — keep it that way in forks).
