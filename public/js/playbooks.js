@@ -14,8 +14,11 @@ function renderDoc(doc) {
   return container;
 }
 
-// Minimal markdown renderer: headings, lists, checkboxes (persisted), tables, bold/italic/code, blockquotes, hr.
-// Exported for reuse (Guide page renders through it too).
+// Minimal markdown renderer: headings, lists, checkboxes (persisted), tables, links,
+// bold/italic/code, fenced code, blockquotes, hr. Exported for reuse (Guide page renders through it too).
+// Relative links resolve to the repo on GitHub (they aren't served by public/). Forks: change REPO.
+const REPO = 'https://github.com/howieyoung/ir-kit/blob/main/';
+
 export function markdown(src, docId) {
   const checklists = store.get('checklists');
   const lines = src.split('\n');
@@ -26,7 +29,11 @@ export function markdown(src, docId) {
     .replace(/&/g, '&amp;').replace(/</g, '&lt;')
     .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
     .replace(/\*(.+?)\*/g, '<i>$1</i>')
-    .replace(/`(.+?)`/g, '<code>$1</code>');
+    .replace(/`(.+?)`/g, '<code>$1</code>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, url) => {
+      const href = /^https?:/.test(url) ? url : REPO + url.replace(/^\.\//, '');
+      return `<a href="${href}" target="_blank" rel="noopener">${text}</a>`;
+    });
 
   while (i < lines.length) {
     const line = lines[i];

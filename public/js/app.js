@@ -86,11 +86,11 @@ function renderSettings(root) {
   ));
 
   root.append(section('Working with your agent', null, el('div', { class: 'doc', html: `
-    <p>This kit is built to be operated <b>with</b> a coding agent (Claude Code, Cursor, etc.):</p>
+    <p>This kit is built to be operated <b>with</b> a coding agent (Claude Code, Codex, Cursor, etc.):</p>
     <ul>
-      <li>All data is plain JSON in <code>data/</code> — your agent can close the month, add SAFEs, or log interactions by editing files. The UI picks changes up on reload.</li>
-      <li>All logic is dependency-free vanilla JS in <code>public/js/</code> — ask your agent to add a module (e.g. ESOP tracking, multi-currency) and point it at <code>CLAUDE.md</code> for the data schemas.</li>
-      <li>The SAFE conversion + waterfall math lives in one pure-function file: <code>public/js/metrics.js</code>.</li>
+      <li>Your agent uses the <code>ir</code> CLI — <code>ir status</code>, <code>ir close-month</code>, <code>ir safe add</code>, <code>ir check</code> — which enforces the same invariants as this UI. Full reference: <a href="https://github.com/howieyoung/ir-kit/blob/main/docs/CLI.md" target="_blank" rel="noopener">docs/CLI.md</a>.</li>
+      <li>The agent contract (capability map, schemas, privacy rules) is <a href="https://github.com/howieyoung/ir-kit/blob/main/AGENTS.md" target="_blank" rel="noopener">AGENTS.md</a>; ritual prompts live in <code>prompts/</code>. See the Get started page → "Use it with your agent".</li>
+      <li>All logic is dependency-free vanilla JS — new operations go in <code>core/ops.js</code>, the math lives in <code>public/js/metrics.js</code>.</li>
     </ul>` })));
 }
 
