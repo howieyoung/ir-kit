@@ -57,7 +57,14 @@ This is the part that matters, so it's not a policy, it's the design:
 
 This is the part no other IR tool has: a first-class programmatic surface, so your coding agent (Claude Code, Codex, Cursor, …) is a peer of the browser UI — not a hack on top of it.
 
-**Day one is one conversation.** Hand your agent [prompts/onboard.md](prompts/onboard.md) and it takes over data collection — with consent at every stage: it scans the folders you appoint (`ir scan` — filenames only, no contents read), organizes what you approve into your private data room, extracts your real cap table, SAFEs, and monthly financials with a source citation for every number, and hands you a dashboard running on real data. Nothing guessed, nothing uploaded.
+**Day one is one conversation:**
+
+1. `git clone` + `node server.js` — the app runs immediately with a sample company.
+2. Open your coding agent in the repo folder — it reads [AGENTS.md](AGENTS.md) automatically.
+3. Say: *"Read `prompts/onboard.md` and take over my IR data setup."*
+4. It asks which folders it may scan (you stay in control), then runs `ir scan` — filenames only, no contents read — and reviews the candidates with you.
+5. You approve → it organizes your private data room and extracts your real cap table, SAFEs, and monthly financials, **every number cited to a source document**; ambiguities go to an open-questions list, never guessed.
+6. `ir check` passes, it walks you through the dashboard, you confirm → sample flag off → your company, real data. Nothing uploaded anywhere.
 
 ```console
 $ ./bin/ir.js safe add "Meridian Capital" --principal 50000 --cap 8000000 --status Wired

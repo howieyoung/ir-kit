@@ -24,10 +24,12 @@ inventory to ir-workspace/onboarding/candidates.md — contents are NOT read at 
 stage. Walk me through the list by category; I'll tell you what's relevant, what's
 missing (then scan another folder), and what you may open.
 
-STAGE 2 — Organize. Copy only the approved files into ir-workspace/data-room/
-(tier1/ for current-round docs, tier2/ for the rest — taxonomy is in the Playbooks
-data-room checklist). Log every copy in ir-workspace/onboarding/INVENTORY.md as
-"source path → destination · doc type". Originals stay untouched.
+STAGE 2 — Organize. Scaffold the workspace first if it doesn't exist yet:
+node scripts/init-workspace.js. Then copy only the approved files into
+ir-workspace/data-room/ (tier1/ for current-round docs, tier2/ for the rest —
+taxonomy is in the Playbooks data-room checklist). Log every copy in
+ir-workspace/onboarding/INVENTORY.md as "source path → destination · doc type".
+Originals stay untouched.
 
 STAGE 3 — Extract (now you may read approved contents). Work document by document:
   - Executed SAFEs / notes → ./bin/ir.js safe add "<investor>" --principal N --cap N

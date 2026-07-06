@@ -60,24 +60,36 @@ export const GUIDE_AGENT = `# Operating IR Kit with your agent
 
 Your coding agent (Claude Code, Codex, Cursor, etc.) is a **peer of this UI**, not a hack on top of it. It works through the \`ir\` command line, which enforces the same rules this interface does — you make the calls, the agent does the clerical work. That's your "IR team of ten".
 
-## Setup (once)
-1. Run your agent in the repo folder. It reads [AGENTS.md](AGENTS.md) — the contract with the capability map, data schemas, and privacy guardrails.
-2. Scaffold your private document workspace: \`node scripts/init-workspace.js\` — data-room folders, board records, meeting briefs. Gitignored; the agent files documents into it.
+## From download to a real dashboard — the ideal first hour
+1. **Get the kit:** \`git clone https://github.com/howieyoung/ir-kit && cd ir-kit\`
+2. **Start the app:** \`node server.js\` → http://127.0.0.1:4820 — it runs immediately with a sample company.
+3. **Open your coding agent in the repo folder** (Claude Code, Codex, Cursor…). It reads [AGENTS.md](AGENTS.md) automatically — the contract with the capability map, schemas, and privacy guardrails.
+4. **Hand it the onboarding ritual:** *"Read prompts/onboard.md and take over my IR data setup."*
+5. **It asks before touching anything:** which folders it may scan (appointed folders recommended — you stay in control), then runs \`ir scan\` — filenames only, no contents read — and reviews the candidate documents with you.
+6. **You approve; it does the clerical work:** organizes approved files into your private data room, extracts your real cap table, SAFEs, and monthly financials — every number cited to a source document, ambiguities parked in an open-questions list instead of guessed.
+7. **It verifies before showing you anything:** \`ir check\` must pass clean, then it walks you through the dashboard against the citations.
+8. **You confirm the numbers** → the sample flag comes off → reload: your company, real data.
 
-## Onboard in one conversation
-Skip manual data entry entirely: hand your agent [prompts/onboard.md](prompts/onboard.md) and it takes over data collection — with your consent, folder by folder. It scans appointed folders for financial and investment documents (\`ir scan\` — filenames only, nothing read without your OK), organizes what you approve into the data room, extracts your real cap table, SAFEs, and monthly financials with a source citation for every number, and hands you back a dashboard running on real data. Nothing is guessed, nothing leaves your machine, and you confirm before the sample flag comes off.
+From then on it's the monthly rhythm — the rituals and schedule below.
 
 ## The interface: the ir CLI
 Full reference with examples: [docs/CLI.md](docs/CLI.md).
 
 \`\`\`
-ir status --json      ground yourself: burn, runway, round progress, SAFE overhang
+# read
+ir status [--json]    every derived metric in one call — ground yourself first
 ir check              the test suite — run after ANY direct edit to data/*.json
+ir model round --pre 12000000 --new 3000000    priced-round SAFE conversion
+
+# write (invariants enforced)
 ir close-month 2026-07 --saas 31000 --ads 14000 --payroll 34000 ...
 ir safe add "Fund X" --principal 50000 --cap 8000000 --status Signed
-ir update draft       metrics-filled draft from actuals (refuses unclosed months)
-ir scan <folders>     onboarding: candidate financial docs, filenames only
+ir update draft | mark-sent
+
+# onboarding & artifacts
+ir scan <folders>     candidate financial docs — filenames only, never opened
 ir export board-pack | tearsheet | captable
+ir schedule show      cron lines for the monthly rituals
 \`\`\`
 
 Three rules the agent follows (and you should too):
