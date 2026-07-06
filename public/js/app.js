@@ -7,6 +7,7 @@ import { renderCrm } from './crm.js';
 import { renderUpdates } from './updates.js';
 import { renderPlaybooks } from './playbooks.js';
 import { renderGuide } from './guide.js';
+import { VERSION, REPO_URL } from './version.js';
 
 const routes = {
   guide: renderGuide,
@@ -88,6 +89,15 @@ function renderSettings(root) {
   root.append(el('div', { class: 'callout' },
     'Working with a coding agent (CLI, prompts, scheduling, extending the kit) is covered in ',
     el('a', { href: '#/guide' }, 'Get started → Use it with your agent'), '.'));
+
+  root.append(section('About', null,
+    el('div', { class: 'doc', html: `
+      <ul>
+        <li>Version: <b>v${VERSION}</b> — check for the latest at <a href="${REPO_URL}/releases" target="_blank" rel="noopener">GitHub releases</a>; update with <code>git pull</code> (your data/ is untouched — it's gitignored)</li>
+        <li>License: <a href="${REPO_URL}/blob/main/LICENSE" target="_blank" rel="noopener">MIT</a> — free to use, modify, and self-host</li>
+        <li>Source &amp; issues: <a href="${REPO_URL}" target="_blank" rel="noopener">github.com/howieyoung/ir-kit</a> · never include real financials in public issues</li>
+        <li>Live demo (sample data): <a href="https://howieyoung.github.io/ir-kit/" target="_blank" rel="noopener">howieyoung.github.io/ir-kit</a></li>
+      </ul>` })));
 }
 
 document.getElementById('sample-dismiss')?.addEventListener('click', () => {
@@ -99,6 +109,10 @@ window.addEventListener('hashchange', render);
 store.init().then(() => {
   const badge = document.getElementById('mode-badge');
   badge.textContent = store.mode === 'server' ? 'server mode' : 'demo mode';
+  document.getElementById('about-line').innerHTML =
+    `<a href="${REPO_URL}/releases" target="_blank" rel="noopener">v${VERSION}</a> · ` +
+    `<a href="${REPO_URL}/blob/main/LICENSE" target="_blank" rel="noopener">MIT</a> · ` +
+    `<a href="${REPO_URL}" target="_blank" rel="noopener">GitHub</a>`;
   store.onChange(() => renderBrand(store.get('company')));
   render();
 });

@@ -79,4 +79,5 @@ Canonical prompts live in `prompts/` (onboarding, monthly close, SAFE signed, dr
 - New operation = function in `core/ops.js` → verb in `bin/ir.js` → mention here and in `ir help`.
 - New page = `public/js/<name>.js` exporting `render<Name>(root)`, registered in `app.js`, linked in `index.html`.
 - Tutorial content lives in `public/js/guide.js`; regenerate docs with `npm run build-tutorial` — never edit `docs/TUTORIAL.md` directly.
+- Release = bump `VERSION` in `public/js/version.js` **and** `"version"` in `package.json` together, then tag `vX.Y.Z` and publish a GitHub release (the in-app About links send users there for updates).
 - Verify UI changes: `node server.js`, check `/api/health`, load each page, zero console errors. Verify data changes: `./bin/ir.js check`.

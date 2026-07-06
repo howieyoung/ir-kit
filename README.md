@@ -23,6 +23,7 @@ node server.js                      # Node 18+, zero dependencies — that's the
 # → http://127.0.0.1:4820
 node scripts/init-workspace.js      # scaffold your private data room / board / CRM folders
 ./bin/ir.js status                  # the same system, from the command line
+# then hand your agent prompts/onboard.md — it populates the system with your real data
 ```
 
 Explore with the built-in sample company, then replace it with yours (Settings → profile, or hand your agent `prompts/monthly-close.md`).
@@ -84,6 +85,7 @@ Three layers make it agent-native:
   | `ir close-month 2026-07 --saas …` | close the books; flags >20% MoM moves and short runway |
   | `ir safe add "Fund X" --principal …` | record a SAFE and reconcile cap table + CRM + distribution in one pass |
   | `ir update draft` / `mark-sent` | metrics-filled draft from actuals (blocked if month isn't closed) / archive + streak |
+  | `ir scan <folders>` | onboarding: find candidate financial docs by filename only — contents never read |
   | `ir model round --pre … --new …` | priced-round conversion with post-money SAFE mechanics |
   | `ir export board-pack\|tearsheet\|captable` | board pack, one-pager, diligence CSV — generated from actuals |
   | `ir schedule show` | cron lines for the monthly rituals |

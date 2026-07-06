@@ -48,6 +48,8 @@ body { font-family: var(--sans); background: var(--bg); color: var(--ink); font-
 .save-status.saved { color: #7fc99a; }
 .save-status.error { color: #e88; }
 .foot-note { margin-top: 8px; line-height: 1.4; }
+.foot-note a { color: #9ec5e8; text-decoration: none; }
+.foot-note a:hover { text-decoration: underline; }
 
 /* ---------- main ---------- */
 #main { flex: 1; padding: 26px 32px 80px; max-width: 1180px; }

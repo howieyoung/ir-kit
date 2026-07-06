@@ -24,6 +24,8 @@ export const GUIDE_HUMAN = `# Your first 30 minutes
 
 IR Kit works on one loop: **enter what happened → the dashboard computes what matters → the update tells your investors.** Set it up once, then it's ~1 hour a month.
 
+> Working with a coding agent? You can skip most of the manual entry below — hand it [prompts/onboard.md](prompts/onboard.md) and it populates the system from your real documents, with your consent at every step. See the "Use it with your agent" tab.
+
 ## 1. Make it yours (Settings, 3 min)
 Set your company name, founder, email, round target, and the day of month your update goes out. Leave the **sample flag on** until your real data has replaced the sample everywhere — the amber SAMPLE pill in the sidebar is your reminder that nothing here is real yet.
 
@@ -74,6 +76,7 @@ ir check              the test suite — run after ANY direct edit to data/*.jso
 ir close-month 2026-07 --saas 31000 --ads 14000 --payroll 34000 ...
 ir safe add "Fund X" --principal 50000 --cap 8000000 --status Signed
 ir update draft       metrics-filled draft from actuals (refuses unclosed months)
+ir scan <folders>     onboarding: candidate financial docs, filenames only
 ir export board-pack | tearsheet | captable
 \`\`\`
 
@@ -87,6 +90,7 @@ Each recurring IR task has a canonical prompt in [prompts/](prompts/) — copy, 
 
 | Prompt | What the agent does |
 |---|---|
+| \`onboard.md\` | **Start here** — consent-gated: scans your folders, organizes the data room, populates real data with a citation per number |
 | \`monthly-close.md\` | \`ir close-month\` + explains every flag it raises, checks promises from last update |
 | \`safe-signed.md\` | \`ir safe add\` + guardrail report + same-day action items |
 | \`draft-update.md\` | \`ir update draft\` for the skeleton, then writes the narrative from your raw material |
