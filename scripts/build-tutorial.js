@@ -11,18 +11,18 @@ const out = `<!-- GENERATED from public/js/guide.js — edit there, then \`npm r
 
 The same guide that lives in the app (**Get started** in the sidebar), for reading on GitHub.
 
-- [Use it yourself](#your-first-30-minutes) — the human track
 - [Use it with your agent](#operating-ir-kit-with-your-agent) — the agent track
+- [Use it yourself](#your-first-30-minutes) — the human track
 - [Cap table 101](#cap-table-101--the-ten-minute-version) — if SAFEs and dilution are new to you
 - [Glossary](#glossary)
 
 ---
 
-${GUIDE_HUMAN}
+${GUIDE_AGENT}
 
 ---
 
-${GUIDE_AGENT}
+${GUIDE_HUMAN}
 
 ---
 

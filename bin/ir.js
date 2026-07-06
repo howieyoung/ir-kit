@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // ir — the IR Kit command line. Built for agents first, humans second.
 // Every command supports --json. Data location overrides: IRKIT_DATA_DIR, IRKIT_ROOT.
-import { status, closeMonth, addSafe, draftUpdate, markSent, modelPricedRound, exportCaptableCsv, exportBoardPack, exportTearsheet } from '../core/ops.js';
+import { status, closeMonth, addSafe, draftUpdate, markSent, modelPricedRound, exportCaptableCsv, exportBoardPack, exportTearsheet, scanDocuments } from '../core/ops.js';
 import { check } from '../core/check.js';
 import { DATA_DIR } from '../core/store.js';
 
@@ -22,6 +22,8 @@ const HELP = `ir — agent-native investor relations (data: ${DATA_DIR})
   ir update mark-sent [--subject S] [--month YYYY-MM]
   ir model round --pre N --new N [--pool 0.10]
   ir export board-pack|tearsheet|captable   real-data artifacts → ir-workspace/exports/
+  ir scan <folder> [...]                 onboarding: find candidate financial docs by FILENAME only
+                                         (consent-first; inventory → ir-workspace/onboarding/candidates.md)
   ir schedule show                       cron lines for the monthly rituals
 
 Rules of engagement (full contract in AGENTS.md):
@@ -99,6 +101,17 @@ try {
         : what === 'tearsheet' ? exportTearsheet()
         : fail('usage: ir export board-pack|tearsheet|captable');
       out(r, () => console.log(`✓ exported — ${r.file}`));
+      break;
+    }
+
+    case 'scan': {
+      const r = scanDocuments(positional);
+      out(r, () => {
+        console.log(`✓ scanned ${r.folders.join(', ')} — ${r.filesVisited.toLocaleString()} files seen, ${r.matched} candidates (filenames only, no contents read)`);
+        for (const [cat, n] of Object.entries(r.byCategory)) console.log(`  ${cat}: ${n}`);
+        console.log(`inventory: ${r.inventory}`);
+        console.log('next: review the checklist with your founder, then continue prompts/onboard.md stage 2');
+      });
       break;
     }
 

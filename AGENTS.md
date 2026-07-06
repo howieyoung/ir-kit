@@ -19,6 +19,7 @@ You are operating a founder's investor-relations system. This file is the canoni
 ./bin/ir.js update mark-sent --subject "..."
 ./bin/ir.js model round --pre 12000000 --new 3000000 --pool 0.10
 ./bin/ir.js export board-pack|tearsheet|captable   real-data artifacts → ir-workspace/exports/
+./bin/ir.js scan <folder> [...]  onboarding: candidate financial docs by FILENAME only → onboarding/candidates.md
 ./bin/ir.js schedule show
 ```
 
@@ -63,9 +64,13 @@ prompts/                ritual prompts for humans to hand to agents
 
 **checklists.json** — `"docId:index": bool` for playbook checkboxes (position-keyed: append items, don't reorder).
 
+## Onboarding (first run with a new founder)
+
+`prompts/onboard.md` is the canonical ritual and is stricter than normal operation because it touches the founder's file system: consent gates every stage; `ir scan` matches filenames only (never opens files); originals are read-only — approved files get *copied* into `ir-workspace/data-room/`; every extracted number carries a file+page citation in `ir-workspace/onboarding/INVENTORY.md`; ambiguity goes to `OPEN-QUESTIONS.md`, never into data; `company.sample` flips to `false` only after the founder confirms the numbers. If you are cloud-backed, disclose what leaves the device before reading any document contents.
+
 ## Recurring rituals
 
-Canonical prompts live in `prompts/` (monthly close, SAFE signed, draft update, meeting prep, data-room audit, round kickoff, scheduling). They now route through `ir` verbs — follow their contracts.
+Canonical prompts live in `prompts/` (onboarding, monthly close, SAFE signed, draft update, meeting prep, data-room audit, round kickoff, scheduling). They route through `ir` verbs — follow their contracts.
 
 ## Code conventions (when extending the kit)
 

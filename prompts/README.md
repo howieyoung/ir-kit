@@ -6,6 +6,7 @@ Copy, fill the brackets, paste. Each prompt produces file edits in `data/` and/o
 
 | Prompt | When |
 |---|---|
+| [onboard.md](onboard.md) | **Start here** — day one: agent scans your appointed folders, organizes the data room, and populates the system with real, cited data |
 | [monthly-close.md](monthly-close.md) | 10 days after month-end, every month |
 | [safe-signed.md](safe-signed.md) | The day a SAFE is signed/wired |
 | [draft-update.md](draft-update.md) | Monthly, right after the close |

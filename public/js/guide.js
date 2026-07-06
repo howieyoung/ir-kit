@@ -5,10 +5,10 @@ import { markdown } from './playbooks.js';
 
 export function renderGuide(root) {
   root.append(el('h1', {}, 'Get started'));
-  root.append(el('p', { class: 'page-sub' }, 'Two ways to run this kit: yourself in the browser, or with a coding agent doing the clerical work. Most founders end up doing both.'));
+  root.append(el('p', { class: 'page-sub' }, 'Two ways to run this kit: with a coding agent doing the clerical work, or yourself in the browser. Most founders end up doing both.'));
   root.append(tabs([
-    { label: 'Use it yourself', render: () => doc(GUIDE_HUMAN, 'guide-human') },
     { label: 'Use it with your agent', render: () => doc(GUIDE_AGENT, 'guide-agent') },
+    { label: 'Use it yourself', render: () => doc(GUIDE_HUMAN, 'guide-human') },
     { label: 'Cap table 101', render: () => doc(CAPTABLE_101, 'guide-cap101') },
     { label: 'Glossary', render: () => doc(GLOSSARY, 'guide-glossary') },
   ]));
@@ -61,6 +61,9 @@ Your coding agent (Claude Code, Codex, Cursor, etc.) is a **peer of this UI**, n
 ## Setup (once)
 1. Run your agent in the repo folder. It reads [AGENTS.md](AGENTS.md) — the contract with the capability map, data schemas, and privacy guardrails.
 2. Scaffold your private document workspace: \`node scripts/init-workspace.js\` — data-room folders, board records, meeting briefs. Gitignored; the agent files documents into it.
+
+## Onboard in one conversation
+Skip manual data entry entirely: hand your agent [prompts/onboard.md](prompts/onboard.md) and it takes over data collection — with your consent, folder by folder. It scans appointed folders for financial and investment documents (\`ir scan\` — filenames only, nothing read without your OK), organizes what you approve into the data room, extracts your real cap table, SAFEs, and monthly financials with a source citation for every number, and hands you back a dashboard running on real data. Nothing is guessed, nothing leaves your machine, and you confirm before the sample flag comes off.
 
 ## The interface: the ir CLI
 Full reference with examples: [docs/CLI.md](docs/CLI.md).

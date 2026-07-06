@@ -96,6 +96,14 @@ ir export captable     # diligence-ready CSV: stakeholders + SAFEs with implied 
 
 Artifacts generated from actuals into `ir-workspace/exports/`, dated. Markdown/CSV substance by design — style into pptx/docx/PDF with your own tools or agent; the numbers must not change in styling.
 
+## `ir scan`
+
+```bash
+ir scan ~/Documents/company ~/Downloads
+```
+
+Onboarding helper: walks the appointed folders and finds candidate financial/investment documents — **by filename and metadata only; file contents are never read**. Writes a tick-box inventory to `ir-workspace/onboarding/candidates.md` grouped by category (SAFEs, cap table, incorporation, bank statements, P&L, term sheets, board, investor materials, tax). Skips hidden and system directories, with hard limits on depth and file count. Requires explicit folders — there is deliberately no "scan everything" default; consent comes first. This is stage 1 of [prompts/onboard.md](../prompts/onboard.md), which takes a new founder from download to a dashboard running on real, source-cited data in one conversation.
+
 ## `ir schedule show`
 
 Prints ready-made cron lines: close reminder (1st), deterministic draft (3rd), weekly `ir check` (Mondays). See [prompts/schedule-updates.md](../prompts/schedule-updates.md) for agent-in-the-loop variants and safety rules.

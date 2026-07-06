@@ -31,8 +31,8 @@ Explore with the built-in sample company, then replace it with yours (Settings �
 
 **[→ The tutorial](docs/TUTORIAL.md)** — also built into the app as the **Get started** page:
 
+- **Use it with your agent** — onboarding in one conversation, the prompt rituals, and putting your agent on a schedule so the update draft is waiting for you on update day
 - **Use it yourself** — the first-30-minutes walkthrough and the monthly rhythm
-- **Use it with your agent** — setup, the prompt rituals, and putting your agent on a schedule so the update draft is waiting for you on update day
 - **Cap table 101** — never seen a SAFE? Ten minutes to using the modeler confidently
 - **Glossary** — every term in the kit, one line each
 
@@ -55,6 +55,8 @@ This is the part that matters, so it's not a policy, it's the design:
 ## Operate it with your agent
 
 This is the part no other IR tool has: a first-class programmatic surface, so your coding agent (Claude Code, Codex, Cursor, …) is a peer of the browser UI — not a hack on top of it.
+
+**Day one is one conversation.** Hand your agent [prompts/onboard.md](prompts/onboard.md) and it takes over data collection — with consent at every stage: it scans the folders you appoint (`ir scan` — filenames only, no contents read), organizes what you approve into your private data room, extracts your real cap table, SAFEs, and monthly financials with a source citation for every number, and hands you a dashboard running on real data. Nothing guessed, nothing uploaded.
 
 ```console
 $ ./bin/ir.js safe add "Meridian Capital" --principal 50000 --cap 8000000 --status Wired

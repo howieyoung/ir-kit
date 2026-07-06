@@ -3,46 +3,10 @@
 
 The same guide that lives in the app (**Get started** in the sidebar), for reading on GitHub.
 
-- [Use it yourself](#your-first-30-minutes) — the human track
 - [Use it with your agent](#operating-ir-kit-with-your-agent) — the agent track
+- [Use it yourself](#your-first-30-minutes) — the human track
 - [Cap table 101](#cap-table-101--the-ten-minute-version) — if SAFEs and dilution are new to you
 - [Glossary](#glossary)
-
----
-
-# Your first 30 minutes
-
-IR Kit works on one loop: **enter what happened → the dashboard computes what matters → the update tells your investors.** Set it up once, then it's ~1 hour a month.
-
-## 1. Make it yours (Settings, 3 min)
-Set your company name, founder, email, round target, and the day of month your update goes out. Leave the **sample flag on** until your real data has replaced the sample everywhere — the amber SAMPLE pill in the sidebar is your reminder that nothing here is real yet.
-
-## 2. Enter your financials (Financials, 10 min)
-Set **opening cash** (bank balance before your first month), then one row per month: revenue split, payroll/infra/other costs, financing inflows, headcount, and your traction numbers. Missing something? Leave it blank — never guess. The computed columns (revenue, costs, P&L, cash) and the dashboard update as you type.
-
-Start with the last 6–12 months if you have them: history is what makes your MoM and runway numbers credible.
-
-## 3. Enter your cap table (Cap Table, 10 min)
-- **Stakeholders:** founder shares, allocated options, unallocated pool — from your incorporation docs, not memory.
-- **SAFE ledger:** every SAFE ever signed: principal, cap, discount, date, status. If you're not sure of a term, get the executed PDF and check — "not sure" on your own cap table is the thing diligence punishes hardest.
-- New to this? Read the **Cap table 101** tab first.
-
-## 4. Set up your investors (Investor CRM, 5 min)
-Add current investors, then everyone who should receive updates (Update distribution tab, with segments). If you're raising, add your pipeline to Round commitments.
-
-## 5. Send your first update (Updates, ongoing)
-The composer pre-fills your real metrics — fill the brackets, cut to a 3-minute read, send via the BCC button, then **Mark sent → archive**. The archive is the point: a future lead investor will read it back-to-back, and an unbroken streak is the cheapest credibility a startup can own.
-
-## The monthly rhythm from here
-| When | What | Where |
-|---|---|---|
-| Month-end + 10 days max | Close the month | Financials |
-| Same day | Check burn/runway/flags | Dashboard |
-| Update day (you set it) | Send the update | Updates |
-| Any SAFE signed | Ledger + CRM + distribution, same day | Cap Table + CRM |
-| Quarterly | Board/investor-council pack | Playbooks → Board pack |
-
-Download the calendar file in Updates to put this rhythm in your actual calendar.
 
 ---
 
@@ -53,6 +17,9 @@ Your coding agent (Claude Code, Codex, Cursor, etc.) is a **peer of this UI**, n
 ## Setup (once)
 1. Run your agent in the repo folder. It reads [AGENTS.md](AGENTS.md) — the contract with the capability map, data schemas, and privacy guardrails.
 2. Scaffold your private document workspace: `node scripts/init-workspace.js` — data-room folders, board records, meeting briefs. Gitignored; the agent files documents into it.
+
+## Onboard in one conversation
+Skip manual data entry entirely: hand your agent [prompts/onboard.md](prompts/onboard.md) and it takes over data collection — with your consent, folder by folder. It scans appointed folders for financial and investment documents (`ir scan` — filenames only, nothing read without your OK), organizes what you approve into the data room, extracts your real cap table, SAFEs, and monthly financials with a source citation for every number, and hands you back a dashboard running on real data. Nothing is guessed, nothing leaves your machine, and you confirm before the sample flag comes off.
 
 ## The interface: the ir CLI
 Full reference with examples: [docs/CLI.md](docs/CLI.md).
@@ -97,6 +64,42 @@ Add an agent run on top to fill in the narrative (highlights/lowlights) — reci
 
 ## Extending the kit
 The codebase is deliberately agent-editable: dependency-free vanilla JS, no build step. Ask your agent for a new module ("add ESOP tracking", "multi-currency support") and point it at [AGENTS.md](AGENTS.md) — the conventions are written down: new operations go in `core/ops.js` and get a CLI verb, the math lives in `public/js/metrics.js`, new pages register in `app.js`. Keep the kit's promise when extending: zero dependencies, local-first, and `ir check` still passes.
+
+---
+
+# Your first 30 minutes
+
+IR Kit works on one loop: **enter what happened → the dashboard computes what matters → the update tells your investors.** Set it up once, then it's ~1 hour a month.
+
+## 1. Make it yours (Settings, 3 min)
+Set your company name, founder, email, round target, and the day of month your update goes out. Leave the **sample flag on** until your real data has replaced the sample everywhere — the amber SAMPLE pill in the sidebar is your reminder that nothing here is real yet.
+
+## 2. Enter your financials (Financials, 10 min)
+Set **opening cash** (bank balance before your first month), then one row per month: revenue split, payroll/infra/other costs, financing inflows, headcount, and your traction numbers. Missing something? Leave it blank — never guess. The computed columns (revenue, costs, P&L, cash) and the dashboard update as you type.
+
+Start with the last 6–12 months if you have them: history is what makes your MoM and runway numbers credible.
+
+## 3. Enter your cap table (Cap Table, 10 min)
+- **Stakeholders:** founder shares, allocated options, unallocated pool — from your incorporation docs, not memory.
+- **SAFE ledger:** every SAFE ever signed: principal, cap, discount, date, status. If you're not sure of a term, get the executed PDF and check — "not sure" on your own cap table is the thing diligence punishes hardest.
+- New to this? Read the **Cap table 101** tab first.
+
+## 4. Set up your investors (Investor CRM, 5 min)
+Add current investors, then everyone who should receive updates (Update distribution tab, with segments). If you're raising, add your pipeline to Round commitments.
+
+## 5. Send your first update (Updates, ongoing)
+The composer pre-fills your real metrics — fill the brackets, cut to a 3-minute read, send via the BCC button, then **Mark sent → archive**. The archive is the point: a future lead investor will read it back-to-back, and an unbroken streak is the cheapest credibility a startup can own.
+
+## The monthly rhythm from here
+| When | What | Where |
+|---|---|---|
+| Month-end + 10 days max | Close the month | Financials |
+| Same day | Check burn/runway/flags | Dashboard |
+| Update day (you set it) | Send the update | Updates |
+| Any SAFE signed | Ledger + CRM + distribution, same day | Cap Table + CRM |
+| Quarterly | Board/investor-council pack | Playbooks → Board pack |
+
+Download the calendar file in Updates to put this rhythm in your actual calendar.
 
 ---
 

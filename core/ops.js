@@ -261,6 +261,82 @@ ${company.tagline || ''}
   return { file, month: m.month };
 }
 
+// Onboarding scanner — finds candidate financial/investment documents by FILENAME AND
+// METADATA ONLY (contents are never read). Consent-first: caller passes appointed
+// folders explicitly; nothing is copied or modified. Output is a checklist inventory
+// the founder + agent review together (see prompts/onboard.md).
+// Filenames are normalized before matching (._- become spaces) so "Acme_SAFE_signed.pdf"
+// matches \bsafe\b — underscores are word characters in JS regex and would defeat \b.
+const DOC_CATEGORIES = [
+  ['SAFE / convertible', /\bsafe\b|convertible|\bkiss\b/i],
+  ['cap table', /cap ?table|capitali[sz]ation/i],
+  ['incorporation / legal', /incorporat|certificate|bylaws|articles of|operating agreement|stock purchase|ip assign|founder agreement/i],
+  ['409A / valuation', /409a|valuation/i],
+  ['bank / statements', /\bbank\b|statement/i],
+  ['bookkeeping / P&L', /p&l|pnl|profit (and |& )?loss|income statement|balance sheet|ledger|bookkeep|\bburn\b|runway/i],
+  ['term sheets', /term ?sheet/i],
+  ['board / governance', /board (pack|deck|meeting|minutes)|\bminutes\b|\bconsent\b|resolution/i],
+  ['investor materials', /investor|pitch ?deck|one ?pager|\bmemo\b|data ?room/i],
+  ['tax', /\btax\b|\bk ?1\b|1099|\bw ?9\b/i],
+];
+const DOC_EXTS = new Set(['.pdf', '.docx', '.doc', '.xlsx', '.xls', '.csv', '.numbers', '.pages', '.pptx', '.key', '.md', '.txt']);
+const SKIP_DIRS = new Set(['node_modules', 'Library', 'Applications', 'System', '.git', '.Trash']);
+
+export function scanDocuments(folders, { maxDepth = 8, maxVisited = 50000, maxMatches = 1000 } = {}) {
+  if (!folders.length) throw new Error('appoint at least one folder: ir scan <folder> [...] — consent first, see prompts/onboard.md');
+  const roots = folders.map((f) => path.resolve(f.replace(/^~(?=$|\/)/, process.env.HOME || '~')));
+  for (const r of roots) if (!fs.existsSync(r)) throw new Error(`folder not found: ${r}`);
+
+  let visited = 0;
+  const matches = [];
+  const walk = (dir, depth) => {
+    if (depth > maxDepth || visited > maxVisited || matches.length >= maxMatches) return;
+    if (dir === WORKSPACE || dir === path.dirname(WORKSPACE)) return; // never rescan ourselves
+    let entries;
+    try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { return; }
+    for (const e of entries) {
+      if (e.name.startsWith('.') || SKIP_DIRS.has(e.name)) continue;
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) { walk(full, depth + 1); continue; }
+      visited++;
+      if (!DOC_EXTS.has(path.extname(e.name).toLowerCase())) continue;
+      const testName = e.name.replace(/[._-]+/g, ' ');
+      const cat = DOC_CATEGORIES.find(([, re]) => re.test(testName));
+      if (!cat) continue;
+      let st;
+      try { st = fs.statSync(full); } catch { continue; }
+      matches.push({ path: full, category: cat[0], sizeKb: Math.round(st.size / 1024), modified: iso(st.mtime) });
+      if (matches.length >= maxMatches) return;
+    }
+  };
+  for (const r of roots) walk(r, 0);
+
+  const dir = path.join(WORKSPACE, 'onboarding');
+  fs.mkdirSync(dir, { recursive: true });
+  const byCat = {};
+  for (const m of matches) (byCat[m.category] ||= []).push(m);
+  const lines = [
+    '# Document scan — candidates for the data room',
+    `Scanned ${roots.join(', ')} on ${iso(new Date())} · filenames and metadata only, no contents read.`,
+    'Tick what belongs in your IR system; your agent copies approved files into ir-workspace/data-room/ (originals untouched).',
+    '',
+  ];
+  for (const [cat, items] of Object.entries(byCat)) {
+    lines.push(`## ${cat}`);
+    for (const m of items.sort((a, b) => b.modified.localeCompare(a.modified)))
+      lines.push(`- [ ] ${m.path} (${m.sizeKb} KB, ${m.modified})`);
+    lines.push('');
+  }
+  if (!matches.length) lines.push('No candidates matched. Try other folders, or organize documents manually per the data-room checklist.');
+  const file = path.join(dir, 'candidates.md');
+  fs.writeFileSync(file, lines.join('\n') + '\n');
+  return {
+    folders: roots, filesVisited: visited, matched: matches.length,
+    byCategory: Object.fromEntries(Object.entries(byCat).map(([k, v]) => [k, v.length])),
+    inventory: file, contentsRead: false,
+  };
+}
+
 const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 const norm = (s) => String(s || '').toLowerCase().trim();
 const round4 = (x) => (x === null || x === undefined || isNaN(x) ? null : Math.round(x * 1e4) / 1e4);
