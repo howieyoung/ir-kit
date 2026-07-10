@@ -1,12 +1,12 @@
 import { el, section, tabs } from './ui.js';
 import { store } from './store.js';
-import { DOCS } from './playbook-content.js';
+import { playbookDocs } from './content.js';
 import { t } from './i18n.js';
 
 export function renderPlaybooks(root) {
   root.append(el('h1', {}, t('playbooks.title')));
   root.append(el('p', { class: 'page-sub' }, t('playbooks.sub')));
-  root.append(tabs(DOCS.map((d) => ({ label: d.title, render: () => renderDoc(d) }))));
+  root.append(tabs(playbookDocs().map((d) => ({ label: d.title, render: () => renderDoc(d) }))));
 }
 
 function renderDoc(doc) {

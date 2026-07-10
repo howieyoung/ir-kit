@@ -1,4 +1,4 @@
-<!-- GENERATED from public/js/guide.js — edit there, then `npm run build-tutorial` -->
+<!-- GENERATED from public/js/content/guide.en.js — edit there, then `npm run build-tutorial` -->
 # IR Kit tutorial
 
 The same guide that lives in the app (**Get started** in the sidebar), for reading on GitHub.

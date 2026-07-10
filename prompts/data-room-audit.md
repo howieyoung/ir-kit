@@ -4,7 +4,7 @@
 Audit my data room at ir-workspace/data-room/ (read CLAUDE.md).
 
 1. Walk the folder tree and compare against the tier-1 / tier-2 checklists in
-   public/js/playbook-content.js (Data room doc).
+   public/js/content/playbooks.en.js (Data room doc).
 2. For every checklist item: present ✅ / missing ❌ / present-but-stale ⚠️
    (undated files, or dated >6 months ago for financials).
 3. Hard blockers first: IP assignments for every contractor and employee,

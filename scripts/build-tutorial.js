@@ -4,9 +4,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { GUIDE_HUMAN, GUIDE_AGENT, CAPTABLE_101, GLOSSARY } from '../public/js/guide.js';
+import { GUIDE_HUMAN, GUIDE_AGENT, CAPTABLE_101, GLOSSARY } from '../public/js/content/guide.en.js';
 
-const out = `<!-- GENERATED from public/js/guide.js — edit there, then \`npm run build-tutorial\` -->
+const out = `<!-- GENERATED from public/js/content/guide.en.js — edit there, then \`npm run build-tutorial\` -->
 # IR Kit tutorial
 
 The same guide that lives in the app (**Get started** in the sidebar), for reading on GitHub.

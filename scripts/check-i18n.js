@@ -21,8 +21,42 @@ const locales = Object.keys(MESSAGES);
 const REQUIRED = ['en', 'zh-TW', 'ja', 'ko', 'es', 'fr'];
 for (const r of REQUIRED) if (!locales.includes(r)) { console.error(`✗ required locale "${r}" is missing entirely`); failed = true; }
 
+// ---- long-form content parity (guide tabs + playbooks per locale) ----
+// Structure must mirror English exactly: same exports, same DOCS ids/order, and the
+// same number of checkboxes per playbook doc (checklist state is keyed docId:index).
+const guideEn = await import('../public/js/content/guide.en.js');
+const pbEn = await import('../public/js/content/playbooks.en.js');
+const GUIDE_EXPORTS = ['GUIDE_AGENT', 'GUIDE_HUMAN', 'CAPTABLE_101', 'GLOSSARY'];
+const boxes = (md) => (md.match(/^\s*- \[( |x)\]/gim) || []).length;
+
+for (const loc of REQUIRED.filter((l) => l !== 'en')) {
+  let g, p;
+  try { g = await import(`../public/js/content/guide.${loc}.js`); }
+  catch { console.error(`✗ content: missing public/js/content/guide.${loc}.js`); failed = true; }
+  try { p = await import(`../public/js/content/playbooks.${loc}.js`); }
+  catch { console.error(`✗ content: missing public/js/content/playbooks.${loc}.js`); failed = true; }
+  if (g) for (const k of GUIDE_EXPORTS) {
+    if (!g[k] || !String(g[k]).trim()) { console.error(`✗ content ${loc}: guide export "${k}" missing/empty`); failed = true; }
+  }
+  if (p) {
+    const enIds = pbEn.DOCS.map((d) => d.id);
+    const locIds = (p.DOCS || []).map((d) => d.id);
+    if (JSON.stringify(enIds) !== JSON.stringify(locIds)) {
+      console.error(`✗ content ${loc}: playbook DOCS ids/order differ from en (${locIds.join(',')} vs ${enIds.join(',')})`); failed = true;
+    } else {
+      for (const d of pbEn.DOCS) {
+        const ld = p.DOCS.find((x) => x.id === d.id);
+        if (!ld.md?.trim()) { console.error(`✗ content ${loc}: playbook "${d.id}" empty`); failed = true; }
+        else if (boxes(ld.md) !== boxes(d.md)) {
+          console.error(`✗ content ${loc}: playbook "${d.id}" has ${boxes(ld.md)} checkboxes, en has ${boxes(d.md)} — counts must match (checklist state is index-keyed)`); failed = true;
+        }
+      }
+    }
+  }
+}
+
 if (failed) {
-  console.error('\ni18n parity FAILED — every UI string key must exist (non-empty) in all locales: ' + REQUIRED.join(', '));
+  console.error('\ni18n parity FAILED — UI keys AND long-form content must be complete in all locales: ' + REQUIRED.join(', '));
   process.exit(1);
 }
-console.log(`✓ i18n parity ok — ${base.length} keys × ${locales.length} locales`);
+console.log(`✓ i18n parity ok — ${base.length} keys × ${locales.length} locales · guide + playbooks content complete in ${REQUIRED.length} locales`);

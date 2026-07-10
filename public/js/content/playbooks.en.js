@@ -1,3 +1,6 @@
+// English playbook content — the CANONICAL source. Translations live in
+// playbooks.<locale>.js exporting DOCS with the SAME ids, order, and checkbox counts
+// (checklist state is keyed by docId:index — reordering or resizing breaks user ticks).
 // Playbook content — condensed operating doctrine. Tailor freely (or have your agent do it).
 // Checkbox state persists to the checklists collection keyed by doc id + position,
 // so REORDERING checklist items resets their ticks. Append new items at the end.

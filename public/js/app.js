@@ -9,6 +9,7 @@ import { renderPlaybooks } from './playbooks.js';
 import { renderGuide } from './guide.js';
 import { VERSION, REPO_URL } from './version.js';
 import { t, LOCALES, getLocale, setLocale } from './i18n.js';
+import { loadContent } from './content.js';
 
 const routes = {
   guide: renderGuide,
@@ -49,7 +50,7 @@ function renderLocalePicker() {
   slot.innerHTML = '';
   slot.append(el('select', {
     'aria-label': t('app.language'),
-    onchange: (e) => { setLocale(e.target.value); render(); renderLocalePicker(); },
+    onchange: async (e) => { setLocale(e.target.value); await loadContent(); render(); renderLocalePicker(); },
   }, ...Object.entries(LOCALES).map(([code, label]) =>
     el('option', { value: code, selected: code === getLocale() ? '' : null }, label))));
 }
@@ -123,7 +124,8 @@ document.getElementById('sample-dismiss')?.addEventListener('click', () => {
 });
 
 window.addEventListener('hashchange', render);
-store.init().then(() => {
+store.init().then(async () => {
+  await loadContent();
   renderLocalePicker();
   const badge = document.getElementById('mode-badge');
   badge.textContent = store.mode === 'server' ? 'server mode' : 'demo mode';
