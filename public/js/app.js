@@ -8,6 +8,7 @@ import { renderUpdates } from './updates.js';
 import { renderPlaybooks } from './playbooks.js';
 import { renderGuide } from './guide.js';
 import { VERSION, REPO_URL } from './version.js';
+import { t, LOCALES, getLocale, setLocale } from './i18n.js';
 
 const routes = {
   guide: renderGuide,
@@ -27,7 +28,13 @@ function currentRoute() {
 
 function render() {
   const route = currentRoute();
-  document.querySelectorAll('#nav a').forEach((a) => a.classList.toggle('active', a.dataset.route === route));
+  document.querySelectorAll('#nav a').forEach((a) => {
+    a.classList.toggle('active', a.dataset.route === route);
+    a.textContent = t('nav.' + a.dataset.route);
+  });
+  document.getElementById('foot-tagline').textContent = t('app.footTagline');
+  document.getElementById('sample-banner-text').textContent = t('app.sampleBanner');
+  document.getElementById('sample-dismiss').textContent = t('app.dismiss');
   const main = document.getElementById('main');
   main.innerHTML = '';
   routes[route](main);
@@ -35,6 +42,16 @@ function render() {
   renderBrand(company);
   const banner = document.getElementById('sample-banner');
   banner.hidden = !(company?.sample) || sessionStorage.getItem('irkit:banner-dismissed');
+}
+
+function renderLocalePicker() {
+  const slot = document.getElementById('locale-slot');
+  slot.innerHTML = '';
+  slot.append(el('select', {
+    'aria-label': t('app.language'),
+    onchange: (e) => { setLocale(e.target.value); render(); renderLocalePicker(); },
+  }, ...Object.entries(LOCALES).map(([code, label]) =>
+    el('option', { value: code, selected: code === getLocale() ? '' : null }, label))));
 }
 
 function renderBrand(company) {
@@ -51,7 +68,7 @@ function renderBrand(company) {
 
 function renderSettings(root) {
   const company = store.get('company');
-  root.append(el('h1', {}, 'Settings'));
+  root.append(el('h1', {}, t('settings.title')));
   root.append(el('p', { class: 'page-sub' }, `Mode: ${store.mode === 'server' ? 'server — data persists to JSON files in the data/ folder (agent-editable)' : 'static demo — data lives in this browser\'s localStorage only'}.`));
 
   const field = (label, key, type = 'text') => el('div', { class: 'field' },
@@ -61,7 +78,7 @@ function renderSettings(root) {
       onchange: (e) => store.update('company', (c) => { c[key] = type === 'number' ? Number(e.target.value) : e.target.value; }),
     }));
 
-  root.append(section('Company profile', 'Used across the app and in update templates.',
+  root.append(section(t('settings.sec.profile'), 'Used across the app and in update templates.',
     el('div', { class: 'grid cols-2' },
       field('Company name', 'name'), field('Founder', 'founder'),
       field('Email', 'email'), field('Round target ($)', 'roundTarget', 'number'),
@@ -78,7 +95,7 @@ function renderSettings(root) {
     try { await store.importAll(e.target.files[0]); alert('Imported.'); render(); }
     catch (err) { alert('Import failed: ' + err.message); }
   } });
-  root.append(section('Data', 'Export everything as one JSON file — for backup, or to move between the static demo and your own server.',
+  root.append(section(t('settings.sec.data'), 'Export everything as one JSON file — for backup, or to move between the static demo and your own server.',
     file,
     el('div', { class: 'btn-row' },
       el('button', { class: 'btn secondary', onclick: () => store.exportAll() }, 'Export all data (JSON)'),
@@ -90,7 +107,7 @@ function renderSettings(root) {
     'Working with a coding agent (CLI, prompts, scheduling, extending the kit) is covered in ',
     el('a', { href: '#/guide' }, 'Get started → Use it with your agent'), '.'));
 
-  root.append(section('About', null,
+  root.append(section(t('settings.sec.about'), null,
     el('div', { class: 'doc', html: `
       <ul>
         <li>Version: <b>v${VERSION}</b> — check for the latest at <a href="${REPO_URL}/releases" target="_blank" rel="noopener">GitHub releases</a>; update with <code>git pull</code> (your data/ is untouched — it's gitignored)</li>
@@ -107,6 +124,7 @@ document.getElementById('sample-dismiss')?.addEventListener('click', () => {
 
 window.addEventListener('hashchange', render);
 store.init().then(() => {
+  renderLocalePicker();
   const badge = document.getElementById('mode-badge');
   badge.textContent = store.mode === 'server' ? 'server mode' : 'demo mode';
   document.getElementById('about-line').innerHTML =

@@ -323,6 +323,115 @@ ${company.tagline || ''}
   return { file, month: m.month };
 }
 
+// ---------- ir start: the one-command guided setup ----------
+// Idempotent state machine. An agent (or human) can run it at any moment; it scaffolds
+// whatever is missing, detects where the founder is in the journey, and prints the
+// exact next action — so "ir start" is the only thing a new user ever needs to know.
+import { scaffoldWorkspace, inboxFiles, dataRoomFileCount, INBOX } from './workspace.js';
+
+export function start() {
+  const scaffold = scaffoldWorkspace();
+  const company = load('company');
+  const inbox = inboxFiles();
+  const sorted = dataRoomFileCount();
+  const fin = load('financials');
+  const captable = load('captable');
+  const sample = company.sample === true;
+  const monthsClosed = (fin.months || []).length;
+  const safes = (captable.safes || []).filter((s) => s.principal).length;
+
+  let stage, next;
+  if (sample && !inbox.length && !sorted) {
+    stage = 'collect';
+    next = [
+      `Ask the founder to drop EVERY financial/fundraising/company document into the inbox: ${INBOX}`,
+      '(SAFEs, bank statements, cap table, incorporation docs, decks — unorganized is fine)',
+      'Alternative if their docs are scattered: offer `ir scan <folders>` on folders they appoint.',
+      'When files are in the inbox, run: ir sort',
+      'If the founder has no documents to provide, stop here — the dashboard keeps the sample data until real data exists.',
+    ];
+  } else if (inbox.length) {
+    stage = 'sort';
+    next = [
+      `${inbox.length} file(s) waiting in the inbox — run: ir sort`,
+      'Files it can\'t classify by name stay in the inbox: ask the founder\'s permission before opening them to classify by content, then move them into the right data-room folder yourself.',
+      'ir sort is safe to re-run any time new files land in the inbox.',
+    ];
+  } else if (sample && sorted) {
+    stage = 'extract';
+    next = [
+      `${sorted} document(s) organized in the data room — extract per the AGENTS.md onboarding contract:`,
+      'executed SAFEs → ir safe add · bank statements/P&L → ir close-month (fully-supported months only) · incorporation/cap docs → stakeholders (then ir check)',
+      'Every number needs a file+page citation in ir-workspace/onboarding/INVENTORY.md; ambiguity → OPEN-QUESTIONS.md, never guessed.',
+      'Then: ir check (must pass) → ir status → walk the founder through the dashboard against the citations.',
+      'Only after the founder confirms the numbers: set sample=false in data/company.json.',
+    ];
+  } else {
+    stage = 'live';
+    next = [
+      'Setup is complete — this is live data. The rhythm from here:',
+      'monthly: ir close-month → ir update draft → founder reviews & sends → ir update mark-sent',
+      'any new SAFE: ir safe add · new documents: drop in the inbox → ir sort · health: ir check',
+    ];
+  }
+  return {
+    stage,
+    workspace: { scaffolded: !scaffold.existed, filesCreated: scaffold.created, inboxPath: INBOX },
+    state: { sampleData: sample, inboxFiles: inbox.length, dataRoomFiles: sorted, monthsClosed, safes },
+    next,
+  };
+}
+
+// ---------- ir sort: repeatable inbox → data-room classification ----------
+// Filename-based (same categories as ir scan). MOVES files within the workspace —
+// the inbox holds copies the founder staged, so moving keeps the inbox as the "to do"
+// pile and the data room as the organized result. Unclassifiable files stay put for
+// the agent+founder to handle by content, with consent.
+const CATEGORY_DEST = {
+  'SAFE / convertible': 'tier1/safes',
+  'cap table': 'tier1/cap-table',
+  'incorporation / legal': 'tier1/incorporation',
+  '409A / valuation': 'tier2/valuations',
+  'bank / statements': 'tier1/bank-statements',
+  'bookkeeping / P&L': 'tier1/financials',
+  'term sheets': 'tier2/term-sheets',
+  'board / governance': 'tier2/board',
+  'investor materials': 'tier1/investor-materials',
+  'tax': 'tier2/tax',
+};
+
+export function sortInbox() {
+  scaffoldWorkspace();
+  const files = inboxFiles();
+  const moved = [];
+  const unclassified = [];
+  for (const full of files) {
+    const name = path.basename(full);
+    const testName = name.replace(/[._-]+/g, ' ');
+    const cat = DOC_CATEGORIES.find(([, re]) => re.test(testName));
+    if (!cat) { unclassified.push(name); continue; }
+    const destDir = path.join(WORKSPACE, 'data-room', CATEGORY_DEST[cat[0]]);
+    fs.mkdirSync(destDir, { recursive: true });
+    let dest = path.join(destDir, name);
+    let n = 1;
+    while (fs.existsSync(dest)) {
+      const ext = path.extname(name);
+      dest = path.join(destDir, `${path.basename(name, ext)}-${n++}${ext}`);
+    }
+    try { fs.renameSync(full, dest); } catch { fs.copyFileSync(full, dest); fs.unlinkSync(full); }
+    moved.push({ file: name, category: cat[0], to: path.relative(WORKSPACE, dest) });
+  }
+  const dir = path.join(WORKSPACE, 'onboarding');
+  fs.mkdirSync(dir, { recursive: true });
+  const log = path.join(dir, 'SORT-LOG.md');
+  const stamp = iso(new Date());
+  const lines = [`\n## ${stamp} — ${moved.length} filed, ${unclassified.length} left in inbox`];
+  for (const m of moved) lines.push(`- ${m.file} → ${m.to} (${m.category})`);
+  for (const u of unclassified) lines.push(`- STILL IN INBOX (classify by content, with consent): ${u}`);
+  fs.appendFileSync(log, lines.join('\n') + '\n');
+  return { moved, unclassified, log, inboxRemaining: unclassified.length };
+}
+
 // Onboarding scanner — finds candidate financial/investment documents by FILENAME AND
 // METADATA ONLY (contents are never read). Consent-first: caller passes appointed
 // folders explicitly; nothing is copied or modified. Output is a checklist inventory

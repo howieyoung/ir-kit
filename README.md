@@ -1,5 +1,7 @@
 # IR Kit
 
+**English** · [繁體中文](docs/i18n/README.zh-TW.md) · [日本語](docs/i18n/README.ja.md) · [한국어](docs/i18n/README.ko.md) · [Español](docs/i18n/README.es.md) · [Français](docs/i18n/README.fr.md)
+
 **The agent-native IR system: run investor relations like you have a team of ten — even if it's just you and an AI agent.**
 
 Most founders learn IR by losing: a diligence that stalls on a messy SAFE stack, an update streak that dies the first bad month, a data room assembled in a panic the week a term sheet shows up. The founders who raise well aren't smarter — they run a *system*. IR Kit is that system, open-sourced: the tools **and** the operating doctrine of an A-class startup's investor relations, runnable by any founder, anywhere, for free.
@@ -14,6 +16,7 @@ Most founders learn IR by losing: a diligence that stalls on a messy SAFE stack,
 - ✉️ **Update composer** — YC-format monthly updates with metrics auto-filled from your financials, plus the archive a future lead will read back-to-back
 - 📚 **Playbooks** — update doctrine, batch fundraising process, tiered data-room checklists (interactive), board pack structure, hard-question FAQ frames, diligence-grade metric definitions
 - 🤖 **Agent harness** — [prompt sets](prompts/) and a [private workspace scaffold](scripts/init-workspace.js) so your coding agent (Claude Code, Cursor, …) operates the whole system with you
+- 🌐 **Six languages** — the dashboard switches between English, 繁體中文, 日本語, 한국어, Español, and Français (sidebar picker); CI enforces full locale coverage on every contribution
 
 ## Quickstart
 
@@ -57,14 +60,15 @@ This is the part that matters, so it's not a policy, it's the design:
 
 This is the part no other IR tool has: a first-class programmatic surface, so your coding agent (Claude Code, Codex, Cursor, …) is a peer of the browser UI — not a hack on top of it.
 
-**Day one is one conversation:**
+**Day one is two words: tell your agent "ir start".**
 
 1. `git clone` + `node server.js` — the app runs immediately with a sample company.
 2. Open your coding agent in the repo folder — it reads [AGENTS.md](AGENTS.md) automatically.
-3. Say: *"Read `prompts/onboard.md` and take over my IR data setup."*
-4. It asks which folders it may scan (you stay in control), then runs `ir scan` — filenames only, no contents read — and reviews the candidates with you.
-5. You approve → it organizes your private data room and extracts your real cap table, SAFEs, and monthly financials, **every number cited to a source document**; ambiguities go to an open-questions list, never guessed.
-6. `ir check` passes, it walks you through the dashboard, you confirm → sample flag off → your company, real data. Nothing uploaded anywhere.
+3. Say: **"ir start"**. The agent scaffolds everything (including a document **inbox** folder), states the ground rules, and guides you from there.
+4. Drop every financial/company document into the inbox — SAFEs, bank statements, cap tables, decks, completely unsorted is fine. (Docs scattered across your disk? It can `ir scan` folders you appoint instead — filenames only, nothing opened without your OK.)
+5. `ir sort` files everything into the right data-room categories — **re-runnable any time** you add more documents; it's a standing filing service, not a one-off.
+6. With your consent it reads the sorted documents and extracts your real cap table, SAFEs, and monthly financials — **every number cited to a source document**; ambiguities go to an open-questions list, never guessed.
+7. `ir check` passes, it walks you through the dashboard, you confirm → your company, real data. Provided nothing? The dashboard simply keeps its sample data. Nothing uploaded anywhere, ever.
 
 ```console
 $ ./bin/ir.js safe add "Meridian Capital" --principal 50000 --cap 8000000 --status Wired

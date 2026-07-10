@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // ir — the IR Kit command line. Built for agents first, humans second.
 // Every command supports --json. Data location overrides: IRKIT_DATA_DIR, IRKIT_ROOT.
-import { status, closeMonth, addSafe, addProspect, listProspects, draftUpdate, markSent, modelPricedRound, exportCaptableCsv, exportBoardPack, exportTearsheet, scanDocuments } from '../core/ops.js';
+import { status, closeMonth, addSafe, addProspect, listProspects, draftUpdate, markSent, modelPricedRound, exportCaptableCsv, exportBoardPack, exportTearsheet, scanDocuments, start, sortInbox } from '../core/ops.js';
 import { check } from '../core/check.js';
 import { DATA_DIR } from '../core/store.js';
 
@@ -11,6 +11,9 @@ const json = !!flags.json;
 
 const HELP = `ir — agent-native investor relations (data: ${DATA_DIR})
 
+  ir start                               BEGIN HERE — guided setup: scaffolds everything, detects
+                                         where you are, prints the exact next step (safe to re-run)
+  ir sort                                file inbox documents into data-room categories (re-run any time)
   ir status [--json]                     every derived metric in one call
   ir check [--json]                      validate schemas + invariants (exit 1 on errors)
   ir close-month <YYYY-MM> --saas N --ads N --payroll N --infra N --other N
@@ -36,6 +39,29 @@ Rules of engagement (full contract in AGENTS.md):
 
 try {
   switch (cmd) {
+    case 'start': {
+      const r = start();
+      out(r, () => {
+        if (r.workspace.scaffolded) console.log(`✓ workspace scaffolded (${r.workspace.filesCreated} files) — inbox: ${r.workspace.inboxPath}`);
+        console.log(`stage: ${r.stage} · ${r.state.sampleData ? 'SAMPLE data' : 'live data'} · inbox ${r.state.inboxFiles} · data room ${r.state.dataRoomFiles} · months ${r.state.monthsClosed} · SAFEs ${r.state.safes}`);
+        console.log('\nNEXT:');
+        for (const line of r.next) console.log('  ' + line);
+        console.log('\nGround rules: consent before reading contents · originals read-only · every number cited · nothing leaves this machine · never auto-send.');
+      });
+      break;
+    }
+
+    case 'sort': {
+      const r = sortInbox();
+      out(r, () => {
+        for (const m of r.moved) console.log(`✓ ${m.file} → ${m.to} (${m.category})`);
+        for (const u of r.unclassified) console.log(`⚠ still in inbox (classify by content, with consent): ${u}`);
+        console.log(`${r.moved.length} filed, ${r.inboxRemaining} remaining · log: ${r.log}`);
+        console.log(r.moved.length || r.inboxRemaining ? 'next: ir start (it will tell you the next stage)' : 'inbox is empty — drop documents in, then re-run ir sort');
+      });
+      break;
+    }
+
     case 'status': out(status(), humanStatus); break;
 
     case 'check': {

@@ -22,6 +22,14 @@ Point these at a throwaway directory for tests or experiments — **never run ex
 
 ---
 
+## `ir start`
+
+The one command a new founder needs to know — usually spoken to their agent as just **"ir start"**. An idempotent state machine: scaffolds whatever is missing (private workspace + the document **inbox** at `ir-workspace/inbox/`), detects the current stage, and prints the exact next action with the privacy ground rules. Stages: **collect** (drop documents into the inbox, or `ir scan` appointed folders) → **sort** → **extract** (agent work, citations required) → **live** (the monthly rhythm). Safe to re-run at any moment; if the founder provides no documents, the dashboard keeps its sample data.
+
+## `ir sort`
+
+Files everything in the inbox into data-room category folders (`tier1/safes`, `tier1/bank-statements`, `tier2/board`, …) by **filename only** — contents are never opened. Collisions get numbered suffixes; every move is logged to `ir-workspace/onboarding/SORT-LOG.md`. Files it can't classify stay in the inbox for the agent to handle by content, with consent. **Repeatable any time** new documents land — it's a standing filing service.
+
 ## `ir status`
 
 Every derived metric in one call — the grounding command an agent (or you) runs first.

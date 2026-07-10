@@ -1,17 +1,18 @@
 import { el, fmt, section, dataTable, tabs } from './ui.js';
 import { store, uid } from './store.js';
 import { pageCoach } from './onboarding.js';
+import { t } from './i18n.js';
 
 export function renderCrm(root) {
-  root.append(el('h1', {}, 'Investor CRM'));
-  root.append(el('p', { class: 'page-sub' }, 'Current investors, sourced prospects, and the active round. Log within 24 hours of contact or it didn\'t happen. Your agent can source fitted prospects into this pipeline (Prospect nurture) — see the agent guide.'));
+  root.append(el('h1', {}, t('crm.title')));
+  root.append(el('p', { class: 'page-sub' }, t('crm.sub')));
   const coach = pageCoach('crm'); if (coach) root.append(coach);
   root.append(tabs([
-    { label: 'Round commitments', render: renderCommitments },
-    { label: 'Current investors', render: renderInvestors },
-    { label: 'Interaction log', render: renderInteractions },
-    { label: 'Asks & intros', render: renderAsks },
-    { label: 'Update distribution', render: renderDistribution },
+    { label: t('crm.tab.commitments'), render: renderCommitments },
+    { label: t('crm.tab.investors'), render: renderInvestors },
+    { label: t('crm.tab.interactions'), render: renderInteractions },
+    { label: t('crm.tab.asks'), render: renderAsks },
+    { label: t('crm.tab.distribution'), render: renderDistribution },
   ]));
 }
 

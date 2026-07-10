@@ -3,18 +3,19 @@ import { store, uid } from './store.js';
 import { latestMetrics, updateCadence } from './metrics.js';
 import { updateTemplate } from './update-template.js';
 import { pageCoach } from './onboarding.js';
+import { t } from './i18n.js';
 
 export function renderUpdates(root) {
   const updates = store.get('updates');
-  root.append(el('h1', {}, 'Investor Updates'));
-  root.append(el('p', { class: 'page-sub' }, 'YC-format monthly update: TL;DR, metrics, highlights, lowlights, asks, thanks. The streak is the asset — same day every month, never skip a bad one.'));
+  root.append(el('h1', {}, t('updates.title')));
+  root.append(el('p', { class: 'page-sub' }, t('updates.sub')));
   const coach = pageCoach('updates'); if (coach) root.append(coach);
 
   root.append(renderSchedule(updates));
   root.append(renderComposer());
 
   // archive
-  const arch = section('Archive', 'A future lead investor will read this entire archive back-to-back. Consistency of metrics and honesty of lowlights are what they grade.',
+  const arch = section(t('updates.sec.archive'), 'A future lead investor will read this entire archive back-to-back. Consistency of metrics and honesty of lowlights are what they grade.',
     updates.archive.length
       ? el('div', {}, ...[...updates.archive].reverse().map((u) => archiveItem(u)))
       : el('div', { class: 'muted' }, 'No updates sent yet. Compose the first one above — the streak starts now.'));
@@ -41,8 +42,8 @@ function renderSchedule(updates) {
   const company = store.get('company');
   const cad = updateCadence(company, updates.archive);
   const chip = el('span', { class: `due-chip ${cad.overdue ? 'overdue' : cad.days <= 3 ? 'soon' : 'ok'}` },
-    cad.overdue ? `OVERDUE by ${-cad.days} days` : cad.days === 0 ? 'DUE TODAY' : `due in ${cad.days} days`);
-  return section('Schedule', `Updates go out on day ${cad.day} of each month (change in Settings). Consistency beats perfection — the same date, every month.`,
+    cad.overdue ? t('due.overdue', { n: -cad.days }) : cad.days === 0 ? t('due.today') : t('due.in', { n: cad.days }));
+  return section(t('updates.sec.schedule'), `Updates go out on day ${cad.day} of each month (change in Settings). Consistency beats perfection — the same date, every month.`,
     el('div', { style: 'display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:6px' },
       el('div', {}, el('b', {}, `Next: ${cad.due.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} `), chip),
       el('div', { class: 'muted' }, cad.streak > 0 ? `Current streak: ${cad.streak} month${cad.streak > 1 ? 's' : ''}` : 'No streak yet'),
@@ -119,7 +120,7 @@ function renderComposer() {
       },
     }, 'Mark sent → archive'));
 
-  return section('Compose', 'Metrics are pre-filled from Financials — never hand-type a number. Fill the brackets, cut until it reads in 3 minutes.',
+  return section(t('updates.sec.compose'), 'Metrics are pre-filled from Financials — never hand-type a number. Fill the brackets, cut until it reads in 3 minutes.',
     el('div', { class: 'field' }, el('label', {}, 'Subject'), subjectInput),
     el('div', { class: 'field' }, el('label', {}, 'Body (markdown)'), body),
     el('div', { class: 'inline-fields' }, el('div', { class: 'field', style: 'max-width:240px' }, el('label', {}, 'Send to segment'), segSelect)),

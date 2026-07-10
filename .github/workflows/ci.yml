@@ -1,0 +1,33 @@
+name: CI
+# Zero-dependency checks — no npm install anywhere.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Syntax — every JS file parses
+        run: |
+          for f in $(git ls-files '*.js'); do node --check "$f" || exit 1; done
+      - name: i18n parity — every key in every locale
+        run: node scripts/check-i18n.js
+      - name: Data invariants — ir check (against bundled sample)
+        run: ./bin/ir.js check
+      - name: CLI smoke — start/sort/status against a temp workspace
+        run: |
+          export IRKIT_DATA_DIR=/tmp/ci/data IRKIT_ROOT=/tmp/ci
+          ./bin/ir.js start
+          touch /tmp/ci/ir-workspace/inbox/Test_SAFE_signed.pdf
+          ./bin/ir.js sort
+          ./bin/ir.js status --json > /dev/null
+      - name: Tutorial is regenerated (docs/TUTORIAL.md matches guide.js)
+        run: |
+          npm run build-tutorial --silent
+          git diff --exit-code docs/TUTORIAL.md || { echo '::error::docs/TUTORIAL.md is stale — run: npm run build-tutorial'; exit 1; }

@@ -14,15 +14,14 @@ The same guide that lives in the app (**Get started** in the sidebar), for readi
 
 Your coding agent (Claude Code, Codex, Cursor, etc.) is a **peer of this UI**, not a hack on top of it. It works through the `ir` command line, which enforces the same rules this interface does — you make the calls, the agent does the clerical work. That's your "IR team of ten".
 
-## From download to a real dashboard — the ideal first hour
+## From download to a real dashboard — say "ir start"
 1. **Get the kit:** `git clone https://github.com/howieyoung/ir-kit && cd ir-kit`
 2. **Start the app:** `node server.js` → http://127.0.0.1:4820 — it runs immediately with a sample company.
-3. **Open your coding agent in the repo folder** (Claude Code, Codex, Cursor…). It reads [AGENTS.md](AGENTS.md) automatically — the contract with the capability map, schemas, and privacy guardrails.
-4. **Hand it the onboarding ritual:** *"Read prompts/onboard.md and take over my IR data setup."*
-5. **It asks before touching anything:** which folders it may scan (appointed folders recommended — you stay in control), then runs `ir scan` — filenames only, no contents read — and reviews the candidate documents with you.
-6. **You approve; it does the clerical work:** organizes approved files into your private data room, extracts your real cap table, SAFEs, and monthly financials — every number cited to a source document, ambiguities parked in an open-questions list instead of guessed.
-7. **It verifies before showing you anything:** `ir check` must pass clean, then it walks you through the dashboard against the citations.
-8. **You confirm the numbers** → the sample flag comes off → reload: your company, real data.
+3. **Open your coding agent in the repo folder** (Claude Code, Codex, Cursor…) and say: **"ir start"**. That's the whole trick — the agent scaffolds everything (including a document **inbox**), states the privacy ground rules, and guides you from there.
+4. **Drop your documents into the inbox** (`ir-workspace/inbox/`) — SAFEs, bank statements, cap tables, decks, completely unsorted is fine. Docs scattered across your disk? The agent can `ir scan` folders you appoint instead (filenames only, nothing opened without your OK).
+5. **It files everything** into the right data-room categories with `ir sort` — **re-runnable any time** you add more documents; a standing filing service, not a one-off.
+6. **With your consent it extracts:** your real cap table, SAFEs, and monthly financials — every number cited to a source document; ambiguities parked in an open-questions list, never guessed.
+7. **It verifies, you confirm:** `ir check` passes clean, it walks you through the dashboard against the citations, and only then does the sample flag come off. If you provide no documents, the dashboard simply keeps its sample data.
 
 From then on it's the monthly rhythm — the rituals and schedule below.
 
@@ -31,7 +30,7 @@ You don't need to know investor relations — you delegate each job to your agen
 
 | You want to… | Say to your agent | Ritual |
 |---|---|---|
-| Set up from your real docs | "Read prompts/onboard.md and take over my IR setup" | `onboard.md` |
+| Set up from your real docs | **"ir start"** | `onboard.md` |
 | Build a clean data room | "Audit my data room against the checklists" | `data-room-audit.md` |
 | **Find fitted investors + reach out** | "Read prompts/investor-sourcing.md and find investors that fit us" | `investor-sourcing.md` |
 | Prep for an investor meeting | "Prep me for my meeting with [investor]" | `meeting-prep.md` |
@@ -46,6 +45,10 @@ Everything runs on your machine, cites your real numbers, and drafts nothing it 
 Full reference with examples: [docs/CLI.md](docs/CLI.md).
 
 ```
+# begin
+ir start              guided setup — scaffolds everything, detects your stage, prints the next step
+ir sort               file inbox documents into data-room categories (re-run any time)
+
 # read
 ir status [--json]    every derived metric in one call — ground yourself first
 ir check              the test suite — run after ANY direct edit to data/*.json
@@ -105,7 +108,7 @@ The codebase is deliberately agent-editable: dependency-free vanilla JS, no buil
 
 IR Kit works on one loop: **enter what happened → the dashboard computes what matters → the update tells your investors.** Set it up once, then it's ~1 hour a month.
 
-> Working with a coding agent? You can skip most of the manual entry below — hand it [prompts/onboard.md](prompts/onboard.md) and it populates the system from your real documents, with your consent at every step. See the "Use it with your agent" tab.
+> Working with a coding agent? Skip most of the manual entry below — just tell it **"ir start"** and it populates the system from your real documents, with your consent at every step. See the "Use it with your agent" tab.
 
 ## 1. Make it yours (Settings, 3 min)
 Set your company name, founder, email, round target, and the day of month your update goes out. Leave the **sample flag on** until your real data has replaced the sample everywhere — the amber SAMPLE pill in the sidebar is your reminder that nothing here is real yet.

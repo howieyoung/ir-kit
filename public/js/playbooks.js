@@ -1,10 +1,11 @@
 import { el, section, tabs } from './ui.js';
 import { store } from './store.js';
 import { DOCS } from './playbook-content.js';
+import { t } from './i18n.js';
 
 export function renderPlaybooks(root) {
-  root.append(el('h1', {}, 'Playbooks'));
-  root.append(el('p', { class: 'page-sub' }, 'The operating doctrine behind the tools. Checklists persist as you tick them. Edit content in public/js/playbook-content.js — or ask your agent to tailor it.'));
+  root.append(el('h1', {}, t('playbooks.title')));
+  root.append(el('p', { class: 'page-sub' }, t('playbooks.sub')));
   root.append(tabs(DOCS.map((d) => ({ label: d.title, render: () => renderDoc(d) }))));
 }
 

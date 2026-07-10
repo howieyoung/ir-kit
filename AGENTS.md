@@ -2,6 +2,15 @@
 
 You are operating a founder's investor-relations system. This file is the canonical contract for every coding agent (Claude Code, Codex, Cursor, etc.). The human uses the browser UI; you use the `ir` CLI and files. Both write the same local JSON.
 
+## "ir start" — the one command a new founder knows
+
+If the founder says **"ir start"** (or anything like "set this up" / "get me started"), run `./bin/ir.js start` and follow its printed NEXT steps exactly. It is an idempotent state machine — scaffolds whatever is missing (including the document **inbox** at `ir-workspace/inbox/`), detects the current stage (collect → sort → extract → live), and tells you the next action. Re-run it whenever you're unsure where things stand. The stages:
+
+1. **collect** — ask the founder to drop all financial/company documents into the inbox (or offer `ir scan` on appointed folders). If they have nothing to provide, stop: the dashboard keeps the sample data.
+2. **sort** — `./bin/ir.js sort` files inbox documents into data-room category folders by filename. **Repeatable any time** new files land. Leftovers it can't classify stay in the inbox: get consent before opening them, classify by content, move them yourself.
+3. **extract** — the onboarding contract below: verbs + citations, never guess.
+4. **live** — the monthly rhythm.
+
 ## The three rules
 
 1. **Prefer `ir` verbs over editing JSON.** The CLI enforces cross-collection invariants that raw edits can silently break.
@@ -11,6 +20,8 @@ You are operating a founder's investor-relations system. This file is the canoni
 ## Capability map
 
 ```
+./bin/ir.js start                guided setup state machine — run when the founder says "ir start" (idempotent)
+./bin/ir.js sort                 file inbox docs into data-room categories (repeatable any time)
 ./bin/ir.js status --json        ground yourself: every derived metric in one call
 ./bin/ir.js check [--json]       validate schemas + invariants (your post-edit test)
 ./bin/ir.js close-month 2026-07 --saas 31000 --ads 14000 --payroll 34000 --infra 4800 --other 3800
@@ -77,6 +88,7 @@ Canonical prompts live in `prompts/` (onboarding, investor sourcing & outreach, 
 ## Code conventions (when extending the kit)
 
 - Zero dependencies, no build step — the kit's core promise. PRs adding packages will be rejected.
+- **i18n is mandatory:** UI strings go through `t()` (from `public/js/i18n.js`); every key must exist, non-empty, in ALL six locales (`en`, `zh-TW`, `ja`, `ko`, `es`, `fr`) in `public/js/i18n-messages.js`. CI (`scripts/check-i18n.js`) fails otherwise. Adding or changing a user-facing string = updating all six locales in the same change. See CONTRIBUTING.md.
 - Percentages are fractions in data (0.10 = 10%); format only at render time.
 - New operation = function in `core/ops.js` → verb in `bin/ir.js` → mention here and in `ir help`.
 - New page = `public/js/<name>.js` exporting `render<Name>(root)`, registered in `app.js`, linked in `index.html`.

@@ -2,13 +2,14 @@ import { el, fmt, section, dataTable } from './ui.js';
 import { store } from './store.js';
 import { derive, latestMetrics, addMonths } from './metrics.js';
 import { pageCoach } from './onboarding.js';
+import { t } from './i18n.js';
 
 export function renderFinancials(root) {
   const fin = store.get('financials');
   const save = () => store.persist('financials');
 
-  root.append(el('h1', {}, 'Financials'));
-  root.append(el('p', { class: 'page-sub' }, 'One row per month. Close within 10 days of month-end. Computed columns (revenue, costs, P&L, cash) update as you type.'));
+  root.append(el('h1', {}, t('financials.title')));
+  root.append(el('p', { class: 'page-sub' }, t('financials.sub')));
   const coach = pageCoach('financials'); if (coach) root.append(coach);
 
   // opening cash

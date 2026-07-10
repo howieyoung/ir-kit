@@ -1,3 +1,4 @@
+import { t } from './i18n.js';
 // Tiny DOM + widget helpers. No framework — every founder's agent can read this in one pass.
 export function el(tag, attrs = {}, ...children) {
   const node = document.createElement(tag);
@@ -69,7 +70,7 @@ export function section(title, note, ...children) {
 // Editable data table over an array of row objects.
 // columns: { key, label, type: text|number|date|select|check, options?, width?, compute?(row), fmt?(v), placeholder? }
 // compute-columns are read-only; others write back to the row and call save().
-export function dataTable({ columns, rows, save, addLabel = '+ Add row', newRow, footer, deletable = true }) {
+export function dataTable({ columns, rows, save, addLabel, newRow, footer, deletable = true }) {
   const wrap = el('div');
   const table = el('table', { class: 'tbl' });
   table.append(el('thead', {}, el('tr', {},
@@ -117,7 +118,7 @@ export function dataTable({ columns, rows, save, addLabel = '+ Add row', newRow,
       tr.append(el('td', { class: 'act' }, el('button', {
         class: 'row-del', title: 'Delete row',
         onclick: () => {
-          if (!confirm('Delete this row?')) return;
+          if (!confirm(t('common.deleteConfirm'))) return;
           rows.splice(rows.indexOf(row), 1);
           save();
           tr.remove();
@@ -143,7 +144,7 @@ export function dataTable({ columns, rows, save, addLabel = '+ Add row', newRow,
     wrap.append(el('div', { class: 'btn-row' }, el('button', {
       class: 'btn secondary small',
       onclick: () => { rows.push(newRow()); save(); wrap.replaceWith(dataTable({ columns, rows, save, addLabel, newRow, footer, deletable })); },
-    }, addLabel)));
+    }, addLabel || t('common.addRow'))));
   }
   return wrap;
 }
