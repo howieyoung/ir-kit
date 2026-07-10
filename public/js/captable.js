@@ -1,10 +1,12 @@
 import { el, fmt, section, dataTable, tabs } from './ui.js';
 import { store, uid } from './store.js';
 import { capTotals, safeImpliedPct, modelRound, dilutionWalk, waterfall } from './metrics.js';
+import { pageCoach } from './onboarding.js';
 
 export function renderCapTable(root) {
   root.append(el('h1', {}, 'Cap Table'));
   root.append(el('p', { class: 'page-sub' }, 'Current ownership, SAFE ledger, priced-round conversion modeling, dilution scenarios, and exit waterfall. Planning tool — final conversion math comes from counsel and the instruments.'));
+  const coach = pageCoach('captable'); if (coach) root.append(coach);
   root.append(tabs([
     { label: 'Current & SAFEs', render: renderLedger },
     { label: 'Round modeler', render: renderModeler },

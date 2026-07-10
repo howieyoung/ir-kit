@@ -1,6 +1,7 @@
 import { el, fmt, kpi, section, lineChart } from './ui.js';
 import { store } from './store.js';
 import { latestMetrics, updateCadence } from './metrics.js';
+import { renderSetupNudge } from './onboarding.js';
 
 export function renderDashboard(root) {
   const fin = store.get('financials');
@@ -12,6 +13,9 @@ export function renderDashboard(root) {
   root.append(el('p', { class: 'page-sub' },
     m ? `Reporting month: ${fmt.month(m.month)} — every number here derives from the Financials tab, the single source of truth.`
       : 'Add monthly data in Financials to light this up.'));
+
+  const nudge = renderSetupNudge();
+  if (nudge) root.append(nudge);
 
   if (!m) return;
 

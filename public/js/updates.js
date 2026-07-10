@@ -2,11 +2,13 @@ import { el, fmt, section } from './ui.js';
 import { store, uid } from './store.js';
 import { latestMetrics, updateCadence } from './metrics.js';
 import { updateTemplate } from './update-template.js';
+import { pageCoach } from './onboarding.js';
 
 export function renderUpdates(root) {
   const updates = store.get('updates');
   root.append(el('h1', {}, 'Investor Updates'));
   root.append(el('p', { class: 'page-sub' }, 'YC-format monthly update: TL;DR, metrics, highlights, lowlights, asks, thanks. The streak is the asset — same day every month, never skip a bad one.'));
+  const coach = pageCoach('updates'); if (coach) root.append(coach);
 
   root.append(renderSchedule(updates));
   root.append(renderComposer());

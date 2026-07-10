@@ -26,6 +26,22 @@ Your coding agent (Claude Code, Codex, Cursor, etc.) is a **peer of this UI**, n
 
 From then on it's the monthly rhythm — the rituals and schedule below.
 
+## The full IR-master journey
+You don't need to know investor relations — you delegate each job to your agent in plain English. The whole arc, and the ritual behind each step:
+
+| You want to… | Say to your agent | Ritual |
+|---|---|---|
+| Set up from your real docs | "Read prompts/onboard.md and take over my IR setup" | `onboard.md` |
+| Build a clean data room | "Audit my data room against the checklists" | `data-room-audit.md` |
+| **Find fitted investors + reach out** | "Read prompts/investor-sourcing.md and find investors that fit us" | `investor-sourcing.md` |
+| Prep for an investor meeting | "Prep me for my meeting with [investor]" | `meeting-prep.md` |
+| Send the monthly update | "Draft this month's investor update" | `draft-update.md` |
+| **Run a board meeting** | "Read prompts/board-meeting.md and organize my [date] board meeting" | `board-meeting.md` |
+| **Run a shareholder / AGM meeting** | "Read prompts/shareholder-meeting.md and prepare my AGM" | `shareholder-meeting.md` |
+| Kick off a raise | "Model my round and build the pipeline plan" | `round-kickoff.md` |
+
+Everything runs on your machine, cites your real numbers, and drafts nothing it will send without you.
+
 ## The interface: the ir CLI
 Full reference with examples: [docs/CLI.md](docs/CLI.md).
 
@@ -38,6 +54,7 @@ ir model round --pre 12000000 --new 3000000    priced-round SAFE conversion
 # write (invariants enforced)
 ir close-month 2026-07 --saas 31000 --ads 14000 --payroll 34000 ...
 ir safe add "Fund X" --principal 50000 --cap 8000000 --status Signed
+ir prospect add "Acme Capital" --fit "leads pre-seed dev-tools" --source "<url>"
 ir update draft | mark-sent
 
 # onboarding & artifacts
@@ -57,10 +74,13 @@ Each recurring IR task has a canonical prompt in [prompts/](prompts/) — copy, 
 | Prompt | What the agent does |
 |---|---|
 | `onboard.md` | **Start here** — consent-gated: scans your folders, organizes the data room, populates real data with a citation per number |
+| `investor-sourcing.md` | Researches fitted investors, logs each with `ir prospect add` (fit + source), drafts personalized outreach — never sends |
 | `monthly-close.md` | `ir close-month` + explains every flag it raises, checks promises from last update |
 | `safe-signed.md` | `ir safe add` + guardrail report + same-day action items |
 | `draft-update.md` | `ir update draft` for the skeleton, then writes the narrative from your raw material |
 | `meeting-prep.md` | One-page brief: history with this investor, numbers to know cold, their 3 hardest questions |
+| `board-meeting.md` | `ir export board-pack` + agenda, invitation, pre-read, resolutions, and a minutes template |
+| `shareholder-meeting.md` | AGM/EGM notice, agenda, resolutions, cap-table voting sheet, proxy form, minutes |
 | `data-room-audit.md` | Walks your data room against the tier checklists, outputs a punch list by blocker severity |
 | `round-kickoff.md` | Models the raise, seeds the CRM pipeline, builds the batch-process round plan |
 

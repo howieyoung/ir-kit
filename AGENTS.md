@@ -15,6 +15,8 @@ You are operating a founder's investor-relations system. This file is the canoni
 ./bin/ir.js check [--json]       validate schemas + invariants (your post-edit test)
 ./bin/ir.js close-month 2026-07 --saas 31000 --ads 14000 --payroll 34000 --infra 4800 --other 3800
 ./bin/ir.js safe add "Fund X" --principal 50000 --cap 8000000 --status Signed --email a@b.c
+./bin/ir.js prospect add "Acme Capital" --fit "leads pre-seed dev-tools" --source "<url>"   sourced target → CRM (inactive nurture + Contacted pipeline, no ticket)
+./bin/ir.js prospect list [--json]
 ./bin/ir.js update draft [--month 2026-07]
 ./bin/ir.js update mark-sent --subject "..."
 ./bin/ir.js model round --pre 12000000 --new 3000000 --pool 0.10
@@ -70,7 +72,7 @@ prompts/                ritual prompts for humans to hand to agents
 
 ## Recurring rituals
 
-Canonical prompts live in `prompts/` (onboarding, monthly close, SAFE signed, draft update, meeting prep, data-room audit, round kickoff, scheduling). They route through `ir` verbs — follow their contracts.
+Canonical prompts live in `prompts/` (onboarding, investor sourcing & outreach, monthly close, SAFE signed, draft update, meeting prep, board meeting, shareholder/AGM meeting, data-room audit, round kickoff, scheduling). They route through `ir` verbs — follow their contracts. `prospect add` is the sourcing analogue of `safe add`: it reconciles the CRM (an inactive `Prospect nurture` distribution row + a `Contacted` pipeline commitment with no ticket) so a sourced name can't receive updates or inflate the weighted pipeline until you've actually made contact.
 
 ## Code conventions (when extending the kit)
 

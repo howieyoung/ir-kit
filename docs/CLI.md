@@ -69,6 +69,16 @@ ir safe add "Fund X" --principal 50000 --cap 8000000 \
 
 One call, four reconciled writes: the SAFE ledger entry, the CRM commitment (stage + stage-appropriate probability), the investor record, and the update-distribution entry (the last two only for Signed/Wired). Reports implied ownership, total SAFE overhang vs the 15% guardrail, and round progress. Refuses a SAFE with neither cap nor discount (conversion would be undefined). Discounts are fractions: `0.2` = 20%.
 
+## `ir prospect add` / `ir prospect list`
+
+```bash
+ir prospect add "Acme Capital" --fit "leads pre-seed dev-tools in EU" --source "https://acme.example/thesis" \
+  [--email partner@acme.example] [--type Fund|Angel|Accelerator|Other] [--ticket 50000]
+ir prospect list [--json]
+```
+
+The sourcing analogue of `safe add`, for investors you've *found* but not yet contacted. One `add` makes two reconciled CRM writes: an **inactive** `Prospect nurture` distribution row (so a sourced name can't receive updates until you flip `active` after real contact) and a `Contacted` pipeline commitment with **no ticket** (so unqualified names never inflate the weighted pipeline). Requires `--fit` and `--source` — a prospect you can't justify or cite doesn't get logged. Dedupes by name: re-running updates a prior *prospect* in place instead of duplicating, and a name you already track as a real investor/recipient/deal is reported back untouched — never overwritten. Stays green under `ir check`. Drives [prompts/investor-sourcing.md](../prompts/investor-sourcing.md), which researches candidates on the public web and drafts the outreach (never sends). `list` prints each prospect with its pipeline stage and fit.
+
 ## `ir update draft` / `ir update mark-sent`
 
 ```bash

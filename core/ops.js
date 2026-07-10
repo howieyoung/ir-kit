@@ -104,6 +104,68 @@ export function addSafe({ investor, principal, cap, discount, date, status = 'Si
   };
 }
 
+// Sourced prospect — a name you found and want to nurture, NOT yet contacted.
+// Lands as an INACTIVE distribution row (segment 'Prospect nurture') so it can't
+// receive updates until the founder actually reaches out, plus a 'Contacted'
+// commitment with probability 0.1 and NO ticket (so weighted pipeline isn't
+// inflated by unqualified names). Rows this verb creates are tagged sourced:true;
+// dedupe touches ONLY those, so re-running updates a prospect in place while a
+// name that collides with the founder's real investor/deal/recipient is left
+// untouched (and reported back, not duplicated). Stays inside ir-check invariants.
+export function addProspect({ name, fit, source, email = '', type = 'Fund', ticket } = {}) {
+  if (!name) throw new Error('prospect name required');
+  if (!fit) throw new Error('--fit required: one line on why they fit');
+  if (!source) throw new Error('--source required: where you found them / thesis URL');
+
+  const crm = load('crm');
+  const notes = `${fit} · via ${source}`;
+  const today = iso(new Date());
+
+  // Never corrupt or duplicate someone already tracked as REAL data (anything not sourced by us).
+  const knownAsReal =
+    crm.investors.some((r) => sameEntity(r.name, name)) ||
+    crm.commitments.some((c) => !c.sourced && sameEntity(c.investor, name)) ||
+    crm.distribution.some((r) => !r.sourced && sameEntity(r.name, name));
+  if (knownAsReal) {
+    return {
+      name, fit, source, updated: false, alreadyKnown: true, addedToDistribution: false,
+      note: 'already in your CRM as a real investor/recipient — not added as a prospect',
+      prospectCount: crm.distribution.filter((r) => r.sourced).length,
+    };
+  }
+
+  // Dedupe only against prior prospect adds (sourced rows) so re-running updates in place.
+  let updated = false;
+  const dist = crm.distribution.find((r) => r.sourced && sameEntity(r.name, name));
+  if (dist) { dist.notes = notes; dist.type = type; if (email) dist.email = email; updated = true; }
+  else crm.distribution.push({ id: uid(), name, email: email || '', segment: 'Prospect nurture', type, active: false, sourced: true, lastSent: '', notes });
+
+  const nextAction = `Outreach — ${fit}`;
+  const com = crm.commitments.find((c) => c.sourced && sameEntity(c.investor, name));
+  if (com) { com.source = source; com.nextAction = nextAction; if (ticket !== undefined) com.ticket = ticket ?? null; updated = true; }
+  else crm.commitments.push({ id: uid(), investor: name, source, ticket: ticket ?? null, stage: 'Contacted', probability: 0.1, nextAction, owner: '', lastTouch: today, sourced: true });
+
+  save('crm', crm);
+
+  const prospectCount = crm.distribution.filter((r) => r.sourced).length;
+  return { name, fit, source, email, type, updated, addedToDistribution: true, pipelineStage: 'Contacted', prospectCount };
+}
+
+export function listProspects() {
+  const crm = load('crm');
+  const prospects = crm.distribution
+    .filter((r) => r.sourced || r.segment === 'Prospect nurture')
+    .map((r) => {
+      const com = crm.commitments.find((c) => sameEntity(c.investor, r.name));
+      const notes = r.notes || '';
+      const via = notes.lastIndexOf(' · via ');
+      const fit = via >= 0 ? notes.slice(0, via) : notes;
+      const source = via >= 0 ? notes.slice(via + ' · via '.length) : (com ? com.source : '');
+      return { name: r.name, email: r.email || '', type: r.type || '', fit, source, stage: com ? com.stage : 'Contacted', active: !!r.active };
+    });
+  return { prospects };
+}
+
 export function draftUpdate(month) {
   const fin = load('financials');
   const m = latestMetrics(fin);
@@ -339,5 +401,13 @@ export function scanDocuments(folders, { maxDepth = 8, maxVisited = 50000, maxMa
 
 const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 const norm = (s) => String(s || '').toLowerCase().trim();
+// Same investor? Exact match, or the same base before a " — Contact" / " - Contact" suffix
+// (distribution rows are stored as "Fund — Partner"), so we recognize a lead already on the
+// list without over-matching on shared substrings.
+const nameBase = (s) => norm(s).split(/\s[—-]\s/)[0].trim();
+const sameEntity = (a, b) => {
+  const na = norm(a), nb = norm(b);
+  return na === nb || nameBase(a) === nameBase(b) || nameBase(a) === nb || na === nameBase(b);
+};
 const round4 = (x) => (x === null || x === undefined || isNaN(x) ? null : Math.round(x * 1e4) / 1e4);
 const round1 = (x) => Math.round(x * 10) / 10;

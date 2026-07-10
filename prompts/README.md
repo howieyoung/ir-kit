@@ -7,10 +7,13 @@ Copy, fill the brackets, paste. Each prompt produces file edits in `data/` and/o
 | Prompt | When |
 |---|---|
 | [onboard.md](onboard.md) | **Start here** — day one: agent scans your appointed folders, organizes the data room, and populates the system with real, cited data |
+| [investor-sourcing.md](investor-sourcing.md) | Find fitted investors + open outreach: research candidates, `ir prospect add` each with fit + source, draft the emails (you send) |
 | [monthly-close.md](monthly-close.md) | 10 days after month-end, every month |
 | [safe-signed.md](safe-signed.md) | The day a SAFE is signed/wired |
 | [draft-update.md](draft-update.md) | Monthly, right after the close |
 | [meeting-prep.md](meeting-prep.md) | Before any investor meeting |
+| [board-meeting.md](board-meeting.md) | Organize a board meeting: pack, agenda, invitation, resolutions, minutes |
+| [shareholder-meeting.md](shareholder-meeting.md) | Prepare an AGM/EGM: notice, resolutions, cap-table voting sheet, proxy, minutes |
 | [data-room-audit.md](data-room-audit.md) | Before opening a raise; quarterly after |
 | [round-kickoff.md](round-kickoff.md) | When you decide to raise |
 | [schedule-updates.md](schedule-updates.md) | Once — put the agent on a monthly schedule |

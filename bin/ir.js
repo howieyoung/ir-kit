@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // ir — the IR Kit command line. Built for agents first, humans second.
 // Every command supports --json. Data location overrides: IRKIT_DATA_DIR, IRKIT_ROOT.
-import { status, closeMonth, addSafe, draftUpdate, markSent, modelPricedRound, exportCaptableCsv, exportBoardPack, exportTearsheet, scanDocuments } from '../core/ops.js';
+import { status, closeMonth, addSafe, addProspect, listProspects, draftUpdate, markSent, modelPricedRound, exportCaptableCsv, exportBoardPack, exportTearsheet, scanDocuments } from '../core/ops.js';
 import { check } from '../core/check.js';
 import { DATA_DIR } from '../core/store.js';
 
@@ -18,6 +18,10 @@ const HELP = `ir — agent-native investor relations (data: ${DATA_DIR})
   ir safe add "<investor>" --principal N [--cap N] [--discount 0.2]
        [--status Signed|Wired|Verbal|"SAFE sent"|Target] [--email E] [--contact C] [--type Fund]
        (reconciles cap table + CRM commitment + distribution in one pass)
+  ir prospect add "<name>" --fit "<why they fit>" --source "<where found / thesis URL>"
+       [--email E] [--type Fund|Angel|Accelerator|Other] [--ticket N]
+       (sourced target → INACTIVE Prospect nurture row + 'Contacted' pipeline, no ticket; dedupes by name)
+  ir prospect list [--json]              sourced prospects with stage + fit
   ir update draft [--month YYYY-MM]      write the metrics-filled draft to ir-workspace/updates/drafts/
   ir update mark-sent [--subject S] [--month YYYY-MM]
   ir model round --pre N --new N [--pool 0.10]
@@ -69,6 +73,27 @@ try {
         console.log(`round: ${usd(r.round.signedWired)} of ${usd(r.round.target)} signed/wired`);
         if (r.reminder) console.log(`→ ${r.reminder}`);
       });
+      break;
+    }
+
+    case 'prospect': {
+      if (positional[0] === 'add') {
+        const r = addProspect({
+          name: positional[1], fit: flags.fit, source: flags.source,
+          email: flags.email, type: flags.type, ticket: num(flags.ticket),
+        });
+        out(r, () => {
+          if (r.alreadyKnown) { console.log(`• ${r.name} is already in your CRM as a real investor/recipient — not added as a prospect`); return; }
+          console.log(`✓ prospect ${r.updated ? 'updated' : 'added'} — ${r.name} · Prospect nurture (inactive until you make contact) · pipeline: Contacted`);
+          console.log('next: draft outreach (prompts/investor-sourcing.md); flip active on once you have reached out — drafts never auto-send');
+        });
+      } else if (positional[0] === 'list') {
+        const r = listProspects();
+        out(r, () => {
+          for (const p of r.prospects) console.log(`${p.name}${p.type ? ` (${p.type})` : ''}  [${p.stage}]  ${p.fit}`);
+          console.log(`${r.prospects.length} prospect(s) in nurture`);
+        });
+      } else fail('usage: ir prospect add "<name>" --fit "..." --source "..."  |  ir prospect list');
       break;
     }
 
