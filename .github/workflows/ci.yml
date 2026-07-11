@@ -30,4 +30,4 @@ jobs:
       - name: Tutorial is regenerated (docs/TUTORIAL.md matches guide.js)
         run: |
           npm run build-tutorial --silent
-          git diff --exit-code docs/TUTORIAL.md || { echo '::error::docs/TUTORIAL.md is stale — run: npm run build-tutorial'; exit 1; }
+          git diff --exit-code -- docs/TUTORIAL.md 'docs/i18n/TUTORIAL.*' || { echo '::error::tutorials are stale — run: npm run build-tutorial'; exit 1; }

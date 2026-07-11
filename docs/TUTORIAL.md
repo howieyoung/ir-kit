@@ -1,11 +1,13 @@
 <!-- GENERATED from public/js/content/guide.en.js — edit there, then `npm run build-tutorial` -->
 # IR Kit tutorial
 
+**English** · [繁體中文](i18n/TUTORIAL.zh-TW.md) · [日本語](i18n/TUTORIAL.ja.md) · [한국어](i18n/TUTORIAL.ko.md) · [Español](i18n/TUTORIAL.es.md) · [Français](i18n/TUTORIAL.fr.md)
+
 The same guide that lives in the app (**Get started** in the sidebar), for reading on GitHub.
 
-- [Use it with your agent](#operating-ir-kit-with-your-agent) — the agent track
-- [Use it yourself](#your-first-30-minutes) — the human track
-- [Cap table 101](#cap-table-101--the-ten-minute-version) — if SAFEs and dilution are new to you
+- [Operating IR Kit with your agent](#operating-ir-kit-with-your-agent) — the agent track
+- [Your first 30 minutes](#your-first-30-minutes) — the human track
+- [Cap table 101 — the ten-minute version](#cap-table-101--the-ten-minute-version) — if SAFEs and dilution are new to you
 - [Glossary](#glossary)
 
 ---

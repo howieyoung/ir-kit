@@ -30,6 +30,6 @@ node server.js        # Node 18+, cero dependencias — la instalación es solo 
 
 ## Idiomas
 
-Cambia el idioma desde la barra lateral (inglés, chino tradicional, japonés, coreano, español, francés). La documentación completa es canónica en inglés: [Tutorial](../TUTORIAL.md) · [CLI](../CLI.md) · [Contribuir](../../CONTRIBUTING.md) (todo PR debe mantener cobertura completa de los 6 idiomas).
+Cambia el idioma desde la barra lateral (inglés, chino tradicional, japonés, coreano, español, francés). El tutorial completo está en español: [Tutorial (español)](TUTORIAL.es.md); la referencia de la CLI es canónica en inglés: [CLI](../CLI.md) · [Contribuir](../../CONTRIBUTING.md) (todo PR debe mantener cobertura completa de los 6 idiomas).
 
 Licencia MIT · [Demo en vivo](https://howieyoung.github.io/ir-kit/) · [English README](../../README.md)

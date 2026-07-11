@@ -30,6 +30,6 @@ node server.js        # Node 18+，零依賴 — 安裝就這一行
 
 ## 語言
 
-儀表板左側欄可切換語言（英／繁中／日／韓／西／法）。完整文件（教學、CLI 參考）目前以英文為準：[Tutorial](../TUTORIAL.md) · [CLI](../CLI.md) · [貢獻規則](../../CONTRIBUTING.md)（所有 PR 必須維持六語系完整覆蓋）。
+儀表板左側欄可切換語言（英／繁中／日／韓／西／法）。完整教學已有繁中版：[教學（繁中）](TUTORIAL.zh-TW.md)；CLI 參考以英文為準：[CLI](../CLI.md) · [貢獻規則](../../CONTRIBUTING.md)（所有 PR 必須維持六語系完整覆蓋）。
 
 MIT 授權 · [線上 Demo](https://howieyoung.github.io/ir-kit/) · [English README](../../README.md)

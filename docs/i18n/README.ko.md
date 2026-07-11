@@ -30,6 +30,6 @@ node server.js        # Node 18+, 의존성 제로 — 설치는 이게 전부
 
 ## 언어
 
-사이드바에서 언어 전환(영어·번체 중문·일본어·한국어·스페인어·프랑스어). 전체 문서는 영어가 기준입니다: [Tutorial](../TUTORIAL.md) · [CLI](../CLI.md) · [기여 규칙](../../CONTRIBUTING.md)(모든 PR은 6개 언어 완전 커버리지 필수).
+사이드바에서 언어 전환(영어·번체 중문·일본어·한국어·스페인어·프랑스어). 튜토리얼은 한국어판이 있습니다: [튜토리얼(한국어)](TUTORIAL.ko.md). CLI 레퍼런스는 영어가 기준입니다: [CLI](../CLI.md) · [기여 규칙](../../CONTRIBUTING.md)(모든 PR은 6개 언어 완전 커버리지 필수).
 
 MIT 라이선스 · [라이브 데모](https://howieyoung.github.io/ir-kit/) · [English README](../../README.md)

@@ -93,6 +93,6 @@ Canonical prompts live in `prompts/` (onboarding, investor sourcing & outreach, 
 - Percentages are fractions in data (0.10 = 10%); format only at render time.
 - New operation = function in `core/ops.js` → verb in `bin/ir.js` → mention here and in `ir help`.
 - New page = `public/js/<name>.js` exporting `render<Name>(root)`, registered in `app.js`, linked in `index.html`.
-- Tutorial content lives in `public/js/guide.js`; regenerate docs with `npm run build-tutorial` — never edit `docs/TUTORIAL.md` directly.
+- Tutorial content lives in `public/js/guide.js`; regenerate ALL locale tutorials (docs/TUTORIAL.md + docs/i18n/TUTORIAL.*.md) with `npm run build-tutorial` — never edit them directly.
 - Release = bump `VERSION` in `public/js/version.js` **and** `"version"` in `package.json` together, then tag `vX.Y.Z` and publish a GitHub release (the in-app About links send users there for updates).
 - Verify UI changes: `node server.js`, check `/api/health`, load each page, zero console errors. Verify data changes: `./bin/ir.js check`.
