@@ -4,14 +4,19 @@
 // the bundled sample (seed), so a step lights up the moment real data replaces the sample.
 import { el } from './ui.js';
 import { store } from './store.js';
-import { seed } from './seed.js';
+import { seed, seedFor } from './seed.js';
+import { LOCALES } from './i18n.js';
 import { t } from './i18n.js';
 
 const j = (v) => JSON.stringify(v ?? null);
 
 // Has a collection diverged from the bundled sample? (i.e. the founder entered real data)
+// The sample may have been seeded in ANY locale (seedFor at seed/reset time), so a step
+// counts as "changed" only when the live data differs from EVERY locale's sample.
+const SEED_VARIANTS = Object.keys(LOCALES).map((loc) => seedFor(loc));
 function changed(name, pick) {
-  return j(pick(store.get(name) || {})) !== j(pick(seed[name] || {}));
+  const live = j(pick(store.get(name) || {}));
+  return SEED_VARIANTS.every((v) => live !== j(pick(v[name] || {})));
 }
 
 // The setup journey, from download to IR master. Each step reports done/undone from real data.

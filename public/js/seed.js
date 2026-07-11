@@ -3,6 +3,8 @@
 // and contact below is invented and demonstrates the data shapes, nothing more.
 // Replace via the UI (Settings), a JSON import, or by pointing your agent at data/.
 
+import { SEED_TEXT } from './seed-i18n.js';
+
 const months2025 = {
   saas: [400, 550, 800, 1200, 1700, 2400, 3200, 4200, 5500, 7000, 8800, 11000],
   ads: [100, 150, 250, 400, 650, 950, 1300, 1800, 2400, 3100, 3900, 5000],
@@ -38,28 +40,29 @@ const row = (y, i, src) => ({
   platforms: src.platforms[i], paying: src.paying[i],
 });
 
-export const seed = {
+function build(T) {
+  return {
   company: {
     name: 'Protico',
     founder: 'Casey Founder',
     email: 'founder@protico.example',
-    tagline: 'Sample company — embedded community & trust infrastructure',
+    tagline: T.tagline,
     roundTarget: 750000,
     roundInstrument: 'Post-money SAFE, $8M cap, $50K tickets',
     sample: true,
   },
   captable: {
     stakeholders: [
-      { id: 'st1', name: 'Casey Founder', type: 'Founder', security: 'Common', shares: 8500000, notes: 'SAMPLE — replace with incorporation docs' },
-      { id: 'st2', name: 'Team option grants (allocated)', type: 'Employees', security: 'Options', shares: 600000, notes: 'Requires 409A before granting' },
-      { id: 'st3', name: 'Option pool (unallocated)', type: 'Pool', security: 'Reserved', shares: 1400000, notes: '' },
+      { id: 'st1', name: 'Casey Founder', type: 'Founder', security: 'Common', shares: 8500000, notes: T.stFounderNote },
+      { id: 'st2', name: T.stOptionsName, type: 'Employees', security: 'Options', shares: 600000, notes: T.stOptionsNote },
+      { id: 'st3', name: T.stPoolName, type: 'Pool', security: 'Reserved', shares: 1400000, notes: '' },
     ],
     safes: [
-      { id: 'sf1', investor: 'Nightingale Ventures', date: '2025-05-01', principal: 150000, cap: 6500000, discount: null, status: 'Signed', notes: 'SAMPLE — fictional investor' },
-      { id: 'sf2', investor: 'Orbit Accelerator', date: '2025-01-15', principal: null, cap: null, discount: null, status: 'Verify', notes: 'Enter actual program equity terms — they must be on the cap table' },
-      { id: 'sf3', investor: 'Current round — SAFE #1', date: '', principal: 50000, cap: 8000000, discount: null, status: 'Target', notes: '$50K ticket at $8M cap' },
-      { id: 'sf4', investor: 'Current round — SAFE #2', date: '', principal: 50000, cap: 8000000, discount: null, status: 'Target', notes: '' },
-      { id: 'sf5', investor: 'Current round — SAFE #3', date: '', principal: 50000, cap: 8000000, discount: null, status: 'Target', notes: '' },
+      { id: 'sf1', investor: 'Nightingale Ventures', date: '2025-05-01', principal: 150000, cap: 6500000, discount: null, status: 'Signed', notes: T.sfFictionalNote },
+      { id: 'sf2', investor: 'Orbit Accelerator', date: '2025-01-15', principal: null, cap: null, discount: null, status: 'Verify', notes: T.sfOrbitNote },
+      { id: 'sf3', investor: T.sfRoundName.replace('{n}', 1), date: '', principal: 50000, cap: 8000000, discount: null, status: 'Target', notes: T.sfTicketNote },
+      { id: 'sf4', investor: T.sfRoundName.replace('{n}', 2), date: '', principal: 50000, cap: 8000000, discount: null, status: 'Target', notes: '' },
+      { id: 'sf5', investor: T.sfRoundName.replace('{n}', 3), date: '', principal: 50000, cap: 8000000, discount: null, status: 'Target', notes: '' },
     ],
     roundModel: { preMoney: 12000000, newMoney: 3000000, poolTarget: 0.10 },
     scenarios: [
@@ -72,24 +75,28 @@ export const seed = {
   financials: { openingCash: 180000, months: buildMonths() },
   crm: {
     investors: [
-      { id: 'iv1', name: 'Nightingale Ventures', type: 'Fund', contact: 'Robin Partner', email: 'robin@nightingale.example', instrument: 'SAFE', amount: 150000, cap: 6500000, date: '2025-05-01', segment: 'Board/Major', lastUpdate: '', notes: 'SAMPLE — fictional' },
-      { id: 'iv2', name: 'Orbit Accelerator', type: 'Accelerator', contact: '', email: '', instrument: 'Program equity', amount: null, cap: null, date: '', segment: 'Board/Major', lastUpdate: '', notes: 'Program terms must appear on cap table' },
-      { id: 'iv3', name: 'Cloud Credits Program', type: 'Program', contact: '', email: '', instrument: 'Credits only', amount: null, cap: null, date: '', segment: 'All investors', lastUpdate: '', notes: 'Non-equity — never present as an investor' },
+      { id: 'iv1', name: 'Nightingale Ventures', type: 'Fund', contact: 'Robin Partner', email: 'robin@nightingale.example', instrument: 'SAFE', amount: 150000, cap: 6500000, date: '2025-05-01', segment: 'Board/Major', lastUpdate: '', notes: T.ivFictionalNote },
+      { id: 'iv2', name: 'Orbit Accelerator', type: 'Accelerator', contact: '', email: '', instrument: 'Program equity', amount: null, cap: null, date: '', segment: 'Board/Major', lastUpdate: '', notes: T.ivOrbitNote },
+      { id: 'iv3', name: 'Cloud Credits Program', type: 'Program', contact: '', email: '', instrument: 'Credits only', amount: null, cap: null, date: '', segment: 'All investors', lastUpdate: '', notes: T.ivCreditsNote },
     ],
     commitments: [
-      { id: 'cm1', investor: '(example) Fund A', source: 'Pipeline top-10 #3', ticket: 50000, stage: 'Verbal', probability: 0.5, nextAction: 'Send SAFE + wire details', owner: 'Casey', lastTouch: '' },
+      { id: 'cm1', investor: T.cmInvestor, source: T.cmSource, ticket: 50000, stage: 'Verbal', probability: 0.5, nextAction: T.cmNext, owner: 'Casey', lastTouch: '' },
     ],
     interactions: [
-      { id: 'in1', date: '2026-07-01', investor: 'Nightingale Ventures', type: 'Call', summary: '(example) Quarterly check-in; asked about enterprise pipeline', followUp: 'Send GTM one-pager', due: '2026-07-08', done: false },
+      { id: 'in1', date: '2026-07-01', investor: 'Nightingale Ventures', type: 'Call', summary: T.inSummary, followUp: T.inFollow, due: '2026-07-08', done: false },
     ],
     asks: [
-      { id: 'as1', date: '2026-07-05', ask: '(example) Intro to a community/audience lead at a top-50 consumer platform', askedOf: 'All investors (July update)', status: 'Open', outcome: '', thanked: false },
+      { id: 'as1', date: '2026-07-05', ask: T.askText, askedOf: T.askOf, status: 'Open', outcome: '', thanked: false },
     ],
     distribution: [
-      { id: 'dl1', name: 'Nightingale Ventures — Robin Partner', email: 'robin@nightingale.example', segment: 'Board/Major', active: true, lastSent: '', notes: 'SAMPLE — fictional' },
+      { id: 'dl1', name: 'Nightingale Ventures — Robin Partner', email: 'robin@nightingale.example', segment: 'Board/Major', active: true, lastSent: '', notes: T.ivFictionalNote },
       { id: 'dl2', name: 'Orbit Accelerator — program lead', email: '', segment: 'Board/Major', active: true, lastSent: '', notes: '' },
     ],
   },
   updates: { archive: [] },
   checklists: {},
-};
+  };
+}
+
+export const seedFor = (locale) => build(SEED_TEXT[locale] || SEED_TEXT.en);
+export const seed = seedFor('en');

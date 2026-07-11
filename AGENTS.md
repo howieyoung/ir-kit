@@ -45,7 +45,7 @@ All commands take `--json` for structured output; errors go to stderr with exit 
 ## Privacy — non-negotiable
 
 - `data/*.json` and `ir-workspace/` are confidential. Never commit them, never weaken `.gitignore`, never paste their contents into anything that leaves this machine.
-- The only data allowed in the public repo is the fictional sample in `public/js/seed.js`. Keep it fictional.
+- The only data allowed in the public repo is the fictional sample in `public/js/seed.js` (localized text in `public/js/seed-i18n.js` — sample data materializes in the locale active at seed/reset time). Keep it fictional.
 - Drafts never auto-send. Scheduled runs write to `ir-workspace/updates/drafts/` only; the human reviews and sends. `ir update mark-sent` records a send that already happened — never call it for an email that wasn't actually sent.
 
 ## Layout

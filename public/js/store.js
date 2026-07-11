@@ -1,7 +1,8 @@
 // Data store with dual persistence:
 //  - server mode: GET/PUT /api/<collection> (JSON files in /data — editable by humans and agents alike)
 //  - static mode: localStorage (public demo hosting; data never leaves the visitor's browser)
-import { seed } from './seed.js';
+import { seedFor } from './seed.js';
+import { getLocale } from './i18n.js';
 
 export const COLLECTIONS = ['company', 'captable', 'financials', 'crm', 'updates', 'checklists'];
 const LS_PREFIX = 'irkit:';
@@ -28,11 +29,11 @@ export const store = {
         const r = await fetch('/api/' + name);
         if (r.ok) return await r.json();
       } catch { /* fall through to seed */ }
-      return structuredClone(seed[name]);
+      return structuredClone(seedFor(getLocale())[name]);
     }
     const raw = localStorage.getItem(LS_PREFIX + name);
     if (raw) { try { return JSON.parse(raw); } catch { /* re-seed */ } }
-    return structuredClone(seed[name]);
+    return structuredClone(seedFor(getLocale())[name]);
   },
 
   get(name) { return this.data[name]; },
@@ -92,7 +93,7 @@ export const store = {
 
   resetToSeed() {
     for (const name of COLLECTIONS) {
-      this.data[name] = structuredClone(seed[name]);
+      this.data[name] = structuredClone(seedFor(getLocale())[name]);
       this.persist(name);
     }
     this.emit();

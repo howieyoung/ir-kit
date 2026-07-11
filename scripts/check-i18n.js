@@ -21,6 +21,17 @@ const locales = Object.keys(MESSAGES);
 const REQUIRED = ['en', 'zh-TW', 'ja', 'ko', 'es', 'fr'];
 for (const r of REQUIRED) if (!locales.includes(r)) { console.error(`✗ required locale "${r}" is missing entirely`); failed = true; }
 
+// ---- sample-data text parity (seed-i18n.js) ----
+const { SEED_TEXT } = await import('../public/js/seed-i18n.js');
+const seedBase = Object.keys(SEED_TEXT.en).sort();
+for (const [locale, dict] of Object.entries(SEED_TEXT)) {
+  if (locale === 'en') continue;
+  const keys = new Set(Object.keys(dict));
+  for (const k of seedBase.filter((k) => !keys.has(k))) { console.error(`✗ seed-text ${locale}: missing key "${k}"`); failed = true; }
+  for (const k of [...keys].filter((k) => !seedBase.includes(k))) { console.error(`✗ seed-text ${locale}: unknown key "${k}"`); failed = true; }
+}
+for (const r of ['en', 'zh-TW', 'ja', 'ko', 'es', 'fr']) if (!SEED_TEXT[r]) { console.error(`✗ seed-text: locale "${r}" missing`); failed = true; }
+
 // ---- long-form content parity (guide tabs + playbooks per locale) ----
 // Structure must mirror English exactly: same exports, same DOCS ids/order, and the
 // same number of checkboxes per playbook doc (checklist state is keyed docId:index).
