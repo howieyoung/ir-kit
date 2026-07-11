@@ -61,16 +61,16 @@ function renderBrand(company) {
   box.append(company?.name || '');
   if (company?.sample) {
     box.append(el('div', {}, el('span', {
-      class: 'sample-pill', title: 'Sample data is loaded — click to open Settings',
+      class: 'sample-pill', title: t('pill.title'),
       onclick: () => { location.hash = '#/settings'; },
-    }, 'SAMPLE DATA')));
+    }, t('pill.sample'))));
   }
 }
 
 function renderSettings(root) {
   const company = store.get('company');
   root.append(el('h1', {}, t('settings.title')));
-  root.append(el('p', { class: 'page-sub' }, `Mode: ${store.mode === 'server' ? 'server — data persists to JSON files in the data/ folder (agent-editable)' : 'static demo — data lives in this browser\'s localStorage only'}.`));
+  root.append(el('p', { class: 'page-sub' }, store.mode === 'server' ? t('set.modeServer') : t('set.modeDemo')));
 
   const field = (label, key, type = 'text') => el('div', { class: 'field' },
     el('label', {}, label),
@@ -79,42 +79,42 @@ function renderSettings(root) {
       onchange: (e) => store.update('company', (c) => { c[key] = type === 'number' ? Number(e.target.value) : e.target.value; }),
     }));
 
-  root.append(section(t('settings.sec.profile'), 'Used across the app and in update templates.',
+  root.append(section(t('settings.sec.profile'), t('set.profileNote'),
     el('div', { class: 'grid cols-2' },
-      field('Company name', 'name'), field('Founder', 'founder'),
-      field('Email', 'email'), field('Round target ($)', 'roundTarget', 'number'),
-      field('Update day of month (1–28)', 'updateDay', 'number')),
-    field('Round instrument (shown in updates)', 'roundInstrument'),
-    el('div', { class: 'field' }, el('label', {}, 'Sample data flag'),
+      field(t('set.name'), 'name'), field(t('set.founder'), 'founder'),
+      field(t('set.email'), 'email'), field(t('set.roundTarget'), 'roundTarget', 'number'),
+      field(t('set.updateDay'), 'updateDay', 'number')),
+    field(t('set.instrument'), 'roundInstrument'),
+    el('div', { class: 'field' }, el('label', {}, t('set.sampleFlag')),
       el('label', { style: 'font-weight:400;display:flex;gap:8px;align-items:center' },
         (() => { const cb = el('input', { type: 'checkbox', onchange: (e) => store.update('company', (c) => { c.sample = e.target.checked; }) }); cb.checked = !!company.sample; return cb; })(),
-        'Show the sample-data banner (untick once real data is in)')),
+        t('set.sampleFlagDesc'))),
   ));
 
   const file = el('input', { type: 'file', accept: '.json', style: 'display:none', onchange: async (e) => {
     if (!e.target.files[0]) return;
-    try { await store.importAll(e.target.files[0]); alert('Imported.'); render(); }
-    catch (err) { alert('Import failed: ' + err.message); }
+    try { await store.importAll(e.target.files[0]); alert(t('set.imported')); render(); }
+    catch (err) { alert(t('set.importFail', { err: err.message })); }
   } });
-  root.append(section(t('settings.sec.data'), 'Export everything as one JSON file — for backup, or to move between the static demo and your own server.',
+  root.append(section(t('settings.sec.data'), t('set.dataNote'),
     file,
     el('div', { class: 'btn-row' },
-      el('button', { class: 'btn secondary', onclick: () => store.exportAll() }, 'Export all data (JSON)'),
-      el('button', { class: 'btn secondary', onclick: () => file.click() }, 'Import JSON'),
-      el('button', { class: 'btn danger', onclick: () => { if (confirm('Replace ALL data with the sample dataset?')) { store.resetToSeed(); render(); } } }, 'Reset to sample')),
+      el('button', { class: 'btn secondary', onclick: () => store.exportAll() }, t('set.export')),
+      el('button', { class: 'btn secondary', onclick: () => file.click() }, t('set.import')),
+      el('button', { class: 'btn danger', onclick: () => { if (confirm(t('set.resetConfirm'))) { store.resetToSeed(); render(); } } }, t('set.reset'))),
   ));
 
   root.append(el('div', { class: 'callout' },
-    'Working with a coding agent (CLI, prompts, scheduling, extending the kit) is covered in ',
-    el('a', { href: '#/guide' }, 'Get started → Use it with your agent'), '.'));
+    t('set.agentCallout'),
+    el('a', { href: '#/guide' }, t('set.agentCalloutLink')), '.'));
 
   root.append(section(t('settings.sec.about'), null,
     el('div', { class: 'doc', html: `
       <ul>
-        <li>Version: <b>v${VERSION}</b> — check for the latest at <a href="${REPO_URL}/releases" target="_blank" rel="noopener">GitHub releases</a>; update with <code>git pull</code> (your data/ is untouched — it's gitignored)</li>
-        <li>License: <a href="${REPO_URL}/blob/main/LICENSE" target="_blank" rel="noopener">MIT</a> — free to use, modify, and self-host</li>
-        <li>Source &amp; issues: <a href="${REPO_URL}" target="_blank" rel="noopener">github.com/howieyoung/ir-kit</a> · never include real financials in public issues</li>
-        <li>Live demo (sample data): <a href="https://howieyoung.github.io/ir-kit/" target="_blank" rel="noopener">howieyoung.github.io/ir-kit</a></li>
+        <li>${t('about.version')}: <b>v${VERSION}</b> — ${t('about.latestAt')} <a href="${REPO_URL}/releases" target="_blank" rel="noopener">${t('about.releases')}</a>; ${t('about.updateNote')}</li>
+        <li>${t('about.license')}: <a href="${REPO_URL}/blob/main/LICENSE" target="_blank" rel="noopener">MIT</a> — ${t('about.licenseNote')}</li>
+        <li>${t('about.source')}: <a href="${REPO_URL}" target="_blank" rel="noopener">github.com/howieyoung/ir-kit</a> · ${t('about.sourceNote')}</li>
+        <li>${t('about.demo')}: <a href="https://howieyoung.github.io/ir-kit/" target="_blank" rel="noopener">howieyoung.github.io/ir-kit</a></li>
       </ul>` })));
 }
 

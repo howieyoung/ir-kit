@@ -15,26 +15,26 @@ export function renderUpdates(root) {
   root.append(renderComposer());
 
   // archive
-  const arch = section(t('updates.sec.archive'), 'A future lead investor will read this entire archive back-to-back. Consistency of metrics and honesty of lowlights are what they grade.',
+  const arch = section(t('updates.sec.archive'), t('upd.archiveNote'),
     updates.archive.length
       ? el('div', {}, ...[...updates.archive].reverse().map((u) => archiveItem(u)))
-      : el('div', { class: 'muted' }, 'No updates sent yet. Compose the first one above — the streak starts now.'));
+      : el('div', { class: 'muted' }, t('upd.archiveEmpty')));
   root.append(arch);
 }
 
 function archiveItem(u) {
   const box = el('details', { style: 'border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:8px' });
-  box.append(el('summary', { style: 'cursor:pointer;font-weight:600' }, `${u.subject} — sent ${u.sentAt || 'draft'}`));
+  box.append(el('summary', { style: 'cursor:pointer;font-weight:600' }, `${u.subject} — ` + (u.sentAt ? t('upd.sentAt', { date: u.sentAt }) : t('upd.draft'))));
   box.append(el('pre', { style: 'font-family:var(--mono);font-size:12px;white-space:pre-wrap;line-height:1.5' }, u.body));
   box.append(el('div', { class: 'btn-row' },
-    el('button', { class: 'btn secondary small', onclick: () => navigator.clipboard.writeText(u.body) }, 'Copy'),
+    el('button', { class: 'btn secondary small', onclick: () => navigator.clipboard.writeText(u.body) }, t('common.copy')),
     el('button', {
       class: 'btn danger small', onclick: () => {
-        if (!confirm('Delete this archived update?')) return;
+        if (!confirm(t('upd.deleteConfirm'))) return;
         store.update('updates', (up) => up.archive.splice(up.archive.findIndex((x) => x.id === u.id), 1));
         box.remove();
       },
-    }, 'Delete')));
+    }, t('common.delete'))));
   return box;
 }
 
@@ -43,16 +43,16 @@ function renderSchedule(updates) {
   const cad = updateCadence(company, updates.archive);
   const chip = el('span', { class: `due-chip ${cad.overdue ? 'overdue' : cad.days <= 3 ? 'soon' : 'ok'}` },
     cad.overdue ? t('due.overdue', { n: -cad.days }) : cad.days === 0 ? t('due.today') : t('due.in', { n: cad.days }));
-  return section(t('updates.sec.schedule'), `Updates go out on day ${cad.day} of each month (change in Settings). Consistency beats perfection — the same date, every month.`,
+  return section(t('updates.sec.schedule'), t('upd.schedNote', { day: cad.day }),
     el('div', { style: 'display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:6px' },
-      el('div', {}, el('b', {}, `Next: ${cad.due.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} `), chip),
-      el('div', { class: 'muted' }, cad.streak > 0 ? `Current streak: ${cad.streak} month${cad.streak > 1 ? 's' : ''}` : 'No streak yet'),
+      el('div', {}, el('b', {}, t('upd.next', { date: cad.due.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }) })), chip),
+      el('div', { class: 'muted' }, cad.streak > 0 ? t('upd.streak', { n: cad.streak }) : t('upd.noStreak')),
     ),
     el('div', { class: 'btn-row' },
-      el('button', { class: 'btn secondary small', onclick: () => downloadIcs(company, cad) }, '📅 Add to calendar (.ics)'),
+      el('button', { class: 'btn secondary small', onclick: () => downloadIcs(company, cad) }, t('upd.ics')),
     ),
     el('div', { class: 'callout', style: 'margin-top:10px' },
-      'Want the draft waiting for you on update day? Put your agent on a schedule — cron/scheduled-task recipes are in ',
+      t('upd.callout'),
       el('a', { href: 'https://github.com/howieyoung/ir-kit/blob/main/prompts/schedule-updates.md', target: '_blank' }, 'prompts/schedule-updates.md'), '.'));
 }
 
@@ -94,36 +94,36 @@ function renderComposer() {
   body.value = updateTemplate(company, m, crm);
 
   const segSelect = el('select', {},
-    ...['All investors', 'Board/Major', 'Prospect nurture', 'Everyone active'].map((s) => el('option', { value: s }, s)));
+    ...['All investors', 'Board/Major', 'Prospect nurture', 'Everyone active'].map((s) => el('option', { value: s }, t('opt.seg.' + s))));
 
   const sendRow = el('div', { class: 'btn-row' },
-    el('button', { class: 'btn secondary', onclick: () => { body.value = updateTemplate(company, latestMetrics(store.get('financials')), store.get('crm')); } }, '↻ Refill metrics'),
-    el('button', { class: 'btn secondary', onclick: () => navigator.clipboard.writeText(body.value) }, 'Copy markdown'),
+    el('button', { class: 'btn secondary', onclick: () => { body.value = updateTemplate(company, latestMetrics(store.get('financials')), store.get('crm')); } }, t('upd.refill')),
+    el('button', { class: 'btn secondary', onclick: () => navigator.clipboard.writeText(body.value) }, t('upd.copyMd')),
     el('button', {
       class: 'btn', onclick: () => {
         const seg = segSelect.value;
         const recipients = crm.distribution.filter((d) => d.active && d.email && (seg === 'Everyone active' || d.segment === seg)).map((d) => d.email);
-        if (!recipients.length) { alert('No active recipients with emails in that segment — fill CRM → Update distribution first.'); return; }
+        if (!recipients.length) { alert(t('upd.noRecipients')); return; }
         const mailto = `mailto:?bcc=${encodeURIComponent(recipients.join(','))}&subject=${encodeURIComponent(subjectInput.value)}&body=${encodeURIComponent(body.value)}`;
-        if (mailto.length > 7500) { navigator.clipboard.writeText(body.value); alert('Update copied to clipboard (too long for a mailto link). Recipients (BCC): ' + recipients.join(', ')); return; }
+        if (mailto.length > 7500) { navigator.clipboard.writeText(body.value); alert(t('upd.tooLong', { recipients: recipients.join(', ') })); return; }
         location.href = mailto;
       },
-    }, 'Open in email (BCC)'),
+    }, t('upd.openEmail')),
     el('button', {
       class: 'btn', onclick: () => {
         store.update('updates', (up) => up.archive.push({
           id: uid(), month: m ? m.month : '', subject: subjectInput.value, body: body.value,
           sentAt: new Date().toISOString().slice(0, 10),
         }));
-        alert('Archived. Now log the send date per recipient in CRM → Update distribution.');
+        alert(t('upd.archived'));
         location.reload();
       },
-    }, 'Mark sent → archive'));
+    }, t('upd.markSent')));
 
-  return section(t('updates.sec.compose'), 'Metrics are pre-filled from Financials — never hand-type a number. Fill the brackets, cut until it reads in 3 minutes.',
-    el('div', { class: 'field' }, el('label', {}, 'Subject'), subjectInput),
-    el('div', { class: 'field' }, el('label', {}, 'Body (markdown)'), body),
-    el('div', { class: 'inline-fields' }, el('div', { class: 'field', style: 'max-width:240px' }, el('label', {}, 'Send to segment'), segSelect)),
+  return section(t('updates.sec.compose'), t('upd.composeNote'),
+    el('div', { class: 'field' }, el('label', {}, t('upd.subject')), subjectInput),
+    el('div', { class: 'field' }, el('label', {}, t('upd.body')), body),
+    el('div', { class: 'inline-fields' }, el('div', { class: 'field', style: 'max-width:240px' }, el('label', {}, t('upd.segment')), segSelect)),
     sendRow);
 }
 

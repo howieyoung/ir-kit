@@ -17,7 +17,7 @@ export function renderFinancials(root) {
     type: 'number', value: fin.openingCash ?? 0, step: 'any',
     onchange: (e) => { fin.openingCash = Number(e.target.value); save(); rerender(root); },
   });
-  root.append(section('Opening cash', 'Cash balance before the first month listed below.',
+  root.append(section(t('fin.opening'), t('fin.openingNote'),
     el('div', { class: 'field', style: 'max-width:220px' }, opening)));
 
   const derived = () => new Map(derive(fin).map((d) => [d.month, d]));
@@ -25,28 +25,28 @@ export function renderFinancials(root) {
   const D = (row, key) => dmap.get(row.month)?.[key];
 
   const columns = [
-    { key: 'month', label: 'Month', type: 'text', width: 78, placeholder: 'YYYY-MM' },
-    { key: 'saas', label: 'SaaS $', type: 'number', width: 70 },
-    { key: 'ads', label: 'Ads $', type: 'number', width: 70 },
-    { compute: (r) => { dmap = derived(); return D(r, 'revenue'); }, label: 'Revenue', fmt: (v) => fmt.usd(v) },
-    { key: 'payroll', label: 'Payroll $', type: 'number', width: 76 },
-    { key: 'infra', label: 'Infra $', type: 'number', width: 66 },
-    { key: 'other', label: 'Other $', type: 'number', width: 66 },
-    { compute: (r) => D(r, 'costs'), label: 'Costs', fmt: (v) => fmt.usd(v) },
-    { compute: (r) => D(r, 'pnl'), label: 'Net P&L', fmt: (v) => fmt.usd(v) },
-    { key: 'inflow', label: 'Equity in $', type: 'number', width: 80 },
-    { compute: (r) => D(r, 'cash'), label: 'Cash', fmt: (v) => fmt.usd(v) },
-    { key: 'headcount', label: 'HC', type: 'number', width: 46 },
-    { key: 'traffic', label: 'Traffic', type: 'number', width: 92 },
-    { key: 'pages', label: 'Pages/day', type: 'number', width: 86 },
-    { key: 'platforms', label: 'Platforms', type: 'number', width: 60 },
-    { key: 'paying', label: 'Paying', type: 'number', width: 56 },
+    { key: 'month', label: t('col.month'), type: 'text', width: 78, placeholder: 'YYYY-MM' },
+    { key: 'saas', label: t('col.saas'), type: 'number', width: 70 },
+    { key: 'ads', label: t('col.ads'), type: 'number', width: 70 },
+    { compute: (r) => { dmap = derived(); return D(r, 'revenue'); }, label: t('col.revenue'), fmt: (v) => fmt.usd(v) },
+    { key: 'payroll', label: t('col.payroll'), type: 'number', width: 76 },
+    { key: 'infra', label: t('col.infra'), type: 'number', width: 66 },
+    { key: 'other', label: t('col.other'), type: 'number', width: 66 },
+    { compute: (r) => D(r, 'costs'), label: t('col.costs'), fmt: (v) => fmt.usd(v) },
+    { compute: (r) => D(r, 'pnl'), label: t('col.pnl'), fmt: (v) => fmt.usd(v) },
+    { key: 'inflow', label: t('col.inflow'), type: 'number', width: 80 },
+    { compute: (r) => D(r, 'cash'), label: t('col.cash'), fmt: (v) => fmt.usd(v) },
+    { key: 'headcount', label: t('col.hc'), type: 'number', width: 46 },
+    { key: 'traffic', label: t('col.traffic'), type: 'number', width: 92 },
+    { key: 'pages', label: t('col.pages'), type: 'number', width: 86 },
+    { key: 'platforms', label: t('col.platforms'), type: 'number', width: 60 },
+    { key: 'paying', label: t('col.paying'), type: 'number', width: 56 },
   ];
 
-  root.append(section('Monthly actuals', 'Traffic = monthly connected visits. Pages/day = daily connected pages (ads inventory). Definitions live in Playbooks → Metric definitions.',
+  root.append(section(t('fin.monthly'), t('fin.monthlyNote'),
     dataTable({
       columns, rows: fin.months, save,
-      addLabel: '+ Add month',
+      addLabel: t('fin.addMonth'),
       newRow: () => {
         const last = fin.months.length ? fin.months[fin.months.length - 1].month : new Date().toISOString().slice(0, 7);
         return { month: addMonths(last, 1), saas: null, ads: null, payroll: null, infra: null, other: null, inflow: 0, headcount: null, traffic: null, pages: null, platforms: null, paying: null };
@@ -55,7 +55,7 @@ export function renderFinancials(root) {
 
   const m = latestMetrics(fin);
   if (m) {
-    root.append(section('Investor update block', 'Paste-ready — these exact figures go in the monthly update table. Compose it in Updates.',
+    root.append(section(t('fin.block'), t('fin.blockNote'),
       el('pre', { style: 'font-family:var(--mono);font-size:12.5px;background:#f4f6f8;padding:12px;border-radius:8px;overflow-x:auto' },
         updateBlock(m))));
   }
@@ -69,37 +69,36 @@ export function renderFinancials(root) {
 
 function updateBlock(m) {
   const lines = [
-    ['Revenue (SaaS + Ads)', `${fmt.usd(m.revenue)}  (${m.mom === null ? '—' : (m.mom >= 0 ? '+' : '') + fmt.pct(m.mom)} MoM)`],
-    ['ARR run-rate', fmt.usd(m.arrRunRate)],
-    ['Monthly connected traffic', `${fmt.num(m.traffic, true)}${m.trafficYoY !== null ? `  (+${fmt.pct(m.trafficYoY, 0)} YoY)` : ''}`],
-    ['Daily connected pages', fmt.num(m.pages, true)],
-    ['Client platforms (paying/total)', `${m.paying ?? '—'} / ${m.platforms ?? '—'}`],
-    ['Net burn (3-mo avg)', m.burn3 >= 0 ? 'cash-flow positive' : fmt.usd(-m.burn3) + '/mo'],
-    ['Cash / runway', `${fmt.usd(m.cash)} / ${m.runway === Infinity ? 'CF positive' : m.runway.toFixed(1) + ' months (zero-cash ' + fmt.month(m.zeroCash) + ')'}`],
+    [t('blk.revenue'), `${fmt.usd(m.revenue)}  (${m.mom === null ? '—' : (m.mom >= 0 ? '+' : '') + fmt.pct(m.mom)} MoM)`],
+    [t('blk.arr'), fmt.usd(m.arrRunRate)],
+    [t('blk.traffic'), `${fmt.num(m.traffic, true)}${m.trafficYoY !== null ? `  (+${fmt.pct(m.trafficYoY, 0)} YoY)` : ''}`],
+    [t('blk.pages'), fmt.num(m.pages, true)],
+    [t('blk.platforms'), `${m.paying ?? '—'} / ${m.platforms ?? '—'}`],
+    [t('blk.burn'), m.burn3 >= 0 ? t('kpi.cfPositive') : fmt.usd(-m.burn3) + t('blk.perMonth')],
+    [t('blk.cashRunway'), `${fmt.usd(m.cash)} / ${m.runway === Infinity ? t('rw.cf') : t('blk.months', { m: m.runway.toFixed(1), date: fmt.month(m.zeroCash) })}`],
   ];
-  const w = Math.max(...lines.map(([l]) => l.length));
-  return lines.map(([l, v]) => l.padEnd(w + 2) + v).join('\n');
+  return lines.map(([l, v]) => `- ${l}: ${v}`).join('\n');
 }
 
 function renderRunway(m, company) {
   if (!m) return el('div');
   const burn = m.burn3;
   const scenarios = [
-    { name: 'As-is', delta: 0 },
-    { name: '+1 senior engineer', delta: -8000 },
-    { name: '+2 hires (eng + GTM)', delta: -15000 },
-    { name: 'US GTM push', delta: -20000 },
+    { name: t('rw.asis'), delta: 0 },
+    { name: t('rw.hire1'), delta: -8000 },
+    { name: t('rw.hire2'), delta: -15000 },
+    { name: t('rw.gtm'), delta: -20000 },
   ];
   const remaining = (company.roundTarget || 0) * 0.8; // planning assumption: 80% of round still to wire
   const row = (s, cash) => {
     const net = burn + s.delta;
-    const rw = net >= 0 ? 'CF positive' : (cash / -net).toFixed(1) + ' mo';
+    const rw = net >= 0 ? t('rw.cf') : (cash / -net).toFixed(1) + ' mo';
     return el('tr', {}, el('td', {}, s.name), el('td', { class: 'computed' }, fmt.usd(s.delta)), el('td', { class: 'computed' }, net >= 0 ? '+' + fmt.usd(net) : fmt.usd(net)), el('td', { class: 'computed' }, rw));
   };
   const tbl = (cash, title) => el('div', {}, el('div', { class: 'chart-title' }, title),
     el('table', { class: 'tbl' },
-      el('thead', {}, el('tr', {}, el('th', {}, 'Scenario'), el('th', {}, 'Burn delta/mo'), el('th', {}, 'Net/mo'), el('th', {}, 'Runway'))),
+      el('thead', {}, el('tr', {}, el('th', {}, t('rw.scenario')), el('th', {}, t('rw.delta')), el('th', {}, t('rw.net')), el('th', {}, t('rw.months')))),
       el('tbody', {}, ...scenarios.map((s) => row(s, cash)))));
-  return section('Runway scenarios', 'Hiring plans against current cash, and with the remainder of the round closed. The round must buy ≥18 months or reach a priceable milestone.',
-    el('div', { class: 'grid cols-2' }, tbl(m.cash, `Current cash (${fmt.usd(m.cash, true)})`), tbl(m.cash + remaining, `With round closed (+${fmt.usd(remaining, true)})`)));
+  return section(t('fin.runway'), t('fin.runwayNote'),
+    el('div', { class: 'grid cols-2' }, tbl(m.cash, t('rw.current', { cash: fmt.usd(m.cash, true) })), tbl(m.cash + remaining, t('rw.withRound', { amount: fmt.usd(remaining, true) }))));
 }

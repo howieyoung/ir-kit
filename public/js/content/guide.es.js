@@ -162,7 +162,7 @@ export const GLOSSARY = `# Glosario
 
 | Término | Significado |
 |---|---|
-| ARR anualizado | Ingresos del mes × 12. No es lo mismo que ARR contratado — etiqueta con honestidad |
+| ARR (ingresos anualizados) | Ingresos del mes × 12. No es lo mismo que ARR contratado — etiqueta con honestidad |
 | Burn (neto) | Costes menos ingresos del mes; entradas de financiación excluidas |
 | Cap (valuation cap) | La valoración usada para convertir un SAFE — cap más bajo = más acciones para el inversor |
 | Data room | La carpeta organizada de documentos que un inversor revisa en due diligence |

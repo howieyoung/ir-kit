@@ -162,7 +162,7 @@ export const GLOSSARY = `# Glossaire
 
 | Terme | Signification |
 |---|---|
-| ARR annualisé | Revenus du mois × 12. Différent de l'ARR contractuel — étiquetez honnêtement |
+| ARR (revenu annualisé) | Revenus du mois × 12. Différent de l'ARR contractuel — étiquetez honnêtement |
 | Burn (net) | Coûts moins revenus du mois ; entrées de financement exclues |
 | Cap (valuation cap) | La valorisation servant à convertir un SAFE — cap plus bas = plus d'actions pour l'investisseur |
 | Data room | Le dossier organisé de documents qu'un investisseur examine en due diligence |

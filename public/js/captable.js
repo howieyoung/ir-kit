@@ -24,41 +24,41 @@ function renderLedger() {
   const wrap = el('div');
   const totals = () => capTotals(cap);
 
-  wrap.append(section('Stakeholders (issued + reserved)', 'Fully-diluted basis, before SAFE conversion.',
+  wrap.append(section(t('cap.stakeholders'), t('cap.stakeholdersNote'),
     dataTable({
       columns: [
-        { key: 'name', label: 'Stakeholder', type: 'text', width: 180 },
-        { key: 'type', label: 'Type', type: 'select', options: ['Founder', 'Employees', 'Pool', 'Advisor', 'Other'] },
-        { key: 'security', label: 'Security', type: 'text', width: 90 },
-        { key: 'shares', label: 'Shares', type: 'number', width: 110 },
-        { compute: (r) => (totals().shares ? (r.shares || 0) / totals().shares : null), label: '% FD', fmt: (v) => fmt.pct(v) },
-        { key: 'notes', label: 'Notes', type: 'text', width: 200 },
+        { key: 'name', label: t('col.stakeholder'), type: 'text', width: 180 },
+        { key: 'type', label: t('col.type'), type: 'select', options: ['Founder', 'Employees', 'Pool', 'Advisor', 'Other'].map((v) => ({ value: v, label: t('opt.holder.' + v) })) },
+        { key: 'security', label: t('col.security'), type: 'text', width: 90 },
+        { key: 'shares', label: t('col.shares'), type: 'number', width: 110 },
+        { compute: (r) => (totals().shares ? (r.shares || 0) / totals().shares : null), label: t('col.fd'), fmt: (v) => fmt.pct(v) },
+        { key: 'notes', label: t('col.notes'), type: 'text', width: 200 },
       ],
       rows: cap.stakeholders, save,
       newRow: () => ({ id: uid(), name: '', type: 'Other', security: 'Common', shares: null, notes: '' }),
       footer: () => el('tr', { class: 'total-row' },
-        el('td', {}, 'TOTAL'), el('td', {}), el('td', {}),
+        el('td', {}, t('common.total')), el('td', {}), el('td', {}),
         el('td', { class: 'computed' }, fmt.num(totals().shares)),
         el('td', { class: 'computed' }, '100.0%'), el('td', {}), el('td', {})),
     })));
 
   const safeTotal = () => cap.safes.reduce((s, r) => s + (safeImpliedPct(r) || 0), 0);
-  wrap.append(section('SAFE ledger', 'Implied ownership = Principal ÷ Post-money cap (the post-money SAFE guarantee, pre-dilution by the next round). Keep the total under ~15% before pricing a round.',
+  wrap.append(section(t('cap.ledger'), t('cap.ledgerNote'),
     dataTable({
       columns: [
-        { key: 'investor', label: 'Investor', type: 'text', width: 170 },
-        { key: 'date', label: 'Date', type: 'date', width: 120 },
-        { key: 'principal', label: 'Principal $', type: 'number', width: 100 },
-        { key: 'cap', label: 'Post-money cap $', type: 'number', width: 120 },
-        { key: 'discount', label: 'Discount (0.2 = 20%)', type: 'number', width: 76 },
-        { compute: (r) => safeImpliedPct(r), label: 'Implied %', fmt: (v) => fmt.pct(v) },
-        { key: 'status', label: 'Status', type: 'select', options: ['Target', 'Verbal', 'SAFE sent', 'Signed', 'Wired', 'Verify'] },
-        { key: 'notes', label: 'Notes', type: 'text', width: 200 },
+        { key: 'investor', label: t('col.investor'), type: 'text', width: 170 },
+        { key: 'date', label: t('col.date'), type: 'date', width: 120 },
+        { key: 'principal', label: t('col.principal'), type: 'number', width: 100 },
+        { key: 'cap', label: t('col.cap'), type: 'number', width: 120 },
+        { key: 'discount', label: t('col.discount'), type: 'number', width: 76 },
+        { compute: (r) => safeImpliedPct(r), label: t('col.implied'), fmt: (v) => fmt.pct(v) },
+        { key: 'status', label: t('col.status'), type: 'select', options: ['Target', 'Verbal', 'SAFE sent', 'Signed', 'Wired', 'Verify'].map((v) => ({ value: v, label: t('opt.safe.' + v) })) },
+        { key: 'notes', label: t('col.notes'), type: 'text', width: 200 },
       ],
       rows: cap.safes, save,
       newRow: () => ({ id: uid(), investor: '', date: '', principal: null, cap: null, discount: null, status: 'Target', notes: '' }),
       footer: () => el('tr', { class: 'total-row' },
-        el('td', {}, 'TOTAL'), el('td', {}),
+        el('td', {}, t('common.total')), el('td', {}),
         el('td', { class: 'computed' }, fmt.usd(cap.safes.reduce((s, r) => s + (r.principal || 0), 0))),
         el('td', {}), el('td', {}),
         el('td', { class: 'computed' }, fmt.pct(safeTotal())),
@@ -82,30 +82,30 @@ function renderModeler() {
       onchange: (e) => { rm[key] = isPct ? Number(e.target.value) / 100 : Number(e.target.value); save(); draw(); },
     }));
 
-  wrap.append(section('Priced round inputs', 'Post-money SAFE percentage method: each SAFE locks Principal/Cap pre-round, then dilutes with everyone by new money + pool top-up. Pool top-up is solved so the post-round unallocated pool hits the target.',
+  wrap.append(section(t('mod.section'), t('mod.note'),
     el('div', { class: 'inline-fields' },
-      input('Pre-money valuation ($)', 'preMoney'),
-      input('New money raised ($)', 'newMoney'),
-      input('Post-round pool target (%)', 'poolTarget', true)),
+      input(t('mod.pre'), 'preMoney'),
+      input(t('mod.new'), 'newMoney'),
+      input(t('mod.pool'), 'poolTarget', true)),
     out));
 
   function draw() {
     out.innerHTML = '';
     const m = modelRound(cap, rm);
-    if (!m) { out.append(el('div', { class: 'callout warn' }, 'Add stakeholders with shares first.')); return; }
+    if (!m) { out.append(el('div', { class: 'callout warn' }, t('mod.addFirst'))); return; }
     out.append(el('div', { class: 'grid cols-4', style: 'margin:10px 0' },
-      stat('Post-money', fmt.usd(m.post, true)), stat('New investors', fmt.pct(m.nPct)),
-      stat('SAFEs (pre-round)', fmt.pct(m.S)), stat('Price/share', '$' + m.pps.toFixed(4))));
-    if (m.dp > 0) out.append(el('div', { class: 'callout' }, `Pool top-up needed: ${fmt.pct(m.dp)} of post-round — founders and existing holders absorb this.`));
+      stat(t('mod.statPost'), fmt.usd(m.post, true)), stat(t('mod.statNew'), fmt.pct(m.nPct)),
+      stat(t('mod.statSafes'), fmt.pct(m.S)), stat(t('mod.statPps'), '$' + m.pps.toFixed(4))));
+    if (m.dp > 0) out.append(el('div', { class: 'callout' }, t('mod.poolTopUp', { pct: fmt.pct(m.dp) })));
     const tbl = el('table', { class: 'tbl' },
-      el('thead', {}, el('tr', {}, el('th', {}, 'Stakeholder'), el('th', { class: 'right' }, 'Post-round shares'), el('th', { class: 'right' }, 'Post-round %'))),
+      el('thead', {}, el('tr', {}, el('th', {}, t('col.stakeholder')), el('th', { class: 'right' }, t('mod.thShares')), el('th', { class: 'right' }, t('mod.thPct')))),
       el('tbody', {},
         ...m.rows.map((r) => el('tr', {},
           el('td', {}, r.name),
           el('td', { class: 'computed' }, fmt.num(Math.round(r.shares))),
           el('td', { class: 'computed' }, fmt.pct(r.pct)))),
         el('tr', { class: 'total-row' },
-          el('td', {}, 'TOTAL'),
+          el('td', {}, t('common.total')),
           el('td', { class: 'computed' }, fmt.num(Math.round(m.T))),
           el('td', { class: 'computed' }, fmt.pct(m.total)))));
     out.append(el('div', { class: 'tbl-wrap' }, tbl));
@@ -125,14 +125,14 @@ function renderScenarios() {
   const wrap = el('div');
 
   const fields = [
-    ['safeRaised', 'Pre-seed SAFEs raised ($)'], ['safeCap', 'Blended SAFE cap ($)'],
-    ['seedMoney', 'Seed new money ($)'], ['seedPost', 'Seed post-money ($)'], ['seedPool', 'Seed pool added (0.10 = 10%)'],
-    ['aMoney', 'Series A new money ($)'], ['aPost', 'Series A post-money ($)'], ['aPool', 'A pool added'],
+    ['safeRaised', t('scn.safeRaised')], ['safeCap', t('scn.safeCap')],
+    ['seedMoney', t('scn.seedMoney')], ['seedPost', t('scn.seedPost')], ['seedPool', t('scn.seedPool')],
+    ['aMoney', t('scn.aMoney')], ['aPost', t('scn.aPost')], ['aPool', t('scn.aPool')],
   ];
   const table = el('table', { class: 'tbl' });
   const draw = () => {
     table.innerHTML = '';
-    table.append(el('thead', {}, el('tr', {}, el('th', {}, 'Assumption'), ...cap.scenarios.map((s) => el('th', {}, s.name)))));
+    table.append(el('thead', {}, el('tr', {}, el('th', {}, t('scn.assumption')), ...cap.scenarios.map((s) => el('th', {}, s.name)))));
     const tb = el('tbody');
     for (const [key, label] of fields) {
       tb.append(el('tr', {}, el('td', {}, label), ...cap.scenarios.map((s) => el('td', {},
@@ -142,16 +142,16 @@ function renderScenarios() {
     const outRow = (label, get, format) => el('tr', {}, el('td', {}, el('b', {}, label)),
       ...walks.map((w) => el('td', { class: 'computed' }, format(get(w)))));
     tb.append(
-      el('tr', {}, el('td', {}, el('b', {}, 'Founder today')), ...cap.scenarios.map(() => el('td', { class: 'computed' }, fmt.pct(founderPct)))),
-      outRow('After SAFEs convert', (w) => w.afterSafe, fmt.pct),
-      outRow('After Seed', (w) => w.afterSeed, fmt.pct),
-      outRow('After Series A', (w) => w.afterA, fmt.pct),
-      outRow('Stake value at A post-money', (w) => w.valueAtA, (v) => fmt.usd(v, true)),
+      el('tr', {}, el('td', {}, el('b', {}, t('scn.today'))), ...cap.scenarios.map(() => el('td', { class: 'computed' }, fmt.pct(founderPct)))),
+      outRow(t('scn.afterSafe'), (w) => w.afterSafe, fmt.pct),
+      outRow(t('scn.afterSeed'), (w) => w.afterSeed, fmt.pct),
+      outRow(t('scn.afterA'), (w) => w.afterA, fmt.pct),
+      outRow(t('scn.value'), (w) => w.valueAtA, (v) => fmt.usd(v, true)),
     );
     table.append(tb);
   };
   draw();
-  wrap.append(section('Founder dilution walk', 'Simplified sequential dilution: each stage multiplies prior ownership by (1 − new money % − pool added %). Rule of thumb: founders + team above 50% going into Series A.',
+  wrap.append(section(t('scn.title'), t('scn.note') + ' ' + t('scn.rule'),
     el('div', { class: 'tbl-wrap' }, table)));
   return wrap;
 }
@@ -174,28 +174,28 @@ function renderWaterfall() {
       onchange: (e) => { wf[key] = isPct ? Number(e.target.value) / 100 : Number(e.target.value); save(); draw(); },
     }));
 
-  wrap.append(section('Exit waterfall', `Single preferred class, 1x non-participating, no dividends. Founder % (${fmt.pct(founderPct)}) comes from the Base dilution scenario. Illustrative only.`,
+  wrap.append(section(t('wf.section'), t('wf.note', { pct: fmt.pct(founderPct) }),
     el('div', { class: 'inline-fields' },
-      input('Preferred invested ($)', 'prefInvested'),
-      input('Preferred as-converted (%)', 'prefPct', true),
-      input('Liquidation multiple (x)', 'multiple')),
+      input(t('wf.invested'), 'prefInvested'),
+      input(t('wf.pct'), 'prefPct', true),
+      input(t('wf.multiple'), 'multiple')),
     out));
 
   function draw() {
     out.innerHTML = '';
     const rows = [
-      ['Preferred payout', (r) => fmt.usd(r.prefTake, true)],
-      ['Decision', (r) => (r.converts ? 'Convert' : 'Take preference')],
-      ['Common receives', (r) => fmt.usd(r.common, true)],
-      ['— of which founder', (r) => fmt.usd(r.founder, true)],
-      ['Preferred MOIC', (r) => (r.moic === null ? '—' : r.moic.toFixed(2) + 'x')],
+      [t('wf.pref'), (r) => fmt.usd(r.prefTake, true)],
+      [t('wf.decision'), (r) => (r.converts ? t('wf.convert') : t('wf.takePref'))],
+      [t('wf.common'), (r) => fmt.usd(r.common, true)],
+      [t('wf.founder'), (r) => fmt.usd(r.founder, true)],
+      [t('wf.moic'), (r) => (r.moic === null ? '—' : r.moic.toFixed(2) + 'x')],
     ];
     const results = wf.exits.map((x) => waterfall(x, { ...wf, founderPct }));
     out.append(el('div', { class: 'tbl-wrap' }, el('table', { class: 'tbl' },
-      el('thead', {}, el('tr', {}, el('th', {}, 'Exit value →'), ...wf.exits.map((x) => el('th', { class: 'right' }, fmt.usd(x, true))))),
+      el('thead', {}, el('tr', {}, el('th', {}, t('wf.exit')), ...wf.exits.map((x) => el('th', { class: 'right' }, fmt.usd(x, true))))),
       el('tbody', {}, ...rows.map(([label, get]) => el('tr', {},
         el('td', {}, label), ...results.map((r) => el('td', { class: 'computed' }, get(r)))))))));
-    out.append(el('div', { class: 'section-note' }, 'Below the preference amount, preferred takes everything; past the conversion point, everyone shares pro-rata.'));
+    out.append(el('div', { class: 'section-note' }, t('wf.reading')));
   }
   draw();
   return wrap;

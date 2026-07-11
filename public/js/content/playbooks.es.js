@@ -150,7 +150,7 @@ Rellena con datos actuales antes de cada reunión; cada respuesta, ~45 segundos.
 | Métrica | Definición | Trampa |
 |---|---|---|
 | Ingresos totales | SaaS + publicidad reconocidos en el mes | Nunca mezcles créditos o subvenciones en ingresos |
-| ARR anualizado | Ingresos del mes × 12 | No llames «ARR» al anualizado ante un inversor SaaS |
+| ARR (ingresos anualizados) | Ingresos del mes × 12 | No llames «ARR» al anualizado ante un inversor SaaS |
 | ARR contratado | Solo el valor anualizado de contratos anuales firmados | Si divergen, informa ambos |
 | Crecimiento MoM | Variación mensual de ingresos totales | Todo «MoM medio» debe indicar la ventana de promedio |
 | Tráfico | Visitas únicas mensuales donde el producto llegó a renderizarse | «Cargado y renderizado», no «script instalado» |

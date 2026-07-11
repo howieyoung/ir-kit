@@ -88,7 +88,8 @@ Canonical prompts live in `prompts/` (onboarding, investor sourcing & outreach, 
 ## Code conventions (when extending the kit)
 
 - Zero dependencies, no build step — the kit's core promise. PRs adding packages will be rejected.
-- **i18n is mandatory:** UI strings go through `t()` (from `public/js/i18n.js`); every key must exist, non-empty, in ALL six locales (`en`, `zh-TW`, `ja`, `ko`, `es`, `fr`) in `public/js/i18n-messages.js`. CI (`scripts/check-i18n.js`) fails otherwise. Adding or changing a user-facing string = updating all six locales in the same change. See CONTRIBUTING.md.
+- **i18n is mandatory:** UI strings go through `t()` (from `public/js/i18n.js`); every key must exist, non-empty, in ALL six locales — one dictionary file per locale in `public/js/i18n/`, long-form content per locale in `public/js/content/`. CI (`scripts/check-i18n.js`) fails otherwise. Adding or changing a user-facing string = updating all six locales in the same change.
+- **Terminology rule:** finance acronyms/jargon (ARR, MoM, MOIC, NRR, net burn, runway…) keep the English term first + a local gloss in parentheses, e.g. zh-TW「ARR（年化營收）」. Data enum VALUES stay English (only `opt.*` display labels are translated) — translating stored values breaks `ir check`. Select options are `{ value, label }` pairs. Full rule in CONTRIBUTING.md.
 - Percentages are fractions in data (0.10 = 10%); format only at render time.
 - New operation = function in `core/ops.js` → verb in `bin/ir.js` → mention here and in `ir help`.
 - New page = `public/js/<name>.js` exporting `render<Name>(root)`, registered in `app.js`, linked in `index.html`.

@@ -5,6 +5,7 @@
 import { el } from './ui.js';
 import { store } from './store.js';
 import { seed } from './seed.js';
+import { t } from './i18n.js';
 
 const j = (v) => JSON.stringify(v ?? null);
 
@@ -41,18 +42,18 @@ export function onboardingSteps() {
   const liveDone = company.sample !== true; // off, false, or absent (imported real data) all count as live
 
   return [
-    { key: 'profile', label: 'Make it yours', done: profileDone, href: '#/settings', cta: 'Open Settings',
-      detail: profileDone ? 'Company profile set' : 'Company name, founder, email, and your round target' },
-    { key: 'financials', label: 'Enter your financials', done: finDone, href: '#/financials', cta: 'Add months',
-      detail: finDone ? `${months.length} month${months.length === 1 ? '' : 's'} of actuals` : 'Opening cash + one row per month — the source of every dashboard number' },
-    { key: 'captable', label: 'Enter your cap table', done: capDone, href: '#/captable', cta: 'Add holders',
-      detail: capDone ? `${holders.length} holders · ${signedSafes.length} SAFE${signedSafes.length === 1 ? '' : 's'}` : 'Founder shares, option pool, every signed SAFE — from the docs, not memory' },
-    { key: 'crm', label: 'Set up your investors', done: crmDone, href: '#/crm', cta: 'Open CRM',
-      detail: crmDone ? `${realDist.length} on the update list` : 'Current investors + everyone who should receive your updates' },
-    { key: 'update', label: 'Send your first update', done: updateDone, href: '#/updates', cta: 'Compose',
-      detail: updateDone ? 'First update archived — the streak is live 🔥' : 'The composer pre-fills your real metrics; you write the story' },
-    { key: 'live', label: 'Go live', done: liveDone, href: '#/settings', cta: 'Settings',
-      detail: liveDone ? 'Sample flag off — this is your company' : 'Once the numbers are real, switch off the sample flag' },
+    { key: 'profile', label: t('setup.profile.label'), done: profileDone, href: '#/settings', cta: t('setup.profile.cta'),
+      detail: profileDone ? t('setup.profile.done') : t('setup.profile.todo') },
+    { key: 'financials', label: t('setup.financials.label'), done: finDone, href: '#/financials', cta: t('setup.financials.cta'),
+      detail: finDone ? t('setup.financials.done', { n: months.length }) : t('setup.financials.todo') },
+    { key: 'captable', label: t('setup.captable.label'), done: capDone, href: '#/captable', cta: t('setup.captable.cta'),
+      detail: capDone ? t('setup.captable.done', { h: holders.length, s: signedSafes.length }) : t('setup.captable.todo') },
+    { key: 'crm', label: t('setup.crm.label'), done: crmDone, href: '#/crm', cta: t('setup.crm.cta'),
+      detail: crmDone ? t('setup.crm.done', { n: realDist.length }) : t('setup.crm.todo') },
+    { key: 'update', label: t('setup.update.label'), done: updateDone, href: '#/updates', cta: t('setup.update.cta'),
+      detail: updateDone ? t('setup.update.done') : t('setup.update.todo') },
+    { key: 'live', label: t('setup.live.label'), done: liveDone, href: '#/settings', cta: t('setup.live.cta'),
+      detail: liveDone ? t('setup.live.done') : t('setup.live.todo') },
   ];
 }
 
@@ -65,14 +66,14 @@ export function renderSetupProgress() {
 
   const box = el('div', { class: 'section setup-card' });
   box.append(el('div', { class: 'setup-head' },
-    el('h2', {}, allDone ? 'You’re all set up 🎉' : 'Your setup'),
+    el('h2', {}, allDone ? t('setup.allDoneTitle') : t('setup.title')),
     el('span', { class: 'setup-count' }, `${done} / ${total}`)));
   box.append(el('div', { class: 'progress' }, el('div', { style: `width:${Math.round((done / total) * 100)}%` })));
 
   if (allDone) {
     box.append(el('p', { class: 'muted', style: 'margin:12px 0 0' },
-      'Every step is done. From here it’s the monthly rhythm — close the month, check the dashboard, send the update. ',
-      el('a', { href: '#/dashboard' }, 'Go to the dashboard →')));
+      t('setup.allDoneBody'),
+      el('a', { href: '#/dashboard' }, t('setup.goDashboard'))));
     return box;
   }
 
@@ -83,12 +84,12 @@ export function renderSetupProgress() {
       el('span', { class: 'setup-text' },
         el('span', { class: 'setup-label' }, s.label),
         el('span', { class: 'setup-detail' }, s.detail)),
-      s.done ? el('span', { class: 'setup-done-tag' }, 'done') : el('span', { class: 'setup-cta' }, s.cta + ' →')));
+      s.done ? el('span', { class: 'setup-done-tag' }, t('setup.doneTag')) : el('span', { class: 'setup-cta' }, s.cta + ' →')));
   }
   box.append(list);
   box.append(el('p', { class: 'muted', style: 'margin:12px 2px 0;font-size:12px' },
-    'Prefer to hand this off? A coding agent can populate it all from your real documents — see ',
-    el('a', { href: '#/guide' }, 'Use it with your agent'), '.'));
+    t('setup.handoff'),
+    el('a', { href: '#/guide' }, t('setup.handoffLink')), '.'));
   return box;
 }
 
@@ -99,26 +100,22 @@ export function renderSetupNudge() {
   if (!next) return null;
   const done = steps.filter((s) => s.done).length;
   return el('a', { class: 'setup-nudge', href: next.href },
-    el('span', { class: 'setup-nudge-badge' }, `Setup ${done}/${steps.length}`),
-    el('span', { class: 'setup-nudge-body' }, el('b', {}, `Next: ${next.label}`), ' — ', next.detail),
+    el('span', { class: 'setup-nudge-badge' }, t('setup.nudgeBadge', { done, total: steps.length })),
+    el('span', { class: 'setup-nudge-body' }, el('b', {}, t('setup.nudgeNext', { label: next.label })), ' — ', next.detail),
     el('span', { class: 'setup-nudge-cta' }, next.cta + ' →'));
 }
 
 // A short teaching callout for a data page, shown while the founder is still on sample data.
-const COACH = {
-  financials: 'This is the single source of truth — every number an investor sees derives from here. Enter opening cash, then one row per month. Missing a value? Leave it blank; never guess.',
-  captable: 'Your cap table is who owns what, counted in shares. Enter founder shares, the option pool, and every signed SAFE from the executed PDFs. New to SAFEs and dilution? Read Cap table 101 first.',
-  crm: 'Your current investors and everyone who should receive updates. Looking for new investors to add? Your agent can source fitted ones and draft the outreach — see the agent guide.',
-  updates: 'The monthly update is the single habit that most raises your odds of closing the next round. The composer fills your real metrics automatically — you just write the story.',
-};
+const COACH_KEYS = { financials: 'coach.financials', captable: 'coach.captable', crm: 'coach.crm', updates: 'coach.updates' };
 
 export function pageCoach(pageKey) {
   const company = store.get('company') || {};
   if (!company.sample) return null; // teaching mode only while the sample data is still loaded
-  const text = COACH[pageKey];
-  if (!text) return null;
+  const key = COACH_KEYS[pageKey];
+  if (!key) return null;
+  const text = t(key);
   return el('div', { class: 'callout coach' },
-    el('span', { class: 'coach-tag' }, 'New to this?'),
+    el('span', { class: 'coach-tag' }, t('coach.tag')),
     el('span', { class: 'coach-body' }, text, ' ',
-      el('a', { href: '#/guide' }, 'Open the Get started guide →')));
+      el('a', { href: '#/guide' }, t('coach.link'))));
 }

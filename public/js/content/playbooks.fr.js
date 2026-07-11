@@ -150,7 +150,7 @@ Remplissez avec les faits à jour avant chaque rendez-vous ; ~45 secondes par r�
 | Métrique | Définition | Piège |
 |---|---|---|
 | Revenus totaux | SaaS + publicité reconnus dans le mois | Ne mélangez jamais crédits ou subventions aux revenus |
-| ARR annualisé | Revenus du mois × 12 | N'appelez pas l'annualisé « ARR » devant un investisseur SaaS |
+| ARR (revenu annualisé) | Revenus du mois × 12 | N'appelez pas l'annualisé « ARR » devant un investisseur SaaS |
 | ARR contractuel | Seule la valeur annualisée des contrats annuels signés | S'ils divergent, publiez les deux |
 | Croissance MoM | Variation mensuelle des revenus totaux | Tout « MoM moyen » doit préciser la fenêtre de moyenne |
 | Trafic | Visites uniques mensuelles où le produit s'est réellement affiché | « Chargé et rendu », pas « script installé » |

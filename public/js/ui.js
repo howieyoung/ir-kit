@@ -101,7 +101,13 @@ export function dataTable({ columns, rows, save, addLabel, newRow, footer, delet
         if (footer) renderFooter();
       };
       if (c.type === 'select') {
-        input = el('select', { onchange: commit }, ...c.options.map((o) => el('option', { value: o, selected: row[c.key] === o ? '' : null }, o)));
+        // options may be plain strings or {value, label} — the VALUE is what gets stored
+        // (data enums stay English so ir check invariants hold); the LABEL is display-only.
+        input = el('select', { onchange: commit }, ...c.options.map((o) => {
+          const v = typeof o === 'object' ? o.value : o;
+          const label = typeof o === 'object' ? o.label : o;
+          return el('option', { value: v, selected: row[c.key] === v ? '' : null }, label);
+        }));
       } else if (c.type === 'check') {
         input = el('input', { type: 'checkbox', onchange: commit });
         input.checked = !!row[c.key];
