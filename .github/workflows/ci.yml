@@ -20,6 +20,8 @@ jobs:
         run: node scripts/check-i18n.js
       - name: Data invariants — ir check (against bundled sample)
         run: ./bin/ir.js check
+      - name: Security smoke — server hardening (headers, DNS-rebinding, traversal)
+        run: node scripts/security-smoke.js
       - name: CLI smoke — start/sort/status against a temp workspace
         run: |
           export IRKIT_DATA_DIR=/tmp/ci/data IRKIT_ROOT=/tmp/ci

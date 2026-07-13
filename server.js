@@ -23,9 +23,33 @@ const MIME = {
   '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon',
 };
 
+// Defense-in-depth headers on every response. CSP: everything self-hosted (ESM, css,
+// data-URI favicon); style attributes need 'unsafe-inline'; no page may frame us.
+const SECURITY_HEADERS = {
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'Referrer-Policy': 'no-referrer',
+  'Content-Security-Policy': "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'none'",
+};
+
 function send(res, status, body, type = 'application/json; charset=utf-8') {
-  res.writeHead(status, { 'Content-Type': type, 'Cache-Control': 'no-store' });
+  res.writeHead(status, { 'Content-Type': type, 'Cache-Control': 'no-store', ...SECURITY_HEADERS });
   res.end(body);
+}
+
+// Anti DNS-rebinding: when bound to loopback (the default), only honor requests whose
+// Host header is a loopback name on our actual port. A malicious website that rebinds
+// its domain to 127.0.0.1 sends its own domain in Host — and gets a 403 instead of the
+// founder's cap table. Skipped when HOST is set non-loopback (container behind a proxy;
+// that deployment's protection is the authenticating proxy per SECURITY.md).
+const LOOPBACK_BIND = ['127.0.0.1', 'localhost', '::1', '[::1]'].includes(HOST);
+let boundPort = PORT; // updated from server.address() once listening (supports PORT=0)
+function isAllowedHost(host) {
+  const m = String(host || '').match(/^(\[[^\]]+\]|[^:]+?)(?::(\d+))?$/);
+  if (!m) return false;
+  const name = m[1].toLowerCase();
+  const okName = name === '127.0.0.1' || name === 'localhost' || name === '[::1]';
+  return okName && (m[2] === undefined || Number(m[2]) === boundPort);
 }
 
 function handleApi(req, res, name) {
@@ -59,10 +83,13 @@ function handleApi(req, res, name) {
 }
 
 function handleStatic(req, res, urlPath) {
-  let rel = decodeURIComponent(urlPath);
+  let rel;
+  try { rel = decodeURIComponent(urlPath); } catch { return send(res, 400, 'bad request', 'text/plain'); }
+  if (rel.includes('\0')) return send(res, 400, 'bad request', 'text/plain');
   if (rel === '/') rel = '/index.html';
   const file = path.normalize(path.join(PUBLIC_DIR, rel));
-  if (!file.startsWith(PUBLIC_DIR)) return send(res, 403, 'forbidden', 'text/plain');
+  // Strict prefix: PUBLIC_DIR + separator, so a sibling like <root>/public-evil can't match.
+  if (!file.startsWith(PUBLIC_DIR + path.sep)) return send(res, 403, 'forbidden', 'text/plain');
   fs.readFile(file, (err, buf) => {
     if (err) return send(res, 404, 'not found', 'text/plain');
     send(res, 200, buf, MIME[path.extname(file)] || 'application/octet-stream');
@@ -70,13 +97,23 @@ function handleStatic(req, res, urlPath) {
 }
 
 const server = http.createServer((req, res) => {
-  const url = new URL(req.url, `http://${req.headers.host}`);
-  if (url.pathname === '/api/health') return send(res, 200, JSON.stringify({ ok: true, mode: 'server' }));
-  const apiMatch = url.pathname.match(/^\/api\/([a-z]+)$/);
-  if (apiMatch) return handleApi(req, res, apiMatch[1]);
-  handleStatic(req, res, url.pathname);
+  try {
+    if (LOOPBACK_BIND && !isAllowedHost(req.headers.host)) {
+      return send(res, 403, JSON.stringify({ error: 'forbidden host' }));
+    }
+    // Parse against a fixed base so a malformed Host header can never throw here.
+    const url = new URL(req.url, 'http://127.0.0.1');
+    if (url.pathname === '/api/health') return send(res, 200, JSON.stringify({ ok: true, mode: 'server' }));
+    const apiMatch = url.pathname.match(/^\/api\/([a-z]+)$/);
+    if (apiMatch) return handleApi(req, res, apiMatch[1]);
+    handleStatic(req, res, url.pathname);
+  } catch {
+    // One malformed request must never take the server down.
+    try { send(res, 400, JSON.stringify({ error: 'bad request' })); } catch { /* socket gone */ }
+  }
 });
 
 server.listen(PORT, HOST, () => {
-  console.log(`IR Kit running at http://${HOST}:${PORT} (data: ${DATA_DIR})`);
+  boundPort = server.address().port;
+  console.log(`IR Kit running at http://${HOST}:${boundPort} (data: ${DATA_DIR})`);
 });

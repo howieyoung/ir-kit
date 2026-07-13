@@ -53,8 +53,9 @@ This is the part that matters, so it's not a policy, it's the design:
 
 - The repo ships **only a fictional sample company** ("Protico" is used as the sample brand; every number, investor, and contact is invented).
 - `data/` and `ir-workspace/` are gitignored, so a fork can't accidentally publish a cap table.
-- The server binds to `127.0.0.1` by default and has no accounts to breach — there's nothing to sign up for and no one else's infrastructure holding your SAFEs.
+- The server binds to `127.0.0.1` by default and has no accounts to breach — there's nothing to sign up for and no one else's infrastructure holding your SAFEs. It's hardened against the classic local-service attacks (DNS-rebinding, clickjacking, path traversal), verified by a smoke test in CI — see [SECURITY.md](SECURITY.md).
 - Back up by making `data/` + `ir-workspace/` a separate **private** repo, or export everything as one JSON from Settings.
+- **One honest caveat about AI agents:** IR Kit itself never sends your data anywhere, but a *cloud-backed* agent (Claude, Codex, Cursor…) processes what it reads through its provider. That's a trust boundary you control — use a local model for fully-offline operation. Details in [SECURITY.md](SECURITY.md).
 
 ## Operate it with your agent
 
