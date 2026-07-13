@@ -40,7 +40,7 @@ export function closeMonth(month, fields) {
   if (!YM.test(month)) throw new Error(`month "${month}" must be YYYY-MM`);
   const fin = load('financials');
   if (fin.months.some((m) => m.month === month)) throw new Error(`${month} already exists — edit data/financials.json directly to amend, then run ir check`);
-  const row = { month, saas: null, ads: null, payroll: null, infra: null, other: null, inflow: 0, headcount: null, traffic: null, pages: null, platforms: null, paying: null };
+  const row = { month, saas: null, ads: null, fde: null, otherRev: null, payroll: null, infra: null, other: null, inflow: 0, headcount: null, traffic: null, pages: null, platforms: null, paying: null };
   for (const k of Object.keys(row)) if (k !== 'month' && fields[k] !== undefined) row[k] = Number(fields[k]);
   fin.months.push(row);
   fin.months.sort((a, b) => a.month.localeCompare(b.month));

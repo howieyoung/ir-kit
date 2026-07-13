@@ -1,14 +1,16 @@
 // Shared financial + cap table math. Pure functions — the numbers investors see all come from here.
 
 // ---------- financials ----------
-// month rows: { month:"YYYY-MM", saas, ads, payroll, infra, other, inflow, headcount, traffic, pages, platforms, paying }
+// month rows: { month:"YYYY-MM", saas, ads, fde, otherRev, payroll, infra, other, inflow, headcount, traffic, pages, platforms, paying }
+// revenue splits four ways: saas = system/subscription revenue, ads = advertising,
+// fde = FDE / one-time services fee, otherRev = other (non-core) income e.g. rent.
 export function derive(fin) {
   const rows = [...(fin.months || [])].sort((a, b) => a.month.localeCompare(b.month));
   let cash = fin.openingCash ?? 0;
   return rows.map((m) => {
-    const revenue = n(m.saas) + n(m.ads);
+    const revenue = n(m.saas) + n(m.ads) + n(m.fde) + n(m.otherRev);
     const costs = n(m.payroll) + n(m.infra) + n(m.other);
-    const hasData = ['saas', 'ads', 'payroll', 'infra', 'other'].some((k) => m[k] !== null && m[k] !== undefined);
+    const hasData = ['saas', 'ads', 'fde', 'otherRev', 'payroll', 'infra', 'other'].some((k) => m[k] !== null && m[k] !== undefined);
     const pnl = hasData ? revenue - costs : null;
     if (pnl !== null) cash += pnl + n(m.inflow);
     return { ...m, revenue: hasData ? revenue : null, costs: hasData ? costs : null, pnl, cash: hasData ? cash : null };

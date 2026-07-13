@@ -5,7 +5,7 @@ import { fmt } from './ui.js';
 export function updateTemplate(company, m, crm) {
   const metricRow = (label, v) => `| ${label} | ${v} |`;
   const metrics = m ? [
-    metricRow('Revenue (SaaS + Ads)', `${fmt.usd(m.revenue)} (${m.mom === null ? '—' : (m.mom >= 0 ? '+' : '') + fmt.pct(m.mom)} MoM)`),
+    metricRow('Revenue (total)', `${fmt.usd(m.revenue)} (${m.mom === null ? '—' : (m.mom >= 0 ? '+' : '') + fmt.pct(m.mom)} MoM)`),
     metricRow('ARR run-rate', fmt.usd(m.arrRunRate)),
     metricRow('Monthly connected traffic', fmt.num(m.traffic, true) + (m.trafficYoY !== null ? ` (+${fmt.pct(m.trafficYoY, 0)} YoY)` : '')),
     metricRow('Daily connected pages', fmt.num(m.pages, true)),

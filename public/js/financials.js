@@ -28,6 +28,8 @@ export function renderFinancials(root) {
     { key: 'month', label: t('col.month'), type: 'text', width: 78, placeholder: 'YYYY-MM' },
     { key: 'saas', label: t('col.saas'), type: 'number', width: 70 },
     { key: 'ads', label: t('col.ads'), type: 'number', width: 70 },
+    { key: 'fde', label: t('col.fde'), type: 'number', width: 70 },
+    { key: 'otherRev', label: t('col.otherRev'), type: 'number', width: 80 },
     { compute: (r) => { dmap = derived(); return D(r, 'revenue'); }, label: t('col.revenue'), fmt: (v) => fmt.usd(v) },
     { key: 'payroll', label: t('col.payroll'), type: 'number', width: 76 },
     { key: 'infra', label: t('col.infra'), type: 'number', width: 66 },
@@ -49,7 +51,7 @@ export function renderFinancials(root) {
       addLabel: t('fin.addMonth'),
       newRow: () => {
         const last = fin.months.length ? fin.months[fin.months.length - 1].month : new Date().toISOString().slice(0, 7);
-        return { month: addMonths(last, 1), saas: null, ads: null, payroll: null, infra: null, other: null, inflow: 0, headcount: null, traffic: null, pages: null, platforms: null, paying: null };
+        return { month: addMonths(last, 1), saas: null, ads: null, fde: null, otherRev: null, payroll: null, infra: null, other: null, inflow: 0, headcount: null, traffic: null, pages: null, platforms: null, paying: null };
       },
     })));
 

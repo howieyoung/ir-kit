@@ -61,7 +61,7 @@ Checks include: month format/duplicates/gaps, numeric types, cap-table share san
 ## `ir close-month`
 
 ```bash
-ir close-month 2026-07 --saas 31000 --ads 14000 --payroll 34000 --infra 4800 --other 3800 \
+ir close-month 2026-07 --saas 31000 --ads 14000 --fde 0 --other-rev 0 --payroll 34000 --infra 4800 --other 3800 \
   [--inflow 0 --headcount 6 --traffic 58000000 --pages 1050000 --platforms 66 --paying 37]
 ```
 

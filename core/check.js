@@ -36,7 +36,7 @@ export function check() {
     if (!YM.test(m.month || '')) E('fin.month-format', at, `month "${m.month}" is not YYYY-MM`);
     if (seen.has(m.month)) E('fin.month-dup', at, `duplicate month ${m.month}`);
     seen.add(m.month);
-    for (const k of ['saas', 'ads', 'payroll', 'infra', 'other', 'inflow']) {
+    for (const k of ['saas', 'ads', 'fde', 'otherRev', 'payroll', 'infra', 'other', 'inflow']) {
       if (m[k] !== null && m[k] !== undefined && typeof m[k] !== 'number')
         E('fin.not-number', `${at}.${k}`, `${k} must be a number or null`);
       if (typeof m[k] === 'number' && m[k] < 0 && k !== 'inflow')

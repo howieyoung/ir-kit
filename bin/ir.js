@@ -16,7 +16,7 @@ const HELP = `ir — agent-native investor relations (data: ${DATA_DIR})
   ir sort                                file inbox documents into data-room categories (re-run any time)
   ir status [--json]                     every derived metric in one call
   ir check [--json]                      validate schemas + invariants (exit 1 on errors)
-  ir close-month <YYYY-MM> --saas N --ads N --payroll N --infra N --other N
+  ir close-month <YYYY-MM> --saas N --ads N --fde N --other-rev N --payroll N --infra N --other N
        [--inflow N --headcount N --traffic N --pages N --platforms N --paying N]
   ir safe add "<investor>" --principal N [--cap N] [--discount 0.2]
        [--status Signed|Wired|Verbal|"SAFE sent"|Target] [--email E] [--contact C] [--type Fund]

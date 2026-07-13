@@ -1,6 +1,6 @@
 import { el, fmt, kpi, section, lineChart } from './ui.js';
 import { store } from './store.js';
-import { latestMetrics, updateCadence } from './metrics.js';
+import { latestMetrics, updateCadence, addMonths } from './metrics.js';
 import { renderSetupNudge } from './onboarding.js';
 import { t } from './i18n.js';
 
@@ -53,6 +53,22 @@ export function renderDashboard(root) {
     el('div', { class: 'progress' }, el('div', { style: `width:${pctClosed * 100}%` })),
     el('div', { class: 'muted', style: 'font-size:12px' }, t('round.manage', { pct: fmt.pct(pctClosed) })),
   ));
+
+  // expected-funding runway scenario (verbal/planned money, NOT booked into cash)
+  const funding = company.expectedFunding || 0;
+  if (funding > 0 && m.burn3 < 0) {
+    const burn = -m.burn3;
+    const withRunway = (m.cash + funding) / burn;
+    root.append(section(t('sec.fundingRunway'), null,
+      el('div', {}, t('fundingRunway.line', {
+        amount: fmt.usd(funding), cur: m.runway.toFixed(1), mo: withRunway.toFixed(1),
+        total: fmt.usd(m.cash + funding, true), date: fmt.month(addMonths(m.month, Math.floor(withRunway))),
+      })),
+      el('div', { class: 'progress' }, el('div', { style: `width:${Math.min((funding / (m.cash + funding)) * 100, 100)}%` })),
+      company.expectedFundingNote ? el('div', { class: 'muted', style: 'font-size:12px;margin-top:6px' }, company.expectedFundingNote) : null,
+      el('div', { class: 'callout warn', style: 'margin-top:8px' }, t('fundingRunway.caveat')),
+    ));
+  }
 
   // IR cadence
   const cad = updateCadence(company, store.get('updates').archive);

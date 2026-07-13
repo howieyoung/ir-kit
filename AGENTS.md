@@ -65,7 +65,7 @@ prompts/                ritual prompts for humans to hand to agents
 
 ## Data schemas
 
-**financials.json** — `openingCash`, `months[]`: `{ month:"YYYY-MM", saas, ads, payroll, infra, other, inflow, headcount, traffic, pages, platforms, paying }`. Revenue/costs/P&L/cash are derived, never stored. `inflow` = financing proceeds, excluded from burn.
+**financials.json** — `openingCash`, `months[]`: `{ month:"YYYY-MM", saas, ads, fde, otherRev, payroll, infra, other, inflow, headcount, traffic, pages, platforms, paying }`. Revenue = `saas + ads + fde + otherRev` (saas = system/subscription, ads = advertising, fde = FDE / one-time services fee, otherRev = other/non-core income e.g. rent); costs/P&L/cash are derived, never stored. `inflow` = financing proceeds, excluded from burn. `company.expectedFunding` (+ `expectedFundingNote`) drives the dashboard's expected-funding runway scenario — a verbal/planned amount, never booked into cash.
 
 **captable.json** — `stakeholders[]` `{id,name,type,security,shares,notes}` (`type:"Pool"` = unallocated pool; `type:"Founder"` feeds the dilution walk) · `safes[]` `{id,investor,date,principal,cap,discount,status,notes}` (discount is a fraction: 0.2 = 20%) · `roundModel` · `scenarios[]` · `waterfall`.
 
