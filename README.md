@@ -71,6 +71,12 @@ This is the part no other IR tool has: a first-class programmatic surface, so yo
 7. `ir check` passes, it walks you through the dashboard, you confirm → your company, real data. Provided nothing? The dashboard simply keeps its sample data. Nothing uploaded anywhere, ever.
 
 ```console
+$ ./bin/ir.js start
+✓ workspace scaffolded (18 files) — inbox: ir-workspace/inbox
+stage: collect · SAMPLE data · inbox 0 · data room 0
+NEXT: drop every financial/company document into the inbox, then run: ir sort
+Ground rules: consent before reading contents · originals read-only · every number cited · nothing leaves this machine.
+
 $ ./bin/ir.js safe add "Meridian Capital" --principal 50000 --cap 8000000 --status Wired
 ✓ SAFE recorded — Meridian Capital $50,000 · implied 0.6%
 ✓ total SAFE overhang 4.8% (guardrail <15%)
@@ -91,10 +97,13 @@ Three layers make it agent-native:
 
   | Command | What it does |
   |---|---|
+  | `ir start` | **begin here** — guided-setup state machine: scaffolds everything (incl. the document inbox), detects your stage, prints the next step; safe to re-run |
+  | `ir sort` | file inbox documents into data-room categories by filename — re-runnable any time; a standing filing service |
   | `ir status` | every derived metric in one call (burn, runway, round, SAFE overhang) |
   | `ir check` | validate schemas + invariants — the post-edit test suite (exit 1 on violations) |
-  | `ir close-month 2026-07 --saas …` | close the books; flags >20% MoM moves and short runway |
+  | `ir close-month 2026-07 --saas … --ads … --fde … --other-rev …` | close the books with the four-way revenue split; flags >20% MoM moves and short runway |
   | `ir safe add "Fund X" --principal …` | record a SAFE and reconcile cap table + CRM + distribution in one pass |
+  | `ir prospect add "Fund Y" --fit … --source …` | log a sourced investor safely: inactive nurture row + no-ticket pipeline entry, so unqualified names never inflate your numbers |
   | `ir update draft` / `mark-sent` | metrics-filled draft from actuals (blocked if month isn't closed) / archive + streak |
   | `ir scan <folders>` | onboarding: find candidate financial docs by filename only — contents never read |
   | `ir model round --pre … --new …` | priced-round conversion with post-money SAFE mechanics |
