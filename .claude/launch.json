@@ -5,7 +5,7 @@
       "name": "ir-kit",
       "runtimeExecutable": "node",
       "runtimeArgs": ["server.js"],
-      "port": 4820
+      "port": 2330
     }
   ]
 }

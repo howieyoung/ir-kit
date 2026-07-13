@@ -9,7 +9,7 @@ IR Kit 是開源、本機優先的投資人關係系統：股權結構表與 SAF
 ```bash
 git clone https://github.com/howieyoung/ir-kit && cd ir-kit
 node server.js        # Node 18+，零依賴 — 安裝就這一行
-# → http://127.0.0.1:4820
+# → http://127.0.0.1:2330
 ```
 
 ## 第一天只要兩個字：告訴你的 agent「ir start」

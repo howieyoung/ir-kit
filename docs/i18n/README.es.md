@@ -9,7 +9,7 @@ IR Kit es un sistema de relaciones con inversores open source y local-first: cap
 ```bash
 git clone https://github.com/howieyoung/ir-kit && cd ir-kit
 node server.js        # Node 18+, cero dependencias — la instalación es solo esto
-# → http://127.0.0.1:4820
+# → http://127.0.0.1:2330
 ```
 
 ## El primer día son dos palabras: dile a tu agente «ir start»

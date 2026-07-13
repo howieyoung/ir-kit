@@ -18,7 +18,7 @@ Votre agent de code (Claude Code, Codex, Cursor, etc.) est un **pair de cette in
 
 ## Du téléchargement à un tableau de bord réel — dites « ir start »
 1. **Récupérez le kit :** `git clone https://github.com/howieyoung/ir-kit && cd ir-kit`
-2. **Lancez l'app :** `node server.js` → http://127.0.0.1:4820 — elle tourne immédiatement avec une société d'exemple.
+2. **Lancez l'app :** `node server.js` → http://127.0.0.1:2330 — elle tourne immédiatement avec une société d'exemple.
 3. **Ouvrez votre agent dans le dossier du repo** (Claude Code, Codex, Cursor…) et dites : **« ir start »**. C'est toute l'astuce — l'agent crée tout (dont une **boîte de réception** de documents), énonce les règles de confidentialité et vous guide.
 4. **Déposez vos documents dans la boîte** (`ir-workspace/inbox/`) — SAFE, relevés bancaires, cap tables, decks, en vrac c'est parfait. Des documents éparpillés sur le disque ? L'agent peut faire `ir scan` sur des dossiers que vous désignez (noms de fichiers uniquement ; rien ne s'ouvre sans votre accord).
 5. **Il classe tout** dans les bonnes catégories de la data room avec `ir sort` — **réexécutable à tout moment** quand vous ajoutez des documents ; un service de classement permanent, pas un événement unique.

@@ -1,6 +1,6 @@
 {
   "name": "ir-kit",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "description": "The agent-native investor-relations kit: cap table + SAFE math, financial dashboard, investor CRM, update composer, IR playbooks, and an ir CLI with invariant checks built for coding agents. Zero dependencies; all data in local JSON.",
   "type": "module",
   "main": "server.js",

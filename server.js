@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // IR Kit server — zero dependencies, Node 18+.
 // Serves the web app from /public and persists collections as JSON files in /data.
-// Usage: node server.js   (PORT and HOST env vars optional; defaults 4820 / 127.0.0.1)
+// Usage: node server.js   (PORT and HOST env vars optional; defaults 2330 / 127.0.0.1)
 
 import http from 'node:http';
 import fs from 'node:fs';
@@ -11,7 +11,8 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.join(ROOT, 'public');
 const DATA_DIR = path.join(ROOT, 'data');
-const PORT = parseInt(process.env.PORT || '4820', 10);
+// Default port 2330 — a small tribute to TSMC's ticker. Override with PORT=….
+const PORT = parseInt(process.env.PORT || '2330', 10);
 // Bind to localhost by default: IR data is sensitive. Set HOST=0.0.0.0 to expose (e.g. in a container).
 const HOST = process.env.HOST || '127.0.0.1';
 

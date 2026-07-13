@@ -44,7 +44,7 @@ Your coding agent (Claude Code, Codex, Cursor, etc.) is a **peer of this UI**, n
 
 ## From download to a real dashboard — say "ir start"
 1. **Get the kit:** \`git clone https://github.com/howieyoung/ir-kit && cd ir-kit\`
-2. **Start the app:** \`node server.js\` → http://127.0.0.1:4820 — it runs immediately with a sample company.
+2. **Start the app:** \`node server.js\` → http://127.0.0.1:2330 — it runs immediately with a sample company.
 3. **Open your coding agent in the repo folder** (Claude Code, Codex, Cursor…) and say: **"ir start"**. That's the whole trick — the agent scaffolds everything (including a document **inbox**), states the privacy ground rules, and guides you from there.
 4. **Drop your documents into the inbox** (\`ir-workspace/inbox/\`) — SAFEs, bank statements, cap tables, decks, completely unsorted is fine. Docs scattered across your disk? The agent can \`ir scan\` folders you appoint instead (filenames only, nothing opened without your OK).
 5. **It files everything** into the right data-room categories with \`ir sort\` — **re-runnable any time** you add more documents; a standing filing service, not a one-off.

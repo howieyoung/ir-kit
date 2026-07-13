@@ -18,7 +18,7 @@
 
 ## 從下載到真實儀表板 — 說「ir start」
 1. **取得工具組：** `git clone https://github.com/howieyoung/ir-kit && cd ir-kit`
-2. **啟動 app：** `node server.js` → http://127.0.0.1:4820 — 內建範例公司，立即可用。
+2. **啟動 app：** `node server.js` → http://127.0.0.1:2330 — 內建範例公司，立即可用。
 3. **在專案資料夾開啟你的 coding agent**（Claude Code、Codex、Cursor…）然後說：**「ir start」**。訣竅就這一句 — agent 會建好一切（含文件**收件匣 inbox**）、說明隱私底線，並一路引導你。
 4. **把文件丟進 inbox**（`ir-workspace/inbox/`）— SAFE、銀行對帳單、股權表、簡報，完全不整理也沒關係。文件散落在硬碟各處？agent 可改用 `ir scan` 掃描你指定的資料夾（只看檔名，未經你同意不開啟任何檔案）。
 5. **它會把所有文件歸檔**到正確的資料室分類，用 `ir sort` — 新增文件後**隨時可重跑**；這是常駐歸檔服務，不是一次性動作。

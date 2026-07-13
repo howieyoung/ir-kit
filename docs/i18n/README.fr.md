@@ -9,7 +9,7 @@ IR Kit est un système de relations investisseurs open source et local-first : c
 ```bash
 git clone https://github.com/howieyoung/ir-kit && cd ir-kit
 node server.js        # Node 18+, zéro dépendance — l'installation tient en une ligne
-# → http://127.0.0.1:4820
+# → http://127.0.0.1:2330
 ```
 
 ## Le premier jour tient en deux mots : dites « ir start » à votre agent

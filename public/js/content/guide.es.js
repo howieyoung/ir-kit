@@ -41,7 +41,7 @@ Tu agente de código (Claude Code, Codex, Cursor, etc.) es un **par de esta inte
 
 ## De la descarga a un panel con datos reales — di «ir start»
 1. **Consigue el kit:** \`git clone https://github.com/howieyoung/ir-kit && cd ir-kit\`
-2. **Arranca la app:** \`node server.js\` → http://127.0.0.1:4820 — funciona al instante con una empresa de ejemplo.
+2. **Arranca la app:** \`node server.js\` → http://127.0.0.1:2330 — funciona al instante con una empresa de ejemplo.
 3. **Abre tu agente en la carpeta del repo** (Claude Code, Codex, Cursor…) y di: **«ir start»**. Ese es todo el truco — el agente crea todo (incluida una **bandeja de entrada** de documentos), enuncia las reglas de privacidad y te guía desde ahí.
 4. **Suelta tus documentos en la bandeja** (\`ir-workspace/inbox/\`) — SAFEs, extractos bancarios, cap tables, decks, sin ordenar está perfecto. ¿Documentos dispersos por el disco? El agente puede hacer \`ir scan\` de carpetas que tú designes (solo nombres de archivo; nada se abre sin tu OK).
 5. **Lo archiva todo** en las categorías correctas del data room con \`ir sort\` — **re-ejecutable en cualquier momento**; un servicio de archivo permanente, no un evento único.

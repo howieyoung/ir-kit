@@ -23,7 +23,7 @@ Most founders learn IR by losing: a diligence that stalls on a messy SAFE stack,
 ```bash
 git clone https://github.com/howieyoung/ir-kit && cd ir-kit
 node server.js                      # Node 18+, zero dependencies — that's the whole install
-# → http://127.0.0.1:4820
+# → http://127.0.0.1:2330
 node scripts/init-workspace.js      # scaffold your private data room / board / CRM folders
 ./bin/ir.js status                  # the same system, from the command line
 # then hand your agent prompts/onboard.md — it populates the system with your real data
