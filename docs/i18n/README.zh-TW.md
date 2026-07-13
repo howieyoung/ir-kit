@@ -2,7 +2,7 @@
 
 **像擁有十人 IR 團隊一樣經營投資人關係 — 即使只有你和一個 AI agent。**
 
-IR Kit 是開源、本機優先的投資人關係系統：股權結構表與 SAFE 轉換計算、財務儀表板（燒錢率／跑道）、投資人 CRM、YC 格式月度更新信、資料室（data room）檢查清單與營運攻略 — 專為與 coding agent（Claude Code、Codex、Cursor…）協作而設計。
+IR Kit 是開源、本機優先的投資人關係系統：股權結構表與 SAFE 轉換計算、財務儀表板（燒錢率／跑道）、投資人 CRM、業界標準格式的月度更新信、資料室（data room）檢查清單與營運攻略 — 專為與 coding agent（Claude Code、Codex、Cursor…）協作而設計。
 
 ## 快速開始
 

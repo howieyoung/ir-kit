@@ -148,7 +148,7 @@ export const es = {
   'col.active': 'Activo', 'col.lastSent': 'Último envío',
 
   'updates.title': 'Updates a inversores',
-  'updates.sub': 'Update mensual formato YC. La racha es el activo — el mismo día cada mes, sin saltarte los malos.',
+  'updates.sub': 'Update mensual en el formato estándar del sector. La racha es el activo — el mismo día cada mes, sin saltarte los malos.',
   'updates.sec.schedule': 'Calendario', 'updates.sec.compose': 'Redactar', 'updates.sec.archive': 'Archivo',
   'upd.schedNote': 'Los updates salen el día {day} de cada mes (cámbialo en Ajustes). La constancia gana a la perfección — la misma fecha, cada mes.',
   'upd.next': 'Próximo: {date} ', 'upd.streak': 'Racha actual: {n} meses', 'upd.noStreak': 'Sin racha aún',

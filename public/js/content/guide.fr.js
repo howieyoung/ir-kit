@@ -174,7 +174,7 @@ export const GLOSSARY = `# Glossaire
 | MoM | Croissance mois sur mois. Précisez la fenêtre quand vous citez une moyenne |
 | MOIC | Multiple sur capital investi — ce que touche l'investisseur ÷ ce qu'il a mis |
 | Pool d'options | Actions réservées à l'équipe future ; rechargé à chaque tour, diluant en général les fondateurs |
-| SAFE post-money | Le SAFE YC standard (2018+) : part figée à principal ÷ cap juste avant le tour |
+| SAFE post-money | Le SAFE post-money standard (2018+) : part figée à principal ÷ cap juste avant le tour |
 | Post-money / pre-money | Valeur de l'entreprise après / avant l'argent nouveau : post = pre + levée |
 | Pro-rata | Droit de l'investisseur de réinvestir pour maintenir son % aux tours suivants |
 | Tour valorisé | Financement en capital à un prix par action négocié (seed, série A…) — où les SAFE convertissent |

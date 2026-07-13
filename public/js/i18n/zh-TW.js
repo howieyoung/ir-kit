@@ -147,7 +147,7 @@ export const zhTW = {
   'col.active': '有效', 'col.lastSent': '上次寄出',
 
   'updates.title': '投資人更新',
-  'updates.sub': 'YC 格式的月度更新。連續紀錄本身就是資產 — 每月同一天，再差的月份也不缺席。',
+  'updates.sub': '業界標準格式的月度更新。連續紀錄本身就是資產 — 每月同一天，再差的月份也不缺席。',
   'updates.sec.schedule': '排程', 'updates.sec.compose': '撰寫', 'updates.sec.archive': '歷史紀錄',
   'upd.schedNote': '更新信於每月 {day} 日寄出（可至設定變更）。穩定勝過完美 — 每月同一天。',
   'upd.next': '下次：{date} ', 'upd.streak': '目前連續 {n} 個月', 'upd.noStreak': '尚無連續紀錄',

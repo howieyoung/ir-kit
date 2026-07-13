@@ -147,7 +147,7 @@ export const ja = {
   'col.active': '有効', 'col.lastSent': '前回送信',
 
   'updates.title': '投資家アップデート',
-  'updates.sub': 'YC形式の月次アップデート。継続こそ資産 — 毎月同じ日に、悪い月も欠かさず。',
+  'updates.sub': '業界標準形式の月次アップデート。継続こそ資産 — 毎月同じ日に、悪い月も欠かさず。',
   'updates.sec.schedule': 'スケジュール', 'updates.sec.compose': '作成', 'updates.sec.archive': 'アーカイブ',
   'upd.schedNote': 'アップデートは毎月{day}日に送信（設定で変更可）。完璧さより一貫性 — 毎月同じ日に。',
   'upd.next': '次回：{date} ', 'upd.streak': '連続 {n}か月', 'upd.noStreak': '連続記録なし',

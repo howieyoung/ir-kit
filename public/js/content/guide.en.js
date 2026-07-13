@@ -177,7 +177,7 @@ export const GLOSSARY = `# Glossary
 | MoM | Month-over-month growth. State the averaging window when quoting an average |
 | MOIC | Multiple on invested capital — investor's payout ÷ what they put in |
 | Option pool | Shares reserved for future team grants; topped up at rounds, usually diluting founders |
-| Post-money SAFE | The standard (2018+) YC SAFE: ownership locked at principal ÷ cap immediately pre-round |
+| Post-money SAFE | The standard post-money SAFE (2018+): ownership locked at principal ÷ cap immediately pre-round |
 | Post-money / pre-money | Company value after / before the new money comes in: post = pre + raise |
 | Pro-rata | An investor's right to invest again to maintain their % in future rounds |
 | Priced round | Equity financing at a negotiated share price (seed, Series A…) — when SAFEs convert |

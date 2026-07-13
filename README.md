@@ -13,7 +13,7 @@ Most founders learn IR by losing: a diligence that stalls on a messy SAFE stack,
 - 📊 **Financial command center** — monthly close, burn/runway/zero-cash date, KPI dashboard, runway scenarios for hiring decisions
 - 🧮 **Cap table & SAFE math** — SAFE ledger with implied ownership, a priced-round modeler using real post-money SAFE mechanics, founder dilution walk to Series A, exit waterfall
 - 🤝 **Investor CRM** — round commitments with weighted pipeline, interaction log, asks tracker, update distribution segments
-- ✉️ **Update composer** — YC-format monthly updates with metrics auto-filled from your financials, plus the archive a future lead will read back-to-back
+- ✉️ **Update composer** — monthly updates in the TL;DR-first format tier-1 investors (YC, a16z, Sequoia) expect, metrics auto-filled from your financials, plus the archive a future lead will read back-to-back
 - 📚 **Playbooks** — update doctrine, batch fundraising process, tiered data-room checklists (interactive), board pack structure, hard-question FAQ frames, diligence-grade metric definitions
 - 🤖 **Agent harness** — [prompt sets](prompts/) and a [private workspace scaffold](scripts/init-workspace.js) so your coding agent (Claude Code, Cursor, …) operates the whole system with you
 - 🌐 **Six languages** — the dashboard switches between English, 繁體中文, 日本語, 한국어, Español, and Français (sidebar picker); CI enforces full locale coverage on every contribution

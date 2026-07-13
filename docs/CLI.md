@@ -94,7 +94,7 @@ ir update draft [--month 2026-07]
 ir update mark-sent [--subject "Protico — July 2026 Update"] [--month 2026-07]
 ```
 
-`draft` writes the metrics-filled YC-format skeleton to `ir-workspace/updates/drafts/<month>.md` — deterministically, from actuals. If the month isn't closed it writes a `BLOCKED-<month>.md` note and exits 1 instead of inventing numbers. `mark-sent` archives the draft (feeding the streak and rolling the due date) — **only call it for an email that was actually sent**; sending itself stays human (web UI BCC button or your mail client).
+`draft` writes the metrics-filled update skeleton (TL;DR / metrics / highlights / lowlights / asks) to `ir-workspace/updates/drafts/<month>.md` — deterministically, from actuals. If the month isn't closed it writes a `BLOCKED-<month>.md` note and exits 1 instead of inventing numbers. `mark-sent` archives the draft (feeding the streak and rolling the due date) — **only call it for an email that was actually sent**; sending itself stays human (web UI BCC button or your mail client).
 
 ## `ir model round`
 

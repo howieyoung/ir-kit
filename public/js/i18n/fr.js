@@ -148,7 +148,7 @@ export const fr = {
   'col.active': 'Actif', 'col.lastSent': 'Dernier envoi',
 
   'updates.title': 'Updates investisseurs',
-  'updates.sub': 'Update mensuel au format YC. La régularité est l\'actif — le même jour chaque mois, sans sauter les mauvais mois.',
+  'updates.sub': 'Update mensuel au format standard du secteur. La régularité est l\'actif — le même jour chaque mois, sans sauter les mauvais mois.',
   'updates.sec.schedule': 'Calendrier', 'updates.sec.compose': 'Rédiger', 'updates.sec.archive': 'Archives',
   'upd.schedNote': 'Les updates partent le {day} de chaque mois (modifiable dans Paramètres). La constance bat la perfection — la même date, chaque mois.',
   'upd.next': 'Prochain : {date} ', 'upd.streak': 'Série en cours : {n} mois', 'upd.noStreak': 'Pas encore de série',

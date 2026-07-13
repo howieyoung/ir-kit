@@ -1,4 +1,4 @@
-// The YC-format update skeleton, generated from real data only.
+// The industry-standard update skeleton (TL;DR / metrics / highlights / lowlights / asks), generated from real data only.
 // Shared by the browser composer (updates.js) and the ir CLI (core/ops.js).
 import { fmt } from './ui.js';
 

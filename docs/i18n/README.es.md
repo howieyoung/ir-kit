@@ -2,7 +2,7 @@
 
 **Gestiona las relaciones con inversores como si tuvieras un equipo de diez — aunque solo estéis tú y un agente de IA.**
 
-IR Kit es un sistema de relaciones con inversores open source y local-first: cap table con cálculo de conversión de SAFEs, panel financiero (burn/runway), CRM de inversores, updates mensuales en formato YC, checklists de data room y playbooks operativos — diseñado para trabajar con agentes de código (Claude Code, Codex, Cursor…).
+IR Kit es un sistema de relaciones con inversores open source y local-first: cap table con cálculo de conversión de SAFEs, panel financiero (burn/runway), CRM de inversores, updates mensuales en el formato estándar del sector, checklists de data room y playbooks operativos — diseñado para trabajar con agentes de código (Claude Code, Codex, Cursor…).
 
 ## Inicio rápido
 

@@ -147,7 +147,7 @@ export const ko = {
   'col.active': '유효', 'col.lastSent': '마지막 발송',
 
   'updates.title': '투자자 업데이트',
-  'updates.sub': 'YC 형식 월간 업데이트. 연속 기록이 곧 자산 — 매달 같은 날, 나쁜 달도 거르지 않기.',
+  'updates.sub': '업계 표준 형식의 월간 업데이트. 연속 기록이 곧 자산 — 매달 같은 날, 나쁜 달도 거르지 않기.',
   'updates.sec.schedule': '일정', 'updates.sec.compose': '작성', 'updates.sec.archive': '보관함',
   'upd.schedNote': '업데이트는 매달 {day}일에 발송(설정에서 변경). 완벽보다 일관성 — 매달 같은 날.',
   'upd.next': '다음: {date} ', 'upd.streak': '현재 연속 {n}개월', 'upd.noStreak': '연속 기록 없음',

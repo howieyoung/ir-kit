@@ -174,7 +174,7 @@ export const GLOSSARY = `# 名詞解釋
 | MoM | 月增率。引用平均值時要說明平均區間 |
 | MOIC | 投入資本回報倍數 — 投資人拿回的 ÷ 投入的 |
 | 選擇權池 | 保留給未來團隊的股份；各輪補足，通常稀釋創辦人 |
-| Post-money SAFE | 標準（2018 後）YC SAFE：持股在定價輪前一刻鎖定為本金 ÷ cap |
+| Post-money SAFE | 標準的 post-money SAFE（2018 後）：持股在定價輪前一刻鎖定為本金 ÷ cap |
 | Post-money / pre-money | 新資金進來後／前的公司估值：post ＝ pre ＋ 募資額 |
 | Pro-rata | 投資人在未來輪次追加投資以維持持股比例的權利 |
 | 定價輪 | 以議定股價進行的股權融資（種子輪、A 輪…）— SAFE 在此轉換 |

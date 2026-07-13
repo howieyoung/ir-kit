@@ -20,8 +20,8 @@ This month's raw material (turn into highlights/lowlights, don't editorialize in
 - Shipped: [...]
 - The ask: [specific person/company/role]
 
-Format: YC-style (TL;DR / metrics table / highlights / lowlights / product / fundraising
-/ asks / thanks), under 3 minutes to read. Lowlights must be real.
+Format: TL;DR / metrics table / highlights / lowlights / product / fundraising
+/ asks / thanks — under 3 minutes to read. Lowlights must be real.
 Write it to ir-workspace/updates/drafts/[YYYY-MM].md for my edit — do NOT add it to the
 archive; I archive from the web UI after sending.
 ```

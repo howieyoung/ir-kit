@@ -161,7 +161,7 @@ export const en = {
 
   // ---- updates ----
   'updates.title': 'Investor Updates',
-  'updates.sub': 'YC-format monthly update. The streak is the asset — same day every month, never skip a bad one.',
+  'updates.sub': 'The industry-standard monthly update. The streak is the asset — same day every month, never skip a bad one.',
   'updates.sec.schedule': 'Schedule', 'updates.sec.compose': 'Compose', 'updates.sec.archive': 'Archive',
   'upd.schedNote': 'Updates go out on day {day} of each month (change in Settings). Consistency beats perfection — the same date, every month.',
   'upd.next': 'Next: {date} ', 'upd.streak': 'Current streak: {n} mo', 'upd.noStreak': 'No streak yet',

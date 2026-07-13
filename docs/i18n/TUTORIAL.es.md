@@ -193,7 +193,7 @@ Los tres están en pantalla en este kit a dos clics. Un «te lo confirmo luego»
 | MoM | Crecimiento mes a mes. Indica la ventana al citar un promedio |
 | MOIC | Múltiplo sobre el capital invertido — lo que recibe el inversor ÷ lo que puso |
 | Pool de opciones | Acciones reservadas para el equipo futuro; se recarga en las rondas, normalmente diluyendo a los fundadores |
-| SAFE post-money | El SAFE estándar de YC (2018+): participación fijada en principal ÷ cap justo antes de la ronda |
+| SAFE post-money | El SAFE post-money estándar (2018+): participación fijada en principal ÷ cap justo antes de la ronda |
 | Post-money / pre-money | Valor de la empresa después / antes del dinero nuevo: post = pre + ronda |
 | Pro-rata | Derecho del inversor a volver a invertir para mantener su % en rondas futuras |
 | Ronda con precio | Financiación de capital a un precio por acción negociado (seed, Serie A…) — donde convierten los SAFEs |
